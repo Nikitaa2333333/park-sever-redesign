@@ -6,3 +6,5 @@ source-repo/
 # Локальный скретч инструментов (не часть проекта)
 .playwright-mcp/
 .superpowers/
+new/
+extracted_content/

@@ -10,204 +10,366 @@ const blockOf = (s: any, type: string) => blocksOf(s, type)[0];
 
 // — hero / slider —
 const slider = byId['slider'];
-const heroVideos = (slider?.blocks ?? []).filter((b: any) => b.type === 'video' && !b.disabled);
+const heroVideos = (slider?.blocks ?? []).filter((b: any) => b.type === 'video');
 const heroDesktop = heroVideos.find((v: any) => v.variant === 'desktop');
 const heroMobile = heroVideos.find((v: any) => v.variant === 'mobile');
-const heroEyebrow = blockOf(slider, 'paragraph')?.text;
-const heroTitle = blockOf(slider, 'heading')?.text;
-const heroLinks = blocksOf(slider, 'link');
+const heroAutumn = heroVideos.find((v: any) => v.variant === 'autumn-desktop');
+const heroWinter = heroVideos.find((v: any) => v.variant === 'winter-desktop');
 
-// — welcome —
-const welcome = byId['welcome'];
-const welcomeTitle = blockOf(welcome, 'heading')?.text;
-const welcomeParas = blocksOf(welcome, 'paragraph');
-const welcomeBtn = blockOf(welcome, 'button');
-const welcomeGallery = blockOf(welcome, 'gallery')?.images ?? [];
+const heroEyebrow = blockOf(slider, 'subtitle')?.text; // "Отдых для двоих среди леса"
+const heroTitle = blockOf(slider, 'heading')?.text; // "Парк Север"
+const heroParas = (slider?.blocks ?? []).filter((b: any) => b.type === 'paragraph' && !b.disabled && b.text !== 'Деятельность ведется в рамках программы развития Сельского туризма');
+const activityBadge = (slider?.blocks ?? []).find((b: any) => b.type === 'paragraph' && b.text.includes('Деятельность'))?.text;
 
-// — main-menu —
-const mm = byId['main-menu'];
-const mmItems = (mm?.items ?? []).filter((i: any) => !i.disabled);
+// — oasis (new) —
+const oasis = byId['oasis'];
+const oasisTitle = blockOf(oasis, 'heading')?.text;
+const oasisParas = blocksOf(oasis, 'paragraph');
+const oasisGallery = blockOf(oasis, 'gallery')?.images ?? [];
 
-// — advantages —
-const adv = byId['advantages'];
-const advItems = (adv?.items ?? []).filter((i: any) => !i.disabled);
+// — art-of-rest (new) —
+const art = byId['art-of-rest'];
+const artTitle = blockOf(art, 'heading')?.text;
+const artSubtitle = blockOf(art, 'subtitle')?.text;
+const artSteps = art?.items ?? [];
 
-// — about / contact / map (refs) —
-const about = byId['about'];
+// — house-forest (new) —
+const houseForest = byId['house-forest'];
+const houseForestTitle = blockOf(houseForest, 'heading')?.text;
+const houseForestPara = blockOf(houseForest, 'paragraph')?.text;
+const houseForestBtn = blockOf(houseForest, 'button');
+const houseForestGallery = blockOf(houseForest, 'gallery')?.images ?? [];
+
+// — atmosphere (new) —
+const atmosphere = byId['atmosphere'];
+const atmosphereTitle = blockOf(atmosphere, 'heading')?.text;
+const atmosphereSubtitle = blockOf(atmosphere, 'subtitle')?.text;
+const atmosphereGallery = blockOf(atmosphere, 'gallery')?.images ?? [];
+const atmosphereItems = atmosphere?.items ?? [];
+
+// — our-world (new) —
+const world = byId['our-world'];
+const worldTitle = blockOf(world, 'heading')?.text;
+const worldItems = world?.items ?? [];
+
+// — reviews —
 const reviewsSec = byId['reviews'];
-const contact = byId['contact'];
-const map = byId['map'];
-
 const ot = (s: any) => blockOf(s, 'overtitle')?.text;
 const hd = (s: any) => blockOf(s, 'heading')?.text;
-const st = (s: any) => blockOf(s, 'subtitle')?.text;
+const reviewItems = reviews?.items ?? [];
 
-const navMenu = [
-  { t: 'Главная', href: withBase('/') },
-  { t: 'Дома', href: withBase('/accommodation/house-1') },
-  { t: 'Искусство отдыха', href: '#' },
-  { t: 'Атмосфера для двоих', href: '#' },
-  { t: 'Наш мир', href: withBase('/about') },
-  { t: 'Истории', href: withBase('/news') },
-];
 const booking = site.contacts.bookingHref;
 const c = site.contacts;
-const reviewItems = reviews?.items ?? [];
+
+const navMenu = [
+  { t: 'Главная', href: '/' },
+  { t: 'Дома', href: '/accommodation/house-1' },
+  { t: 'Искусство отдыха', href: '#art-of-rest' },
+  { t: 'Атмосфера для двоих', href: '#atmosphere' },
+  { t: 'Наш мир', href: '#our-world' },
+  { t: 'Истории', href: '#reviews' },
+];
 ---
 <SiteLayout title={page.seo.title}>
-  <!-- NAV -->
+  <!-- NAV (Sticky Navigation with Mobile Hamburger) -->
   <nav class="nav">
     <div class="wrap">
-      <a class="nav__logo" href={withBase('/')}>ПАРК СЕВЕР</a>
+      <a class="nav__logo" href="/">ПАРК СЕВЕР</a>
+      
+      <button class="nav__toggle" aria-label="Открыть меню">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
       <div class="nav__menu">
         {navMenu.map((m) => <a href={m.href}>{m.t}</a>)}
       </div>
+
       <a class="nav__book" href={booking}>Забронировать</a>
     </div>
   </nav>
 
-  <!-- HERO -->
+  <!-- HERO (Seasonal video background, Overlay content) -->
   <header class="hero">
     <div class="hero__media">
       {heroDesktop && (
-        <video class="video-desktop" autoplay loop muted playsinline poster={withBase(heroDesktop.poster)}>
+        <video id="video-summer" class="video-desktop" autoplay loop muted playsinline poster={withBase(heroDesktop.poster)}>
           <source src={withBase(heroDesktop.src)} type="video/mp4" />
         </video>
       )}
       {heroMobile && (
-        <video class="video-mobile" autoplay loop muted playsinline poster={withBase(heroMobile.poster)}>
+        <video id="video-summer-mob" class="video-mobile" autoplay loop muted playsinline poster={withBase(heroMobile.poster)}>
           <source src={withBase(heroMobile.src)} type="video/mp4" />
+        </video>
+      )}
+      {heroAutumn && (
+        <video id="video-autumn" class="video-desktop" loop muted playsinline poster={withBase(heroAutumn.poster)} style="display:none">
+          <source src={withBase(heroAutumn.src)} type="video/mp4" />
+        </video>
+      )}
+      {heroWinter && (
+        <video id="video-winter" class="video-desktop" loop muted playsinline poster={withBase(heroWinter.poster)} style="display:none">
+          <source src={withBase(heroWinter.src)} type="video/mp4" />
         </video>
       )}
     </div>
     <div class="hero__scrim"></div>
-    <div class="wrap">
-      {heroEyebrow && <div class="hero__eyebrow">{heroEyebrow}</div>}
-      <h1 class="h1">{heroTitle}</h1>
-      {heroLinks.length > 0 && (
-        <div class="hero__links">
-          {heroLinks.map((l: any) => <a href={withBase(l.href)}>{l.text}</a>)}
-        </div>
-      )}
-      <div class="hero__cta">
+    <div class="wrap" style="text-align: left; max-width: 800px; margin-left: 0; padding-top: 140px; padding-bottom: 80px;">
+      <h1 class="hero-title" style="color:#fff; margin-bottom:12px;">{heroTitle}</h1>
+      {heroEyebrow && <div class="h3" style="color:#fff; margin-bottom:28px; font-weight:500; font-family:var(--font-head); opacity:0.95;">{heroEyebrow}</div>}
+      
+      <div class="hero__lead-text" style="margin-bottom:34px;">
+        {heroParas.map((p: any) => (
+          <p class="body-lead" style="color:#fff; margin:10px 0; opacity:0.95;">{p.text}</p>
+        ))}
+      </div>
+
+      <div class="hero__cta" style="justify-content: flex-start; margin: 0;">
         <a class="btn btn--light" href={booking}>Забронировать</a>
-        <a class="btn btn--outline-light" href={withBase('/accommodation/house-1')}>Смотреть домики</a>
+        <a class="btn btn--outline-light" href="/accommodation/house-1">Смотреть домики</a>
       </div>
     </div>
+    {activityBadge && (
+      <div style="position: absolute; bottom: 24px; left: 32px; font-size: 13px; opacity: 0.8; font-family: var(--font-head); font-weight: 500; color: #fff; z-index: 2;">
+        {activityBadge}
+      </div>
+    )}
   </header>
 
-  <!-- WELCOME -->
-  <section class="sec">
-    <div class="wrap">
-      <div class="split2">
-        <div>
-          <div class="eyebrow" style="margin-bottom:14px">Добро пожаловать</div>
-          <h2 class="h2">{welcomeTitle}</h2>
-          {welcomeParas.map((p: any) => <p class="body" style="margin-top:14px">{p.text}</p>)}
-          {welcomeBtn && <a class="btn btn--ghost" style="margin-top:24px" href={withBase(welcomeBtn.href)}>{welcomeBtn.text}</a>}
-        </div>
-        {welcomeGallery.length > 0 && (
-          <div class="gallery">
-            {welcomeGallery.map((src: string) => <a href={withBase(src)}><img src={withBase(src)} alt="Парк Север" loading="lazy" /></a>)}
+  <!-- Блок 2: Оазис спокойствия среди леса -->
+  {oasis && !oasis.disabled && (
+    <section class="sec section-calm" id="oasis">
+      <div class="wrap">
+        <div class="split2">
+          <div>
+            <div class="label-eyebrow" style="margin-bottom:14px;">Добро пожаловать</div>
+            <h2 class="h2" style="margin-bottom:24px;">{oasisTitle}</h2>
+            {oasisParas.map((p: any) => (
+              <p class="body" style="margin-bottom:16px;">{p.text}</p>
+            ))}
           </div>
-        )}
-      </div>
-    </div>
-  </section>
-
-  <!-- MAIN MENU -->
-  <section class="sec sec--navy">
-    <div class="wrap">
-      <div class="shead">
-        {ot(mm) && <div class="eyebrow">{ot(mm)}</div>}
-        <h2 class="h2">{hd(mm)}</h2>
-        {st(mm) && <p class="sub">{st(mm)}</p>}
-      </div>
-      <div class="grid3" style="margin-top:34px">
-        {mmItems.map((i: any) => (
-          <a class="card" href={withBase(i.href)}>
-            <div class="card__pic" style="height:210px"><img src={withBase(i.image)} alt={i.title} loading="lazy" /></div>
-            <div class="card__body">
-              <div class="card__title">{i.title}</div>
-              <span class="link-gold" style="margin-top:10px;display:inline-block">Подробнее →</span>
+          <div class="slider-container">
+            <div class="slider-snap">
+              {oasisGallery.map((src: string) => (
+                <div class="slider-snap__slide">
+                  <img src={withBase(src)} alt="Оазис спокойствия" loading="lazy" />
+                </div>
+              ))}
             </div>
-          </a>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- ADVANTAGES -->
-  <section class="sec">
-    <div class="wrap">
-      <div class="shead">
-        {ot(adv) && <div class="eyebrow">{ot(adv)}</div>}
-        <h2 class="h2">{hd(adv)}</h2>
-        {st(adv) && <p class="sub">{st(adv)}</p>}
-      </div>
-      <div class="grid4" style="margin-top:34px">
-        {advItems.map((i: any) => (
-          <div class="card">
-            <div class="card__pic" style="height:160px"><img src={withBase(i.image)} alt="" loading="lazy" /></div>
-            <div class="card__body"><p class="card__text">{i.text}</p></div>
+            <div class="slider-arrows">
+              <button class="slider-arrow slider-arrow--left" aria-label="Назад">&larr;</button>
+              <button class="slider-arrow slider-arrow--right" aria-label="Вперед">&rarr;</button>
+            </div>
+            <div class="slider-dots">
+              {oasisGallery.map((_, idx) => (
+                <button class={`slider-dot ${idx === 0 ? 'active' : ''}`} data-index={idx} aria-label={`Слайд ${idx + 1}`}></button>
+              ))}
+            </div>
           </div>
-        ))}
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+  )}
 
-  <!-- ABOUT (navy) -->
-  <section class="sec sec--navy">
-    <div class="wrap">
-      <div class="shead">
-        {ot(about) && <div class="eyebrow">{ot(about)}</div>}
-        {st(about) && <h2 class="h2">{st(about)}</h2>}
-      </div>
-    </div>
-  </section>
-
-  <!-- REVIEWS -->
-  <section class="sec">
-    <div class="wrap">
-      <div class="shead">
-        {ot(reviewsSec) && <div class="eyebrow">{ot(reviewsSec)}</div>}
-        <h2 class="h2">{hd(reviewsSec)}</h2>
-      </div>
-      {reviewItems.length > 0 ? (
-        <div class="grid3" style="margin-top:30px">
-          {reviewItems.map((r: any) => (
-            <div class="rcard">
-              <p class="rcard__q">«{r.text}»</p>
-              <div class="rcard__a">— {r.author}</div>
+  <!-- Блок 3: Искусство отдыха (Шаги-таймлайн) -->
+  {art && !art.disabled && (
+    <section class="sec sec--ink" id="art-of-rest">
+      <div class="wrap">
+        <div class="shead">
+          <div class="label-eyebrow" style="margin-bottom:8px;">Как проходит отдых</div>
+          <h2 class="h2" style="color:#fff;">{artTitle}</h2>
+          {artSubtitle && <p class="lead" style="color:#cfccc6; text-align:center; margin-top:8px;">{artSubtitle}</p>}
+        </div>
+        <div class="art-steps">
+          {artSteps.map((step: any) => (
+            <div class="art-step">
+              <div class="art-step__num">{step.step}</div>
+              <div class="art-step__desc">{step.text}</div>
+              <div class="art-step__img">
+                <img src={withBase(step.image)} alt={step.title} loading="lazy" />
+              </div>
             </div>
           ))}
         </div>
-      ) : (
-        <div class="empty-note" style="margin-top:24px">Скоро здесь появятся отзывы наших гостей.</div>
-      )}
-    </div>
-  </section>
+      </div>
+    </section>
+  )}
 
-  <!-- CONTACT + MAP -->
-  <section class="sec sec--navy">
+  <!-- Блок 4: Дом среди леса -->
+  {houseForest && !houseForest.disabled && (
+    <section class="sec section-calm" id="house-forest">
+      <div class="wrap">
+        <div class="split2" style="align-items: flex-start;">
+          <div style="padding-top: 14px;">
+            <div class="label-eyebrow" style="margin-bottom:14px;">Пространство</div>
+            <h2 class="h2" style="margin-bottom:24px;">{houseForestTitle}</h2>
+            <p class="body" style="margin-bottom:30px;">{houseForestPara}</p>
+            {houseForestBtn && (
+              <a class="btn btn--navy" href={houseForestBtn.href}>{houseForestBtn.text}</a>
+            )}
+          </div>
+          <div class="slider-container">
+            <div class="slider-snap">
+              {houseForestGallery.map((src: string) => (
+                <div class="slider-snap__slide">
+                  <img src={withBase(src)} alt="Дом среди леса" loading="lazy" />
+                </div>
+              ))}
+            </div>
+            <div class="slider-arrows">
+              <button class="slider-arrow slider-arrow--left" aria-label="Назад">&larr;</button>
+              <button class="slider-arrow slider-arrow--right" aria-label="Вперед">&rarr;</button>
+            </div>
+            <div class="slider-dots">
+              {houseForestGallery.map((_, idx) => (
+                <button class={`slider-dot ${idx === 0 ? 'active' : ''}`} data-index={idx} aria-label={`Слайд ${idx + 1}`}></button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Блок 5: Атмосфера для двоих -->
+  {atmosphere && !atmosphere.disabled && (
+    <section class="sec sec--ink" id="atmosphere">
+      <div class="wrap">
+        <div class="shead" style="margin-bottom:48px;">
+          <div class="label-eyebrow" style="margin-bottom:8px;">Особый день</div>
+          <h2 class="h2" style="color:#fff;">{atmosphereTitle}</h2>
+          {atmosphereSubtitle && <p class="lead" style="color:#cfccc6; text-align:center; margin-top:8px;">{atmosphereSubtitle}</p>}
+        </div>
+        
+        <div class="atmosphere-icons">
+          {atmosphereItems.map((item: any) => (
+            <div class="atmosphere-icon">
+              <div class="atmosphere-icon__svg">
+                {item.icon === 'heart' && (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                  </svg>
+                )}
+                {item.icon === 'cake' && (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2v4M12 8a4 4 0 0 0-4 4v9h8v-9a4 4 0 0 0-4-4zM6 17h12M6 14h12"/>
+                  </svg>
+                )}
+                {item.icon === 'flower' && (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M12 2a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4zm0 10a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4zm-6-4a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4zm12 0a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4z"/>
+                  </svg>
+                )}
+                {item.icon === 'ring' && (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="14" r="6"/>
+                    <path d="M12 2l3 3-3 3-3-3 3-3z"/>
+                  </svg>
+                )}
+                {item.icon === 'gift' && (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="22 7 12 12 2 7 12 2 22 7"/>
+                    <polyline points="2 17 12 22 22 17"/>
+                    <polyline points="2 12 12 17 22 12"/>
+                    <line x1="12" y1="22" x2="12" y2="12"/>
+                  </svg>
+                )}
+              </div>
+              <div class="atmosphere-icon__title">{item.title}</div>
+            </div>
+          ))}
+        </div>
+
+        <div class="slider-drag">
+          {atmosphereGallery.map((src: string) => (
+            <div class="slider-drag__item">
+              <img src={withBase(src)} alt="Атмосфера" loading="lazy" />
+            </div>
+          ))}
+        </div>
+        
+        <div style="text-align: center; margin-top: 48px;">
+          <a class="btn btn--outline-light" href="/special-offers">Узнать больше</a>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Блок 6: Наш мир -->
+  {world && !world.disabled && (
+    <section class="sec section-calm" id="our-world">
+      <div class="wrap">
+        <div class="shead" style="margin-bottom:32px;">
+          <div class="label-eyebrow" style="margin-bottom:8px;">Территория и активности</div>
+          <h2 class="h2">{worldTitle}</h2>
+        </div>
+        
+        <div class="world-grid">
+          {worldItems.map((item: any) => (
+            <a class="world-card" href={item.href}>
+              <img src={withBase(item.image)} alt={item.title} loading="lazy" />
+              <div class="world-card__overlay">
+                <div class="world-card__title">{item.title}</div>
+              </div>
+            </a>
+          ))}
+        </div>
+        
+        <div style="text-align: center; margin-top: 48px;">
+          <a class="btn btn--navy" href="/about">Исследовать наш мир</a>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Блок 7: Отзывы -->
+  {reviewsSec && !reviewsSec.disabled && (
+    <section class="sec section-calm" id="reviews">
+      <div class="wrap">
+        <div class="shead" style="margin-bottom:32px;">
+          {ot(reviewsSec) && <div class="label-eyebrow" style="margin-bottom:8px;">{ot(reviewsSec)}</div>}
+          <h2 class="h2">{hd(reviewsSec)}</h2>
+        </div>
+        {reviewItems.length > 0 ? (
+          <div class="grid3">
+            {reviewItems.map((r: any) => (
+              <div class="rcard">
+                <p class="rcard__q">«{r.text}»</p>
+                <div class="rcard__a">— {r.author}</div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div class="empty-note">Скоро здесь появятся отзывы наших гостей.</div>
+        )}
+      </div>
+    </section>
+  )}
+
+  <!-- Блок 8: Контакты + Карта -->
+  <section class="sec section-calm" id="contacts">
     <div class="wrap">
       <div id="znms-widget-1" style="margin-bottom:40px"></div>
       <div class="cmap">
         <div class="cbox">
-          {ot(contact) && <div class="eyebrow">{ot(contact)}</div>}
-          <h2 class="h2" style="margin-top:14px">{hd(contact)}</h2>
-          {st(contact) && <p class="body" style="margin-top:14px">{st(contact)}</p>}
-          <p><a class="tel" href={c.phoneHref}>{c.phone}</a></p>
-          <p>{c.address}</p>
-          <div class="hero__cta" style="margin-top:18px;justify-content:flex-start">
-            <a class="btn btn--light" href={booking}>Забронировать</a>
-            <a class="btn btn--wa" href={c.whatsapp}>Написать в WhatsApp</a>
+          <div class="label-eyebrow" style="margin-bottom:8px;">Расположение</div>
+          <h2 class="h2" style="margin-top:14px">Как добраться</h2>
+          <p class="body" style="margin-top:14px">Мы всегда на связи и с радостью ответим на ваши вопросы.</p>
+          <p style="margin-top:16px;"><a class="tel" href={c.phoneHref} style="font-size:20px; font-weight:700;">{c.phone}</a></p>
+          <p style="font-size:15px; color:var(--graphite); margin-top:8px;">{c.address}</p>
+          <div class="hero__cta" style="margin-top:24px; justify-content:flex-start;">
+            <a class="btn btn--navy" href={booking}>Забронировать</a>
+            <a class="btn btn--wa" href={c.whatsapp} target="_blank" rel="noopener noreferrer">Написать в WhatsApp</a>
           </div>
         </div>
         <div class="map-frame">
-          {blockOf(map, 'iframe') && (
-            <iframe src={blockOf(map, 'iframe').src} title={blockOf(map, 'iframe').title} loading="lazy"></iframe>
-          )}
+          <iframe 
+            src="https://yandex.ru/map-widget/v1/?org=145451177721&cx=37.781878&cy=56.257017&z=10" 
+            title="Карта проезда к Парк Север" 
+            loading="lazy">
+          </iframe>
         </div>
       </div>
     </div>
@@ -219,24 +381,152 @@ const reviewItems = reviews?.items ?? [];
       <div class="foot__cols">
         <div>
           <div class="foot__logo">ПАРК СЕВЕР</div>
-          <p class="body" style="color:#cfd6d2;margin-top:12px;max-width:40ch">Загородный парк со стеклянными гостевыми домиками в 80 км от Москвы.</p>
+          <p class="body" style="color:#cfd6d2; margin-top:12px; max-width:40ch; font-size:15px;">Загородный парк со стеклянными гостевыми домиками в 80 км от Москвы.</p>
           <div class="socials">
-            {site.socials.map((s: any) => <a href={s.href}>{s.type}</a>)}
+            {site.socials.map((s: any) => <a href={s.href} target="_blank" rel="noopener noreferrer">{s.type.toUpperCase()}</a>)}
           </div>
         </div>
         <div>
-          <h4>Разделы</h4>
-          {navMenu.slice(1).map((m) => <a href={m.href}>{m.t}</a>)}
+          <h4 style="font-family:var(--font-head); font-size:14px; text-transform:uppercase; color:#fff; margin-bottom:14px;">Разделы</h4>
+          {navMenu.map((m) => <a href={m.href}>{m.t}</a>)}
         </div>
         <div>
-          <h4>Контакты</h4>
+          <h4 style="font-family:var(--font-head); font-size:14px; text-transform:uppercase; color:#fff; margin-bottom:14px;">Контакты</h4>
           <a href={c.phoneHref}>{c.phone}</a>
           <a href={c.emailHref}>{c.email}</a>
-          <a href={c.whatsapp}>WhatsApp</a>
-          <span style="display:block;padding-top:8px;color:#cfd6d2;font-family:var(--font-head);font-size:14px">{c.address}</span>
+          <a href={c.whatsapp} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+          <span style="display:block; padding-top:8px; color:#cfd6d2; font-size:14px; line-height:1.4;">{c.address}</span>
         </div>
       </div>
       <div class="foot__cp">© {site.company} · {site.requisites.entity} · {site.requisites.note}</div>
     </div>
   </footer>
+
+  <!-- КЛИЕНТСКИЕ СКРИПТЫ (Липкая шапка, Времена года, Слайдеры, Драг-эффект) -->
+  <script is:inline>
+    // 1. Мобильное меню
+    const toggle = document.querySelector('.nav__toggle');
+    const menu = document.querySelector('.nav__menu');
+    if (toggle && menu) {
+      toggle.addEventListener('click', () => {
+        toggle.classList.toggle('active');
+        menu.classList.toggle('open');
+      });
+      menu.querySelectorAll('a').forEach(l => {
+        l.addEventListener('click', () => {
+          toggle.classList.remove('active');
+          menu.classList.remove('open');
+        });
+      });
+    }
+
+    // 2. Сезонное видео
+    (function() {
+      const d = new Date();
+      const m = d.getMonth() + 1; // 1-12
+      const date = d.getDate();
+      let season = 'summer';
+      
+      if ((m === 9 && date >= 1) || m === 10 || (m === 11 && date <= 14)) {
+        season = 'autumn';
+      } else if ((m === 11 && date >= 15) || m === 12 || m === 1 || m === 2) {
+        season = 'winter';
+      }
+      
+      const isMobile = window.innerWidth <= 640;
+      
+      const vSummer = document.getElementById('video-summer');
+      const vSummerMob = document.getElementById('video-summer-mob');
+      const vAutumn = document.getElementById('video-autumn');
+      const vWinter = document.getElementById('video-winter');
+      
+      function playVideo(s) {
+        // прячем все
+        if (vSummer) vSummer.style.display = 'none';
+        if (vSummerMob) vSummerMob.style.display = 'none';
+        if (vAutumn) vAutumn.style.display = 'none';
+        if (vWinter) vWinter.style.display = 'none';
+        
+        let active = null;
+        if (isMobile) {
+          active = vSummerMob; // моб по умолчанию
+        } else {
+          if (s === 'autumn') active = vAutumn || vSummer;
+          else if (s === 'winter') active = vWinter || vSummer;
+          else active = vSummer;
+        }
+        
+        if (active) {
+          active.style.display = 'block';
+          active.play().catch(e => console.log('Autoplay blocked:', e));
+        }
+      }
+      playVideo(season);
+    })();
+
+    // 3. Scroll-snap слайдеры (Оазис и Дом)
+    document.querySelectorAll('.slider-container').forEach(container => {
+      const track = container.querySelector('.slider-snap');
+      const dots = container.querySelectorAll('.slider-dot');
+      const leftArrow = container.querySelector('.slider-arrow--left');
+      const rightArrow = container.querySelector('.slider-arrow--right');
+      
+      if (!track) return;
+      
+      track.addEventListener('scroll', () => {
+        const width = track.offsetWidth;
+        const index = Math.round(track.scrollLeft / width);
+        dots.forEach((dot, idx) => {
+          if (idx === index) dot.classList.add('active');
+          else dot.classList.remove('active');
+        });
+      });
+      
+      if (leftArrow) {
+        leftArrow.addEventListener('click', () => {
+          track.scrollBy({ left: -track.offsetWidth, behavior: 'smooth' });
+        });
+      }
+      if (rightArrow) {
+        rightArrow.addEventListener('click', () => {
+          track.scrollBy({ left: track.offsetWidth, behavior: 'smooth' });
+        });
+      }
+      
+      dots.forEach((dot, idx) => {
+        dot.addEventListener('click', () => {
+          track.scrollTo({ left: idx * track.offsetWidth, behavior: 'smooth' });
+        });
+      });
+    });
+
+    // 4. Драг-слайдер для Атмосферы
+    document.querySelectorAll('.slider-drag').forEach(slider => {
+      let isDown = false;
+      let startX;
+      let scrollLeft;
+      
+      slider.addEventListener('mousedown', (e) => {
+        isDown = true;
+        slider.classList.add('active');
+        startX = e.pageX - slider.offsetLeft;
+        scrollLeft = slider.scrollLeft;
+      });
+      slider.addEventListener('mouseleave', () => {
+        isDown = false;
+        slider.classList.remove('active');
+      });
+      slider.addEventListener('mouseup', () => {
+        isDown = false;
+        slider.classList.remove('active');
+      });
+      slider.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - slider.offsetLeft;
+        const walk = (x - startX) * 2;
+        slider.scrollLeft = scrollLeft - walk;
+      });
+    });
+  </script>
 </SiteLayout>
