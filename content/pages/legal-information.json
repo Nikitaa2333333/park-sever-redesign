@@ -1,0 +1,46 @@
+{
+  "id": "legal-information",
+  "route": "/legal-information",
+  "seo": {
+    "title": "Правовая информация"
+  },
+  "sections": [
+    {
+      "id": "info",
+      "kind": "info",
+      "blocks": [
+        { "type": "overtitle", "text": "Информация" },
+        { "type": "heading", "level": 2, "text": "Правовая информация" }
+      ]
+    },
+    {
+      "id": "documents",
+      "kind": "documents",
+      "blocks": [
+        { "type": "heading", "level": 3, "text": "Документы" },
+        { "type": "link", "text": "Договор-оферта (PDF)", "href": "/files/Договор-оферта.pdf?3" },
+        { "type": "link", "text": "Правила проживания (PDF)", "href": "/files/Правила-проживания.pdf?3" }
+      ],
+      "items": [
+        { "title": "Договор-оферта (PDF)", "href": "/files/Договор-оферта.pdf?3" },
+        { "title": "Правила проживания (PDF)", "href": "/files/Правила-проживания.pdf?3" }
+      ]
+    },
+    {
+      "id": "bank-details",
+      "kind": "bank-details",
+      "blocks": [
+        { "type": "heading", "level": 3, "text": "Реквизиты" },
+        {
+          "type": "html",
+          "raw": "<table><tr><td>Наименование</td><td>ИП Дерюгин П.С.</td></tr><tr><td>ИНН</td><td>773170493306</td></tr></table>"
+        },
+        { "type": "paragraph", "text": "Деятельность ведется в рамках развития Сельского туризма в соответствии с ФЗ от 14.10.2024 г. №346-ФЗ2 и ФЗ от 11.07.2003 №74." }
+      ],
+      "requisites": {
+        "Наименование": "ИП Дерюгин П.С.",
+        "ИНН": "773170493306"
+      }
+    }
+  ]
+}

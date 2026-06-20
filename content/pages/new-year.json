@@ -1,0 +1,108 @@
+{
+  "id": "new-year",
+  "route": "/new-year",
+  "seo": {
+    "title": "Новый Год",
+    "description": "Спецпредложения и акции при размещении в наших домиках — скидка при проживании несколько дней, скидка при раннем бронировании, а также организация праздников."
+  },
+  "category": "Праздники",
+  "subtitle": "Спецпредложения и акции при размещении в наших домиках — скидка при проживании несколько дней, скидка при раннем бронировании, а также организация праздников.",
+  "sections": [
+    {
+      "id": "new-year",
+      "kind": "new-year",
+      "anchor": "new-year",
+      "disabled": false,
+      "blocks": [
+        {
+          "type": "overtitle",
+          "text": "Праздники"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Новый Год"
+        },
+        {
+          "type": "paragraph",
+          "text": "🎄 В Новогодние праздники дом сдаётся только от 2-х ночей."
+        },
+        {
+          "type": "paragraph",
+          "text": "✨️ В декабре дом предварительно подготавливается к праздникам (чем ближе к новому году, тем больше украшен). В праздники к каждому заезду гостей, Вас будет ждать:"
+        },
+        {
+          "type": "list",
+          "items": [
+            "❄️ праздничная атмосфера;",
+            "❄️ новогодняя особая сервировка стола;",
+            "❄️ шампанское (игристое вино);",
+            "❄️ подарки 🎁."
+          ]
+        },
+        {
+          "type": "video",
+          "src": "/videos/new-year/1.mp4",
+          "poster": "/images/new-year/poster-1.jpg",
+          "href": "/videos/new-year/1.mp4",
+          "attrs": {
+            "autoplay": true,
+            "loop": true,
+            "muted": true,
+            "playsinline": true
+          }
+        },
+        {
+          "type": "video",
+          "src": "/videos/new-year/2.mp4",
+          "poster": "/images/new-year/poster-2.jpg",
+          "href": "/videos/new-year/2.mp4",
+          "attrs": {
+            "autoplay": true,
+            "loop": true,
+            "muted": true,
+            "playsinline": true
+          }
+        },
+        {
+          "type": "gallery",
+          "images": [
+            "/images/new-year/1.jpg",
+            "/images/new-year/2.jpg",
+            "/images/new-year/3.jpg",
+            "/images/new-year/4.jpg",
+            "/images/new-year/5.jpg",
+            "/images/new-year/6.jpg",
+            "/images/new-year/7.jpg",
+            "/images/new-year/8.jpg",
+            "/images/new-year/9.jpg",
+            "/images/new-year/10.jpg",
+            "/images/new-year/11.jpg",
+            "/images/new-year/12.jpg"
+          ]
+        }
+      ],
+      "videos": [
+        {
+          "src": "/videos/new-year/1.mp4",
+          "poster": "/images/new-year/poster-1.jpg",
+          "href": "/videos/new-year/1.mp4"
+        },
+        {
+          "src": "/videos/new-year/2.mp4",
+          "poster": "/images/new-year/poster-2.jpg",
+          "href": "/videos/new-year/2.mp4"
+        }
+      ]
+    },
+    {
+      "ref": "gift-cards"
+    },
+    {
+      "ref": "contact"
+    },
+    {
+      "ref": "map"
+    }
+  ]
+}

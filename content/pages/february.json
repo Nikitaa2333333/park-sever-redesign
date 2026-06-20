@@ -1,0 +1,96 @@
+{
+  "id": "february",
+  "route": "/february",
+  "seo": {
+    "title": "14 и 23 Февраля",
+    "description": "Спецпредложения и акции при размещении в наших домиках — скидка при проживании несколько дней, скидка при раннем бронировании, а также организация праздников."
+  },
+  "category": "Праздники",
+  "subtitle": "Спецпредложения и акции при размещении в наших домиках — скидка при проживании несколько дней, скидка при раннем бронировании, а также организация праздников.",
+  "sections": [
+    {
+      "id": "february",
+      "kind": "february",
+      "disabled": false,
+      "items": [
+        {
+          "id": "february-14",
+          "anchor": "february-14",
+          "blocks": [
+            {
+              "type": "overtitle",
+              "text": "14 февраля"
+            },
+            {
+              "type": "heading",
+              "level": 2,
+              "text": "Valentine's Day"
+            },
+            {
+              "type": "paragraph",
+              "text": "Романтика и уединение."
+            },
+            {
+              "type": "paragraph",
+              "text": "Парк Север отмечает праздник с 12.02 по 19.02 февраля."
+            },
+            {
+              "type": "paragraph",
+              "text": "Love is… in  the Park Sever"
+            },
+            {
+              "type": "gallery",
+              "images": [
+                "/images/february/1.jpg",
+                "/images/february/2.jpg",
+                "/images/february/3.jpg",
+                "/images/february/4.jpg"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "february-23",
+          "anchor": "february-23",
+          "blocks": [
+            {
+              "type": "overtitle",
+              "text": "23 февраля"
+            },
+            {
+              "type": "heading",
+              "level": 2,
+              "text": "День защитника Отечества"
+            },
+            {
+              "type": "paragraph",
+              "text": "Park Sever отмечает праздник с 20.02 по 26.02 февраля."
+            },
+            {
+              "type": "paragraph",
+              "text": "Немного перчинки в праздник для мужчин!"
+            },
+            {
+              "type": "gallery",
+              "images": [
+                "/images/february/5.jpg",
+                "/images/february/6.jpg",
+                "/images/february/7.jpg",
+                "/images/february/8.jpg"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ref": "gift-cards"
+    },
+    {
+      "ref": "contact"
+    },
+    {
+      "ref": "map"
+    }
+  ]
+}

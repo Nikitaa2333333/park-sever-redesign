@@ -1,0 +1,212 @@
+{
+  "id": "about",
+  "route": "/about",
+  "seo": {
+    "title": "О нас",
+    "description": "Узнайте подробную информацию про обширную территорию парка и животных, которых можно встретить на прогулке в лесу."
+  },
+  "category": "Раздел",
+  "title": "О нас",
+  "subtitle": "Узнайте подробную информацию про обширную территорию парка и животных, которых можно встретить на прогулке в лесу.",
+  "sections": [
+    {
+      "id": "main",
+      "kind": "main",
+      "disabled": true
+    },
+    {
+      "id": "territory",
+      "kind": "territory",
+      "anchor": "territory",
+      "disabled": false,
+      "blocks": [
+        {
+          "type": "overtitle",
+          "text": "Природа"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Про территорию"
+        },
+        {
+          "type": "paragraph",
+          "text": "Территория Парка Север граничит с огромными лесными кварталами Дмитровского лесничества. Оставив позади населенные пункты, окружите себя счастьем Затерянности на природе от мира суматохи мегаполисов."
+        },
+        {
+          "type": "paragraph",
+          "text": "В тени могучих деревьев Вы прогуляетесь среди берез, елей и сосен. В глубине леса, протекает небольшая живописная речка – Лесминка. А летом еще и можно полакомится дикой малиной и земляникой."
+        },
+        {
+          "type": "paragraph",
+          "text": "Осень встречает парк активным сезоном «тихой охоты», когда «охота» (сбор грибов) начинается, не выходя из Стеклянных гостевых домов – подберезовики и подосиновики растут у порога дома."
+        },
+        {
+          "type": "paragraph",
+          "text": "Зима, пожалуй, самый насыщенный красотой сезон! Невероятные вид мерцающего снега, красота застывших на морозе деревьев, порой их северная суровость, явное присутствие диких животных – следы лосей и зайцев (и кого-то еще!), не оставят никого равнодушными."
+        },
+        {
+          "type": "paragraph",
+          "text": "А долгожданная весна, после зимних метелей, не нуждается в описании своего тепла и жизнерадостности, когда один вид на набухшие почки у деревьев под теплым солнечным светом, окрыляет сердце!"
+        },
+        {
+          "type": "video",
+          "src": "/videos/territory.mov",
+          "poster": "/images/territory/poster.jpg",
+          "attrs": {
+            "autoplay": true,
+            "loop": true,
+            "muted": true,
+            "playsinline": true
+          }
+        },
+        {
+          "type": "gallery",
+          "images": [
+            "/images/territory/1.jpg",
+            "/images/territory/2.jpg",
+            "/images/territory/3.jpg",
+            "/images/territory/4.jpg",
+            "/images/territory/5.jpg",
+            "/images/territory/6.jpg",
+            "/images/territory/7.jpg",
+            "/images/territory/8.jpg",
+            "/images/territory/9.jpg",
+            "/images/territory/10.jpg",
+            "/images/territory/11.jpg"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "animals",
+      "kind": "animals",
+      "anchor": "animals",
+      "disabled": false,
+      "blocks": [
+        {
+          "type": "overtitle",
+          "text": "Животный мир"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Кто у нас водится"
+        },
+        {
+          "type": "paragraph",
+          "text": "Животный мир на участке весьма  разнообразен, так как участок частично граничит с лесным массивом. Здесь обитают птицы и звери, первоначально жившие в лесных массивах, но сумевшие приспособиться к жизни рядом с человеком: лисица, барсук, селящийся по оврагам, куница, ласка, заяц, белка, еж, а также насекомоядные крот, землеройка. Из птиц водятся рябчик, тетерев-косач, серая куропатка. Обилие мелких птичек и другой живности (мышей, лягушек) дает возможность кормиться большому количеству хищных птиц, таких как ястреб-стервятник, ястреб-перепелятник, коршун. Ночные хищники представлены отрядом совиных: филин, серая неясыть, маленькая совка, сыч."
+        },
+        {
+          "type": "paragraph",
+          "text": "Так как участок проектирования находится неподалеку от деревни, здесь обитают жаворонок, перепел, коростель, полевые мыши, а также ласточки, грачи, скворцы, галки, вороны, голуби, воробьи и т.д."
+        },
+        {
+          "type": "paragraph",
+          "text": "Ящерицы распространены повсюду и представлены тремя видами - веретеница ломкая, похожая по внешнему виду на змею медянку, прыткая ящерица, живородящая ящерица. Из земноводных в районе проектирования можно отметить травяную, остромордую, озерную и прудовую лягушек, серую жабу и два вида тритонов: тритон обыкновенный и тритон гребенчатый."
+        }
+      ],
+      "items": [
+        {
+          "category": "Крупные животные",
+          "list": [
+            "Лось",
+            "Кабан",
+            "Косуля",
+            "Барсук",
+            "Лисица",
+            "Заяц-беляк",
+            "Куница",
+            "Горностай"
+          ],
+          "images": [
+            "/images/animals/los.jpeg",
+            "/images/animals/kaban.jpeg",
+            "/images/animals/kosulya.jpeg",
+            "/images/animals/barsuk.jpeg",
+            "/images/animals/lisa.jpeg",
+            "/images/animals/zayac-belyak.jpeg",
+            "/images/animals/kunica.jpg",
+            "/images/animals/gornostay.jpeg"
+          ]
+        },
+        {
+          "category": "Птички",
+          "list": [
+            "Тетерев-глухарь",
+            "Утка",
+            "Кулик",
+            "Утка чирки",
+            "Дупель",
+            "Бекас",
+            "Жаворонок",
+            "Перепел",
+            "Коростель"
+          ],
+          "images": [
+            "/images/animals/teterev.jpeg",
+            "/images/animals/utka-kryakva.jpeg",
+            "/images/animals/kulik.jpeg",
+            "/images/animals/utka-kryakva-2.jpeg",
+            "/images/animals/dupel.jpeg",
+            "/images/animals/bekas.jpeg",
+            "/images/animals/zhavoronok.jpeg",
+            "/images/animals/perepel.jpeg",
+            "/images/animals/korostel.jpeg"
+          ]
+        },
+        {
+          "category": "Мелкие животные",
+          "list": [
+            "Полевая мышь",
+            "Ящерица живородящая",
+            "Ласка",
+            "Заяц",
+            "Белка",
+            "Еж",
+            "Крот",
+            "Землеройка"
+          ],
+          "images": [
+            "/images/animals/mysh-polevka.jpeg",
+            "/images/animals/yascherica.jpeg",
+            "/images/animals/laska.jpeg",
+            "/images/animals/zayac.jpeg",
+            "/images/animals/belka.jpeg",
+            "/images/animals/ezh.jpeg",
+            "/images/animals/krot.jpeg",
+            "/images/animals/zemleroyka.jpeg"
+          ]
+        },
+        {
+          "category": "Птицы",
+          "list": [
+            "Рябчик",
+            "Тетерев-косач",
+            "Серая куропатка",
+            "Ястреб-стервятник",
+            "Ястреб-перепелятник",
+            "Коршун"
+          ],
+          "images": [
+            "/images/animals/ryabchik.jpeg",
+            "/images/animals/teterev-kosach.jpeg",
+            "/images/animals/seraya-kuropatka.jpeg",
+            "/images/animals/yastreb-stervyatnik.jpeg",
+            "/images/animals/yastreb-perepelyatnik.jpeg",
+            "/images/animals/korshun.jpeg"
+          ]
+        }
+      ]
+    },
+    {
+      "ref": "about"
+    },
+    {
+      "ref": "contact"
+    },
+    {
+      "ref": "map"
+    }
+  ]
+}

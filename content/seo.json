@@ -1,0 +1,104 @@
+{
+  "policy": {
+    "urlsUnchanged": true,
+    "note": "URL-структура сохраняется 1:1 со старым сайтом. 301-редиректы НЕ требуются. Если какой-то URL всё же поменяется — добавить сюда в redirects.",
+    "redirects": []
+  },
+  "defaults": {
+    "siteName": "Парк Север",
+    "baseUrl": "https://park-sever.ru",
+    "locale": "ru_RU",
+    "titleTemplate": "%s | Парк Север",
+    "ogImage": "/images/og-default.jpg",
+    "note": "ogImage пока плейсхолдер — добавить шаринг-картинку при дизайне."
+  },
+  "sitemap": {
+    "generate": true,
+    "url": "https://park-sever.ru/sitemap.xml"
+  },
+  "robots": {
+    "generate": true,
+    "allowAll": true,
+    "sitemap": "https://park-sever.ru/sitemap.xml"
+  },
+  "pages": [
+    {
+      "route": "/",
+      "title": "Парк Север | Официальный сайт",
+      "description": null,
+      "needsDescription": true
+    },
+    {
+      "route": "/about",
+      "title": "О нас",
+      "description": "Узнайте подробную информацию про обширную территорию парка и животных, которых можно встретить на прогулке в лесу.",
+      "needsDescription": false
+    },
+    {
+      "route": "/accommodation/house-1",
+      "title": "Дом в лесу. Gold",
+      "description": null,
+      "needsDescription": true
+    },
+    {
+      "route": "/accommodation/house-2",
+      "title": "Дом в лесу. Brown",
+      "description": null,
+      "needsDescription": true
+    },
+    {
+      "route": "/accommodation/house-3",
+      "title": "Стеклянный дом №3",
+      "description": null,
+      "needsDescription": true
+    },
+    {
+      "route": "/entertainment",
+      "title": "Досуг",
+      "description": "Катайтесь на багги, мотоцикле, снегоходе, велосипедах, ретроавтомобиле ГАЗ М-72, рыбачьте в пруду, гуляйте по лесу, познакомьтесь с щенками из ретривер-клуба, изучайте животный мир окружающей вас природы.",
+      "needsDescription": false
+    },
+    {
+      "route": "/new-year",
+      "title": "Новый Год",
+      "description": "Спецпредложения и акции при размещении в наших домиках — скидка при проживании несколько дней, скидка при раннем бронировании, а также организация праздников.",
+      "needsDescription": false
+    },
+    {
+      "route": "/february",
+      "title": "14 и 23 Февраля",
+      "description": "Спецпредложения и акции при размещении в наших домиках — скидка при проживании несколько дней, скидка при раннем бронировании, а также организация праздников.",
+      "needsDescription": false
+    },
+    {
+      "route": "/special-offers",
+      "title": "Специальные предложения",
+      "description": "Спецпредложения и акции при размещении в наших домиках — скидка при проживании несколько дней, скидка при раннем бронировании, а также организация праздников.",
+      "needsDescription": false
+    },
+    {
+      "route": "/news",
+      "title": "Новости",
+      "description": null,
+      "needsDescription": true
+    },
+    {
+      "route": "/contacts",
+      "title": "Контакты",
+      "description": null,
+      "needsDescription": true
+    },
+    {
+      "route": "/legal-information",
+      "title": "Правовая информация",
+      "description": null,
+      "needsDescription": true
+    },
+    {
+      "route": "/pay",
+      "title": "Оплата",
+      "description": null,
+      "needsDescription": true
+    }
+  ]
+}

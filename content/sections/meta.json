@@ -1,0 +1,48 @@
+{
+  "id": "meta",
+  "kind": "meta",
+  "seo": {
+    "titleTemplate": "seoTitle || title + ' | ' + company",
+    "descriptionSource": "subtitle"
+  },
+  "charset": "UTF-8",
+  "viewport": "width=device-width, initial-scale=1.0",
+  "stylesheets": [
+    "/libraries/jquery.fancybox.min.css",
+    "/libraries/owl.carousel.min.css",
+    "/libraries/owl.theme.default.min.css",
+    "/libraries/animate.min.css",
+    "/libraries/pannellum.css",
+    "/libraries/fullpage.min.css",
+    "/styles/main.css"
+  ],
+  "favicons": [
+    { "rel": "icon", "type": "image/png", "href": "/images/favicon/favicon-16x16.png", "sizes": "16x16" },
+    { "rel": "icon", "type": "image/png", "href": "/images/favicon/favicon-32x32.png", "sizes": "32x32" },
+    { "rel": "apple-touch-icon", "href": "/images/favicon/apple-touch-icon.png", "sizes": "180x180" }
+  ],
+  "scripts": [
+    { "src": "/libraries/jquery.min.js" },
+    { "src": "/libraries/jquery.fancybox.min.js" },
+    { "src": "/libraries/jquery.instagramFeed.min.js" },
+    { "src": "/libraries/owl.carousel.min.js" },
+    { "src": "/libraries/pannellum.js" },
+    { "src": "/libraries/fullpage.min.js" },
+    { "src": "//widget.bronirui-online.ru/js/app.js" },
+    { "src": "https://vk.com/js/api/openapi.js?168" },
+    { "src": "/scripts/javascript/header.js", "type": "module" },
+    { "src": "/scripts/javascript/slider.js", "type": "module" },
+    { "src": "/scripts/javascript/popups.js", "type": "module" },
+    { "src": "/scripts/javascript/animations.js", "type": "module" },
+    { "src": "/scripts/javascript/booking.js", "type": "module" },
+    { "src": "/scripts/javascript/panorama.js", "type": "module" },
+    { "src": "/scripts/javascript/fixed-buttons.js", "type": "module" },
+    { "src": "/scripts/javascript/houses.js", "type": "module", "disabled": true },
+    { "src": "/scripts/javascript/scrolling.js", "type": "module" },
+    { "src": "/scripts/javascript/photos.js", "type": "module", "disabled": true },
+    { "src": "/scripts/javascript/reviews.js", "type": "module" },
+    { "src": "/scripts/javascript/spoilers.js", "type": "module", "disabled": true },
+    { "src": "/scripts/javascript/news.js", "type": "module" },
+    { "src": "/scripts/javascript/yandex-metrika.js", "type": "module" }
+  ]
+}

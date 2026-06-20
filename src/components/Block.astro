@@ -1,0 +1,20 @@
+---
+// Рендер одного контент-блока по его type (см. content/SCHEMA.md).
+const { block: b } = Astro.props;
+---
+{b.type === 'overtitle' && <p class="overtitle">{b.text}</p>}
+{b.type === 'heading' && <Fragment set:html={`<h${b.level}>${b.text}</h${b.level}>`} />}
+{b.type === 'subtitle' && <p class="subtitle">{b.text}</p>}
+{b.type === 'paragraph' && <p>{b.text}</p>}
+{b.type === 'list' && <ul>{(b.items || []).map((i: string) => <li>{i}</li>)}</ul>}
+{b.type === 'link' && <a class="tag" href={b.href}>{b.text}</a>}
+{b.type === 'button' && <a class={`button ${b.style || ''}`} href={b.href}>{b.text}</a>}
+{b.type === 'image' && <img src={b.src} alt={b.alt || ''} loading="lazy" />}
+{b.type === 'video' && (
+  <video class={b.variant} src={b.src} poster={b.poster} autoplay loop muted playsinline></video>
+)}
+{b.type === 'iframe' && <iframe src={b.src} title={b.title || ''} loading="lazy"></iframe>}
+{b.type === 'gallery' && (
+  <div class="gallery">{(b.images || []).map((src: string) => <img src={src} alt="" loading="lazy" />)}</div>
+)}
+{b.type === 'html' && <Fragment set:html={b.raw} />}

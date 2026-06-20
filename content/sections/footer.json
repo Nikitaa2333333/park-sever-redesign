@@ -1,0 +1,33 @@
+{
+  "id": "footer",
+  "kind": "footer",
+  "logo": "Парк Север",
+  "description": "Парк для отдыха и развлечений в 80 км от Москвы. Для гостей доступен стеклянный гостевой домик с голосовым управлением через Алису, а также аренда багги, мотоцикла или снегохода, игры на открытом воздухе, рыбалка и пешие прогулки.",
+  "menu": [
+    { "text": "Главная", "href": "/" },
+    { "text": "Проживание", "href": "/accommodation/house-1" },
+    { "text": "Досуг", "href": "/entertainment" },
+    { "text": "Спецпредложения", "href": "/special-offers" },
+    { "text": "Оплата", "href": "/pay", "disabled": true },
+    { "text": "Новости", "href": "/news" },
+    { "text": "О нас", "href": "/about" },
+    { "text": "Контакты", "href": "/contacts" },
+    { "text": "Правовая информация", "href": "/legal-information" }
+  ],
+  "contacts": [
+    { "label": "Адрес", "text": "Московская область, Дмитровский городской округ, деревня Василёво, 1", "href": "" },
+    { "label": "Телефон", "text": "+7 929 606-00-45", "href": "tel:+79296060045" },
+    { "label": "Email", "text": "park-sever@inbox.ru", "href": "mailto:park-sever@inbox.ru" }
+  ],
+  "socialsLabel": "Социальные сети",
+  "socials": [
+    { "type": "vk", "href": "https://vk.com/park_sever" },
+    { "type": "whatsapp", "href": "https://wa.me/79296060045" },
+    { "type": "tiktok", "href": "https://tiktok.com/@park_sever" },
+    { "type": "instagram", "href": "https://www.instagram.com/parksever" },
+    { "type": "telegram", "href": "https://t.me/park_sever" },
+    { "type": "youtube", "href": "https://youtube.com/@ParkSever" },
+    { "type": "rutube", "href": "https://rutube.ru/channel/34216981/" }
+  ],
+  "copyright": "© 2021—#{year} Парк Север. Все права защищены."
+}

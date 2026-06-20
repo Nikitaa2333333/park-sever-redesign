@@ -1,0 +1,10 @@
+{
+  "id": "map",
+  "kind": "map",
+  "anchor": "map",
+  "blocks": [
+    { "type": "overtitle", "text": "Где мы находимся" },
+    { "type": "heading", "level": 2, "text": "Карта проезда" },
+    { "type": "iframe", "src": "https://yandex.ru/map-widget/v1/?ll=37.814914%2C56.456567&mode=search&oid=145451177721&ol=biz&z=16.9", "title": "Карта проезда" }
+  ]
+}

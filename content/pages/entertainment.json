@@ -1,0 +1,536 @@
+{
+  "id": "entertainment",
+  "route": "/entertainment",
+  "seo": {
+    "title": "Досуг",
+    "description": "Катайтесь на багги, мотоцикле, снегоходе, велосипедах, ретроавтомобиле ГАЗ М-72, рыбачьте в пруду, гуляйте по лесу, познакомьтесь с щенками из ретривер-клуба, изучайте животный мир окружающей вас природы."
+  },
+  "category": "Услуги",
+  "subtitle": "Катайтесь на багги, мотоцикле, снегоходе, велосипедах, ретроавтомобиле ГАЗ М-72, рыбачьте в пруду, гуляйте по лесу, познакомьтесь с щенками из ретривер-клуба, изучайте животный мир окружающей вас природы.",
+  "sections": [
+    {
+      "id": "services",
+      "kind": "services",
+      "anchor": "services",
+      "disabled": false,
+      "blocks": [
+        {
+          "type": "overtitle",
+          "text": "Чем заняться"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Виды отдыха"
+        },
+        {
+          "type": "subtitle",
+          "text": "Отдых в Московской области вдали от шумного города, в окружении леса и чистого воздуха."
+        }
+      ],
+      "items": [
+        {
+          "category": "Горнолыжный комплекс",
+          "name": "Дмитровские альпы",
+          "subtitle": "Горнолыжная инфраструктура и курортные отели.",
+          "image": "/images/services/skiing.jpg",
+          "disabled": true
+        },
+        {
+          "category": "Развлечения",
+          "name": "Мир дикого запада",
+          "subtitle": "Улица в стиле дикого запада 1885 года из фильма «Назад в будущее 3», с тематическими отелями, барами и ресторанами.",
+          "image": "/images/services/wild-west.jpg",
+          "disabled": true
+        },
+        {
+          "category": "Развлечения",
+          "name": "Катание на багги",
+          "status": "Временно недоступно",
+          "subtitle": "Уникальное решение для катания по грязевым и снежным трассам.",
+          "image": "/images/services/buggy.jpg",
+          "popup": "buggy",
+          "disabled": true
+        },
+        {
+          "category": "Развлечения",
+          "name": "Катание на мотоцикле",
+          "status": "Временно недоступно",
+          "subtitle": "Аренда мотоцикла для катания по лесу и ближайшим дорогам.",
+          "image": "/images/services/motobike.jpg",
+          "disabled": true
+        },
+        {
+          "category": "Развлечения",
+          "name": "Катание на снегоходе",
+          "status": "Временно недоступно",
+          "subtitle": "Cнегоход Arctic Cat M1100 Turbo, мощность 177 л.с., максимальная скорость 190 км/ч, 4-тактный двигатель 1100 см3 Turbo. Стоимость — 8 000 ₽ / час.",
+          "image": "/images/services/snowmobile-3.jpg",
+          "popup": "snowmobile",
+          "disabled": true
+        },
+        {
+          "category": "Развлечения",
+          "name": "Катание на велосипеде",
+          "subtitle": "Аренда включена в стоимость проживания.",
+          "image": "/images/services/bike.jpg",
+          "popup": "bikes",
+          "disabled": false
+        },
+        {
+          "category": "Развлечения",
+          "name": "Ретромобиль ГАЗ М-72",
+          "status": "Временно недоступно",
+          "subtitle": "Катание на ретро автомобиле по ближайшей округе.",
+          "image": "/images/services/retromobile.jpg",
+          "disabled": true
+        },
+        {
+          "category": "Игра",
+          "name": "Бильярд",
+          "subtitle": "Помещения со столами для игры с бильярд.",
+          "image": "/images/services/billiards.jpg",
+          "disabled": true
+        },
+        {
+          "category": "Игра",
+          "name": "Пейнтбол",
+          "subtitle": "Подготовленная площадка для игры в пейнтбол.",
+          "image": "/images/services/paintball.jpg",
+          "disabled": true
+        },
+        {
+          "category": "Спорт",
+          "name": "Пинг-понг",
+          "subtitle": "Столы для игр в пинг-понг с соперник.",
+          "image": "/images/services/ping-pong.jpg",
+          "disabled": true
+        },
+        {
+          "category": "Детям",
+          "name": "Детская площадка LECO",
+          "subtitle": "Оборудованная детская площадка c ярким дизайном.",
+          "image": "/images/services/leco.jpg",
+          "disabled": true
+        },
+        {
+          "category": "Детям",
+          "name": "Детский батут",
+          "subtitle": "На территории парка расположен большой детский батут.",
+          "image": "/images/services/trampoline.jpg",
+          "disabled": true
+        },
+        {
+          "category": "Природа",
+          "name": "Пешие прогулки",
+          "subtitle": "Семейная прогулка по лесным тропинкам или просто поход за грибами.",
+          "image": "/images/services/walking.jpg",
+          "popup": "walking",
+          "disabled": false
+        },
+        {
+          "category": "Природа",
+          "name": "Рыбалка в пруду",
+          "subtitle": "Близлежащий пруд, пригодный для летней и зимней рыбалки.",
+          "image": "/images/services/fishing.jpg",
+          "popup": "fishing",
+          "disabled": false
+        },
+        {
+          "category": "Клуб",
+          "name": "Ретривер-клуб",
+          "subtitle": "Официальный ретривер клуб с лицензией для разведения и продажи щенят с паспортами.",
+          "image": "/images/services/dogs.jpg",
+          "disabled": true
+        },
+        {
+          "category": "Плавание",
+          "name": "Термальный бассейн",
+          "subtitle": "Бассейн с подогревом, доступный для купания круглый год (в том числе зимой).",
+          "image": "/images/services/thermal-pool.jpg",
+          "disabled": true
+        }
+      ],
+      "popups": [
+        {
+          "id": "buggy",
+          "overtitle": "Развлечения",
+          "heading": "Катание на багги",
+          "image": "/images/services/buggy.jpg",
+          "paragraphs": [
+            "Уникальный проект, который вы можете испытать только в нашем парке — полноприводный багги Draft Crawler V8 с мотором от BMW (мощностью 300 лошадиных сил) и монструозными колесами размером 44 дюйма.",
+            "Этот аппарат способен резво прокатить вас по полям Дмитровских угодий и подарить массу незабываемых эмоций!"
+          ],
+          "images": [
+            "/images/services/buggy/1.jpg",
+            "/images/services/buggy/2.jpg",
+            "/images/services/buggy/3.jpg",
+            "/images/services/buggy/4.jpg",
+            "/images/services/buggy/5.jpg",
+            "/images/services/buggy/6.jpg"
+          ]
+        },
+        {
+          "id": "snowmobile",
+          "overtitle": "Развлечения",
+          "heading": "Катание на снегоходе",
+          "image": "/images/services/snowmobile-3.jpg",
+          "paragraphs": [
+            "Cнегоход Arctic Cat M1100 Turbo с мощностью 177 л.с. и максимальной скоростью 190 км/ч. Имеет 4-тактный двигатель 1100 см3 Turbo.",
+            "Никогда выдаваемая двигателями мощь не была столь высока. Единственный серийный двигатель с турбонаддувом 1100 Turbo обеспечивает максимум мощности на любой высоте над уровнем моря. Вы не потеряете ни единой силы из выдаваемых 177 л.с.",
+            "Только у нас возможно арендовать снегоход такого класса.",
+            "Стоимость — 8 000 ₽ / час."
+          ],
+          "images": []
+        },
+        {
+          "id": "walking",
+          "overtitle": "Природа",
+          "heading": "Пешие прогулки",
+          "image": "/images/services/walking.jpg",
+          "paragraphs": [
+            "Вы всегда можете выйти из домика на прогулку по тихому лесу, как одному, так и вдвоем, или даже с детьми.",
+            "На пути встречаются различные проявления природы — скопления грибов, естественные ручьи или гнезда птиц. Всё это делает прогулку по лесу абсолютно уникальной для вас."
+          ],
+          "images": [
+            "/images/services/walking/1.jpeg",
+            "/images/services/walking/2.jpeg",
+            "/images/services/walking/3.jpeg",
+            "/images/services/walking/4.jpeg",
+            "/images/services/walking/5.jpeg",
+            "/images/services/walking/6.jpeg",
+            "/images/services/walking/7.jpeg",
+            "/images/services/walking/8.jpeg",
+            "/images/services/walking/9.jpeg",
+            "/images/services/walking/10.jpeg",
+            "/images/services/walking/11.jpeg",
+            "/images/services/walking/12.jpeg",
+            "/images/services/walking/13.jpeg",
+            "/images/services/walking/14.jpeg",
+            "/images/services/walking/15.jpeg",
+            "/images/services/walking/16.jpeg",
+            "/images/services/walking/9.jpeg",
+            "/images/dogs/20.jpeg",
+            "/images/dogs/21.jpeg",
+            "/images/dogs/22.jpeg",
+            "/images/dogs/23.jpeg"
+          ]
+        },
+        {
+          "id": "bikes",
+          "overtitle": "Развлечения",
+          "heading": "Катание на велосипедах",
+          "image": "/images/services/bikes/bike-1.jpg",
+          "paragraphs": [
+            "В ParkSever предоставляется без доплат два велосипеда, что бы покататься по округе STELS и BMW",
+            "Наслаждаемся тёплыми деньками с удовольствием!"
+          ],
+          "images": [
+            "/images/services/bikes/bike-2.jpg",
+            "/images/services/bikes/bike-3.jpg",
+            "/images/services/bikes/bike-4.jpg",
+            "/images/services/bikes/bike-5.jpg"
+          ]
+        },
+        {
+          "id": "fishing",
+          "overtitle": "Природа",
+          "heading": "Рыбалка в пруду",
+          "image": "/images/services/fishing/1.jpg",
+          "paragraphs": [
+            "В ParkSever есть небольшой пруд, который заселен рыбками, в том числе и \"золотыми\".",
+            "Можно порыбачить (удочки предоставляются без доплат) или просто послушать природу, которая весной особенно шумная.",
+            "Иногда прилетают уточки, но к сожалению, собаки любят их гонять."
+          ],
+          "images": [
+            "/images/services/fishing/1.jpg",
+            "/images/services/fishing/2.jpg"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dogs",
+      "kind": "dogs",
+      "anchor": "retriver-club",
+      "disabled": false,
+      "blocks": [
+        {
+          "type": "overtitle",
+          "text": "Развлечения"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "«Золото» в Парке. Golden retriever"
+        },
+        {
+          "type": "subtitle",
+          "text": "В Парке Север живут собаки породы Золотистый ретривер, исключительно для любви и дружбы между человеком и «четверолапыми собратьями»."
+        },
+        {
+          "type": "subtitle",
+          "text": "«Лохматые антидепрессанты» подарят Вам свое внимание, всю свою нежность и ласку совершенно бескорыстно и с большой радостью. Играйте, веселитесь и фотографируйтесь с ними, или прогуляйтесь вместе в лесу — и они сделают Ваш отдых на природе незабываемым."
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": "Наши собаки"
+        }
+      ],
+      "items": [
+        {
+          "name": "Рыжуля",
+          "born": "19.12.2023 г.",
+          "image": "/images/dogs/Рыжуля.jpg",
+          "popup": "dog-ryzhulya",
+          "fullName": "Рыжуля (по документам: Анима, перевод с lat. - душа )",
+          "text": [
+            "Кличка: Рыжуля (по документам: Анима, перевод с lat. - душа )",
+            "Дата рождения: 19.12.2023 г.",
+            "Самая быстрая и шустрая, и самая маленькая, за счет чего выигрывает всегда в догонялки, когда играет со своими подругами-собаками.",
+            "Отличается насыщенным рыжим окрасом, за счет чего и получила свою кличку.",
+            "Не может быть одна, самая социальная. Иногда ее можно спутать по характеру с кошкой, которая любит лечь на ручках, чтоб погладиться и урчать. Ей обязательно нужен рядом либо человек, либо подруга, немного пугливая."
+          ],
+          "images": ["/images/dogs/Рыжуля.jpg"]
+        },
+        {
+          "name": "Гаечка",
+          "born": "19.12.2023 г.",
+          "image": "/images/dogs/Гайка.jpg",
+          "popup": "dog-gayka",
+          "fullName": "Гаечка (по документам: Аморозо, перевод с lat. – нежно, музыкальный термин)",
+          "text": [
+            "Кличка: Гаечка (по документам: Аморозо, перевод с lat. – нежно, музыкальный термин)",
+            "Дата рождения: 19.12.2023 г.",
+            "Самая уравновешенная, ничего не боится – ни выстрелов, ни громких звуков. Очень самодостаточная и уверенная в себе личность. Безумно ласковая и нежная, крупная игривая девочка. Очень разбалована гостями, поэтому любит обниматься))",
+            "Гаечка предпочитает ночевать и охранять гостей.",
+            "Носит всегда что-то в зубах, чаще дрова. Носит, потому что считает, что так правильно и так надо, а не потому, что хочет поиграть с Вами."
+          ],
+          "images": ["/images/dogs/Гайка.jpg"]
+        },
+        {
+          "name": "Бэлла",
+          "born": "30.08.2019 г.",
+          "image": "/images/dogs/6.jpeg",
+          "popup": "dog-bella",
+          "fullName": "Бэлла (по документам: Мэриленд Мэджик Умберто Роуз)",
+          "text": [
+            "Кличка: Бэлла (по документам: Мэриленд Мэджик Умберто Роуз)",
+            "Дата рождения: 30.08.2019 г.",
+            "Первопроходец в нашей семье, покоривший своими породистыми качествами - добротой, безграничной лаской, любовью и умом.",
+            "Обожает играть в мячик, палочку и снежки.",
+            "Самая спокойная по темпераменту и осторожная. Очень аккуратна к окружающим, всегда спокойно подождёт своей очереди, когда её погладят! Если её угощают, а нежно возьмёт еду губками.",
+            "Не любит плавать, но обожает полежать в луже. Ооочень ценит, когда ей чешут попу и ляшечки - и поэтому чаще встаёт сразу задом к Вам, чтоб соответственно чесали."
+          ],
+          "images": ["/images/dogs/6.jpeg"]
+        }
+      ],
+      "gallery": [
+        {
+          "src": "/images/dogs/1.jpeg",
+          "disabled": false
+        },
+        {
+          "src": "/images/dogs/2.jpeg",
+          "disabled": true
+        },
+        {
+          "src": "/images/dogs/3.jpeg",
+          "disabled": true
+        },
+        {
+          "src": "/images/dogs/4.jpeg",
+          "disabled": true
+        },
+        {
+          "src": "/images/dogs/5.jpeg",
+          "disabled": true
+        },
+        {
+          "src": "/images/dogs/6.jpeg",
+          "disabled": false
+        },
+        {
+          "src": "/images/dogs/7.jpeg",
+          "disabled": true
+        },
+        {
+          "src": "/images/dogs/10.jpeg",
+          "disabled": true
+        },
+        {
+          "src": "/images/dogs/9.jpeg",
+          "disabled": true
+        },
+        {
+          "src": "/images/dogs/8.jpeg",
+          "disabled": true
+        },
+        {
+          "src": "/images/dogs/11.jpeg",
+          "disabled": true
+        },
+        {
+          "src": "/images/dogs/12.jpeg",
+          "disabled": false
+        },
+        {
+          "src": "/images/dogs/13.jpeg",
+          "disabled": true
+        },
+        {
+          "src": "/images/dogs/14.jpeg",
+          "disabled": true
+        },
+        {
+          "src": "/images/dogs/15.jpeg",
+          "disabled": true
+        },
+        {
+          "src": "/images/dogs/16.jpeg",
+          "disabled": true
+        },
+        {
+          "src": "/images/dogs/17.jpeg",
+          "disabled": false
+        },
+        {
+          "src": "/images/dogs/18.jpeg",
+          "disabled": true
+        },
+        {
+          "src": "/images/dogs/19.jpeg",
+          "disabled": false
+        },
+        {
+          "src": "/images/dogs/20.jpeg",
+          "disabled": true
+        },
+        {
+          "src": "/images/dogs/21.jpeg",
+          "disabled": true
+        },
+        {
+          "src": "/images/dogs/22.jpeg",
+          "disabled": true
+        },
+        {
+          "src": "/images/dogs/23.jpeg",
+          "disabled": false
+        },
+        {
+          "src": "/images/dogs/24.jpg",
+          "disabled": false
+        },
+        {
+          "src": "/images/dogs/25.jpg",
+          "disabled": false
+        },
+        {
+          "src": "/images/dogs/26.jpg",
+          "disabled": false
+        },
+        {
+          "src": "/images/dogs/27.jpg",
+          "disabled": false
+        },
+        {
+          "src": "/images/dogs/28.jpg",
+          "disabled": false
+        },
+        {
+          "src": "/images/dogs/29.jpg",
+          "disabled": false
+        }
+      ]
+    },
+    {
+      "id": "about-animals",
+      "kind": "about-animals",
+      "anchor": "about-animals",
+      "disabled": false,
+      "blocks": [
+        {
+          "type": "overtitle",
+          "text": "Природа"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Животный мир"
+        },
+        {
+          "type": "subtitle",
+          "text": "Весь окружающий лес обладает обширным животным миром и при прогулке можно встретить самых разных животных — лося, кабана, косулю, барсука, зайца и других."
+        },
+        {
+          "type": "button",
+          "text": "Подробнее",
+          "href": "/about#animals",
+          "style": "outline"
+        },
+        {
+          "type": "gallery",
+          "images": [
+            "/images/animals/1.jpeg",
+            "/images/animals/2.jpeg",
+            "/images/animals/3.jpeg",
+            "/images/animals/4.jpeg",
+            "/images/animals/6.jpeg",
+            "/images/animals/7.jpeg",
+            "/images/animals/9.jpeg",
+            "/images/animals/10.jpeg"
+          ]
+        }
+      ],
+      "gallery": [
+        {
+          "src": "/images/animals/1.jpeg",
+          "disabled": false
+        },
+        {
+          "src": "/images/animals/2.jpeg",
+          "disabled": false
+        },
+        {
+          "src": "/images/animals/3.jpeg",
+          "disabled": false
+        },
+        {
+          "src": "/images/animals/4.jpeg",
+          "disabled": false
+        },
+        {
+          "src": "/images/animals/5.jpeg",
+          "disabled": true
+        },
+        {
+          "src": "/images/animals/6.jpeg",
+          "disabled": false
+        },
+        {
+          "src": "/images/animals/7.jpeg",
+          "disabled": false
+        },
+        {
+          "src": "/images/animals/9.jpeg",
+          "disabled": false
+        },
+        {
+          "src": "/images/animals/10.jpeg",
+          "disabled": false
+        }
+      ]
+    },
+    {
+      "ref": "about"
+    },
+    {
+      "ref": "contact"
+    },
+    {
+      "ref": "map"
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "company": "Парк Север",
+  "domain": "park-sever.ru",
+  "contacts": {
+    "phone": "+7 929 606-00-45",
+    "phoneHref": "tel:+79296060045",
+    "email": "park-sever@inbox.ru",
+    "emailHref": "mailto:park-sever@inbox.ru",
+    "address": "Московская область, Дмитровский городской округ, деревня Василёво, 1",
+    "whatsapp": "https://wa.me/79296060045",
+    "bookingHref": "?znms_widget_open=5558"
+  },
+  "socials": [
+    { "type": "vk", "href": "https://vk.com/park_sever" },
+    { "type": "whatsapp", "href": "https://wa.me/79296060045" },
+    { "type": "tiktok", "href": "https://tiktok.com/@park_sever" },
+    { "type": "instagram", "href": "https://www.instagram.com/parksever" },
+    { "type": "telegram", "href": "https://t.me/park_sever" },
+    { "type": "youtube", "href": "https://youtube.com/@ParkSever" },
+    { "type": "rutube", "href": "https://rutube.ru/channel/34216981/" }
+  ],
+  "requisites": {
+    "entity": "ИП Дерюгин П.С.",
+    "inn": "773170493306",
+    "note": "Деятельность ведется в рамках развития Сельского туризма в соответствии с ФЗ от 14.10.2024 г. №346-ФЗ2 и ФЗ от 11.07.2003 №74."
+  },
+  "integrations": {
+    "yandexMetrika": { "id": "99962092" },
+    "booking": {
+      "provider": "bronirui-online (znms / модуль бронирования отеля)",
+      "scriptSrc": "//widget.bronirui-online.ru/js/app.js",
+      "globalObject": "window.znmsWidget",
+      "container": "#znms-widget-1",
+      "moduleId": 5558,
+      "openDeepLink": "?znms_widget_open=5558",
+      "initConfig": {
+        "moduleId": 5558,
+        "index": 0,
+        "widget": { "position": { "top": "100px" }, "mobile": { "absolute": false, "position": { "top": "100px" } } },
+        "button": { "position": { "bottom": "50px", "left": "50px", "right": "50px" } }
+      },
+      "note": "Контейнер #znms-widget-1 на главной (slider). init вызывается в booking.js. Все CTA «Забронировать» = ссылка с openDeepLink — виджет сам открывает модуль 5558. КРИТИЧНО сохранить."
+    },
+    "yandexMaps": {
+      "org": "145451177721",
+      "iframeSrc": "https://yandex.ru/map-widget/v1/?ll=37.814914%2C56.456567&mode=search&oid=145451177721&ol=biz&z=16.9"
+    },
+    "jivo": {
+      "active": false,
+      "trigger": "jivo_api.open()",
+      "note": "Вызывается только из chat.pug, который НЕ подключён ни на одной странице → чат сейчас неактивен. Если нужен — добавить загрузочный скрипт Jivo с ID виджета (в исходниках его нет)."
+    },
+    "payment": {
+      "provider": "Alfa-Bank (RBS)",
+      "iframeSrc": "https://alfa.rbsuat.com/ab/shortlink/QT7ajAJB",
+      "env": "TEST",
+      "warning": "rbsuat.com = UAT/тестовая песочница RBS. На проде платежи НЕ проходят. Заменить на боевой шлюз (alfa.rbs.ru / payment.alfabank.ru) перед запуском."
+    },
+    "tour3d": {
+      "provider": "share360.ru",
+      "iframeSrc": "https://share360.ru/temp/ps/",
+      "note": "URL содержит /temp/ — уточнить постоянную ссылку у share360."
+    },
+    "vkNews": {
+      "openapi": "https://vk.com/js/api/openapi.js?168",
+      "widget": "VK Groups",
+      "note": "Страницу «Новости» оставляем, VK-виджет заменим позже своим."
+    },
+    "dropped": [
+      "Instagram-лента (jquery.instagramFeed) — API сломан, удалить",
+      "Отзывы Яндекс.Карт (reviews.php + phpQuery, scraping) — удалить, делаем свой блок отзывов",
+      "fullpage.js, animate.css, pannellum, PHPMailer — не переносим"
+    ]
+  }
+}

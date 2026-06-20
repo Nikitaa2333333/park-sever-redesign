@@ -1,0 +1,78 @@
+{
+  "id": "contacts",
+  "route": "/contacts",
+  "seo": {
+    "title": "Контакты"
+  },
+  "sections": [
+    {
+      "id": "info",
+      "kind": "info",
+      "blocks": [
+        { "type": "overtitle", "text": "Контакты" },
+        { "type": "heading", "level": 2, "text": "Как нас найти" }
+      ],
+      "items": [
+        {
+          "label": "Адрес",
+          "text": "Московская область, Дмитровский городской округ, деревня Василёво, 1"
+        },
+        {
+          "label": "Телефон",
+          "text": "+7 929 606-00-45",
+          "href": "tel:+79296060045"
+        },
+        {
+          "label": "Email",
+          "text": "park-sever@inbox.ru",
+          "href": "mailto:park-sever@inbox.ru"
+        },
+        {
+          "label": "Социальные сети",
+          "socials": [
+            { "type": "vk", "href": "https://vk.com/park_sever" },
+            { "type": "whatsapp", "href": "https://wa.me/79296060045" },
+            { "type": "tiktok", "href": "https://tiktok.com/@park_sever" },
+            { "type": "instagram", "href": "https://www.instagram.com/parksever" },
+            { "type": "telegram", "href": "https://t.me/park_sever" },
+            { "type": "youtube", "href": "https://youtube.com/@ParkSever" },
+            { "type": "rutube", "href": "https://rutube.ru/channel/34216981/" }
+          ]
+        }
+      ],
+      "media": [
+        {
+          "type": "iframe",
+          "src": "https://yandex.ru/map-widget/v1/?ll=37.814914%2C56.456567&mode=search&oid=145451177721&ol=biz&z=16.9",
+          "title": "Карта"
+        }
+      ]
+    },
+    {
+      "id": "road-schema",
+      "kind": "road-schema",
+      "disabled": true,
+      "blocks": [
+        { "type": "heading", "level": 3, "text": "Схема проезда около деревни Василево" },
+        { "type": "subtitle", "text": "Через саму деревню Василево, как ведет навигатор, проезда нет. Перед первым домом (где стоит строительная техника) есть поворот налево — эта дорога ведет к нам. Далее, за деревней (когда объезжаете ее) дорога пролегает справа относительно поля, вдоль линии ЛЭП. Через овраг к нам проезда нет, необходимо держаться левее. Проезжая вдоль столбов ЛЭП вы упретесь в ворота — это начинается территория Парка Север, где Вас уже встретят." },
+        { "type": "image", "src": "/images/map.png", "href": "/images/map.png" }
+      ]
+    },
+    {
+      "id": "bank-details",
+      "kind": "bank-details",
+      "blocks": [
+        { "type": "heading", "level": 3, "text": "Реквизиты" },
+        {
+          "type": "html",
+          "raw": "<table><tr><td>Наименование</td><td>ИП Дерюгин П.С.</td></tr><tr><td>ИНН</td><td>773170493306</td></tr></table>"
+        },
+        { "type": "paragraph", "text": "Деятельность ведется в рамках развития Сельского туризма в соответствии с ФЗ от 14.10.2024 г. №346-ФЗ2 и ФЗ от 11.07.2003 №74." }
+      ],
+      "requisites": {
+        "Наименование": "ИП Дерюгин П.С.",
+        "ИНН": "773170493306"
+      }
+    }
+  ]
+}

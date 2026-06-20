@@ -1,0 +1,19 @@
+{
+  "id": "entertainment-summary",
+  "kind": "entertainment",
+  "anchor": "entertainment",
+  "blocks": [
+    { "type": "overtitle", "text": "Развлечения" },
+    { "type": "heading", "level": 2, "text": "Чем заняться" },
+    { "type": "paragraph", "text": "Для посетителей нашего парка доступны различные виды развлечений и отдыха, такие как катание на багги, мотоцикле, снегоходе, велосипеде, ретроавтомобиле, а также пешие прогулки по лесу, рыбалка в пруду и знакомство с щенками из ретривер-клуба. В дополнение к этому, окружающий лес обладает обширным животным миром и при прогулке можно встретить лося, кабана, косулю, барсука и других животных." },
+    { "type": "button", "text": "Подробнее", "href": "/entertainment", "style": "outline" },
+    {
+      "type": "gallery",
+      "images": [
+        "/images/services/buggy.jpg",
+        "/images/services/walking.jpg",
+        "/images/services/animals.jpeg"
+      ]
+    }
+  ]
+}

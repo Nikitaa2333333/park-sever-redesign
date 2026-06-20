@@ -1,0 +1,314 @@
+{
+  "id": "home",
+  "route": "/",
+  "seo": {
+    "title": "Парк Север | Официальный сайт"
+  },
+  "options": {
+    "transparentHeader": true
+  },
+  "sections": [
+    {
+      "id": "slider",
+      "kind": "slider",
+      "anchor": "slider",
+      "disabled": false,
+      "blocks": [
+        {
+          "type": "video",
+          "src": "/videos/summer-desktop.mp4",
+          "poster": "/images/summer-desktop.png",
+          "variant": "desktop",
+          "attrs": {
+            "autoplay": true,
+            "loop": true,
+            "muted": true,
+            "playsinline": true
+          }
+        },
+        {
+          "type": "video",
+          "src": "/videos/summer-mobile.mp4",
+          "poster": "/images/summer-mobile.png",
+          "variant": "mobile",
+          "attrs": {
+            "autoplay": true,
+            "loop": true,
+            "muted": true,
+            "playsinline": true
+          }
+        },
+        {
+          "type": "image",
+          "src": "/images/main.jpeg?2",
+          "variant": "desktop",
+          "disabled": true
+        },
+        {
+          "type": "image",
+          "src": "/images/main-mobile.jpeg?2",
+          "variant": "mobile",
+          "disabled": true
+        },
+        {
+          "type": "paragraph",
+          "text": "Деятельность ведется в рамках программы развития Сельского туризма"
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "Park Sever – эстетика отдыха человека на природе"
+        },
+        {
+          "type": "link",
+          "text": "Волнующий",
+          "href": "#"
+        },
+        {
+          "type": "link",
+          "text": "Беспрецедентно инновационный",
+          "href": "#"
+        },
+        {
+          "type": "paragraph",
+          "text": "Затерянность ощути как счастье...",
+          "disabled": true
+        },
+        {
+          "type": "html",
+          "raw": "<div id=\"znms-widget-1\"></div>"
+        }
+      ]
+    },
+    {
+      "id": "welcome",
+      "kind": "welcome",
+      "anchor": "welcome",
+      "disabled": false,
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Приветствуем Вас в Парк Север"
+        },
+        {
+          "type": "paragraph",
+          "text": "Наши только что построенные дома интуитивно спроектированы для комфорта, успокоения, удовольствия и волнения, представляют собой оазис спокойствия за границами шумного города."
+        },
+        {
+          "type": "paragraph",
+          "text": "Территория Парк Север, площадью 12,4 га, на краю огромных лесных кварталов напомнит, что такое оглушающая забытая тишина. Соседей нет!"
+        },
+        {
+          "type": "paragraph",
+          "text": "Проснитесь и насладитесь захватывающими видами."
+        },
+        {
+          "type": "paragraph",
+          "text": "Почувствуйте себя как дома, зная, что все, что вам нужно и чего вы хотите находится у вашего порога."
+        },
+        {
+          "type": "paragraph",
+          "text": "Поразительная эстетика, демонстративно стирает грань между искусством, архитектурой и природой."
+        },
+        {
+          "type": "paragraph",
+          "text": "Насладитесь беспрецедентным комфортом с исключительным сервисом в наших стеклянных домах, где каждая деталь, продуманная до мелочей, шепчет любовь."
+        },
+        {
+          "type": "button",
+          "text": "Подробнее",
+          "href": "/accommodation/house-1",
+          "style": "outline"
+        },
+        {
+          "type": "gallery",
+          "images": [
+            "/images/welcome/1.jpg?4",
+            "/images/welcome/2.jpg?4",
+            "/images/welcome/3.jpg?4"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "main-menu",
+      "kind": "main-menu",
+      "anchor": "main-menu",
+      "disabled": false,
+      "blocks": [
+        {
+          "type": "overtitle",
+          "text": "Услуги парка"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Побалуйте себя и свои чувства"
+        },
+        {
+          "type": "subtitle",
+          "text": "Для гостей парка доступен стеклянный гостевой домик с голосовым управлением через Алису, а также различные развлечения, спорт и активный отдых на открытом воздухе."
+        }
+      ],
+      "items": [
+        {
+          "title": "Развлечения с экстримом",
+          "href": "/entertainment",
+          "image": "/images/main-menu/1.jpeg",
+          "disabled": true
+        },
+        {
+          "title": "Ферма «Благородный север»",
+          "href": "https://t.me/kfhNoble",
+          "image": "/images/main-menu/deers.jpg"
+        },
+        {
+          "title": "Эксклюзивные дома с уникальным интерьером",
+          "href": "/accommodation/house-1",
+          "image": "/images/main-menu/2.jpeg"
+        },
+        {
+          "title": "Прогулки по первозданной природе",
+          "href": "/about",
+          "image": "/images/main-menu/3.jpeg"
+        },
+        {
+          "title": "Общение с животными. Наш ретривер-клуб",
+          "href": "/entertainment#retriver-club",
+          "image": "/images/dogs/14.jpeg"
+        }
+      ]
+    },
+    {
+      "id": "advantages",
+      "kind": "advantages",
+      "anchor": "advantages",
+      "disabled": false,
+      "blocks": [
+        {
+          "type": "overtitle",
+          "text": "Удобства"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Почему стоит выбрать нас"
+        },
+        {
+          "type": "subtitle",
+          "text": "Оставьте позади повседневность и суету. У нас вы окунетесь в свежий воздух лесов и полей, насладитесь потрясающими пейзажами, услышите забытые звуки природы. А инновационные технологии обеспечат Вас безмятежным уединением."
+        }
+      ],
+      "items": [
+        {
+          "image": "/images/advantages/1.jpeg",
+          "text": "Технологии интегрированные в дизайн наших домов"
+        },
+        {
+          "image": "/images/advantages/2.jpeg?2",
+          "text": "Бесплатный Wi-Fi 6 категории последнего поколения cat6 со скоростью до 150 Мбит/сек"
+        },
+        {
+          "image": "/images/advantages/3.jpeg?2",
+          "text": "Бесшовный роуминг (переход между точками без потери сигнала) и оптоволоконная сеть (уверенный сигнал в любой точке парка)"
+        },
+        {
+          "image": "/images/advantages/4.jpeg",
+          "text": "Система «Умного дома» с голосовым управлением"
+        }
+      ]
+    },
+    {
+      "ref": "about"
+    },
+    {
+      "id": "reviews",
+      "kind": "reviews",
+      "anchor": "reviews",
+      "disabled": false,
+      "blocks": [
+        {
+          "type": "overtitle",
+          "text": "Отзывы"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Что про нас говорят"
+        },
+        {
+          "type": "link",
+          "text": "Смотреть все",
+          "href": "#"
+        }
+      ]
+    },
+    {
+      "ref": "contact"
+    },
+    {
+      "ref": "map"
+    },
+    {
+      "id": "description",
+      "kind": "description",
+      "disabled": true
+    },
+    {
+      "id": "advantages-old",
+      "kind": "advantages-old",
+      "disabled": true
+    },
+    {
+      "id": "reservation",
+      "kind": "reservation",
+      "disabled": true
+    },
+    {
+      "id": "services",
+      "kind": "services",
+      "disabled": true
+    },
+    {
+      "id": "quality",
+      "kind": "quality",
+      "disabled": true
+    },
+    {
+      "id": "technology",
+      "kind": "technology",
+      "disabled": true
+    },
+    {
+      "id": "prices",
+      "kind": "prices",
+      "disabled": true
+    },
+    {
+      "id": "equipment",
+      "kind": "equipment",
+      "disabled": true
+    },
+    {
+      "id": "brands",
+      "kind": "brands",
+      "disabled": true
+    },
+    {
+      "id": "photos",
+      "kind": "photos",
+      "disabled": true
+    },
+    {
+      "id": "faq",
+      "kind": "faq",
+      "disabled": true
+    },
+    {
+      "id": "chat",
+      "kind": "chat",
+      "disabled": true
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "id": "contact",
+  "kind": "contact",
+  "anchor": "contact",
+  "blocks": [
+    { "type": "overtitle", "text": "Связаться с нами" },
+    { "type": "heading", "level": 2, "text": "Забронировать дом" },
+    { "type": "subtitle", "text": "Свяжитесь с нами любым удобным способом (по телефону или через WhatsApp), чтобы мы ответили на ваши вопросы и помогли забронировать домик на нужные даты. Также вы можете самостоятельно оформить бронь через систему бронирования." },
+    { "type": "button", "text": "Забронировать", "href": "?znms_widget_open=5558", "style": "primary" },
+    { "type": "button", "text": "Написать в WhatsApp", "href": "https://wa.me/79296060045", "style": "whatsapp" }
+  ],
+  "phone": {
+    "label": "Позвонить по телефону:",
+    "text": "+7 929 606-00-45",
+    "href": "tel:+79296060045"
+  }
+}

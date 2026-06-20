@@ -1,0 +1,242 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { getPage, site, reviews, withBase } from '../lib/content';
+
+const page = getPage('home');
+const byId: Record<string, any> = Object.fromEntries(page.sections.map((s: any) => [s.id, s]));
+
+const blocksOf = (s: any, type: string) => (s?.blocks ?? []).filter((b: any) => b.type === type && !b.disabled);
+const blockOf = (s: any, type: string) => blocksOf(s, type)[0];
+
+// — hero / slider —
+const slider = byId['slider'];
+const heroVideos = (slider?.blocks ?? []).filter((b: any) => b.type === 'video' && !b.disabled);
+const heroDesktop = heroVideos.find((v: any) => v.variant === 'desktop');
+const heroMobile = heroVideos.find((v: any) => v.variant === 'mobile');
+const heroEyebrow = blockOf(slider, 'paragraph')?.text;
+const heroTitle = blockOf(slider, 'heading')?.text;
+const heroLinks = blocksOf(slider, 'link');
+
+// — welcome —
+const welcome = byId['welcome'];
+const welcomeTitle = blockOf(welcome, 'heading')?.text;
+const welcomeParas = blocksOf(welcome, 'paragraph');
+const welcomeBtn = blockOf(welcome, 'button');
+const welcomeGallery = blockOf(welcome, 'gallery')?.images ?? [];
+
+// — main-menu —
+const mm = byId['main-menu'];
+const mmItems = (mm?.items ?? []).filter((i: any) => !i.disabled);
+
+// — advantages —
+const adv = byId['advantages'];
+const advItems = (adv?.items ?? []).filter((i: any) => !i.disabled);
+
+// — about / contact / map (refs) —
+const about = byId['about'];
+const reviewsSec = byId['reviews'];
+const contact = byId['contact'];
+const map = byId['map'];
+
+const ot = (s: any) => blockOf(s, 'overtitle')?.text;
+const hd = (s: any) => blockOf(s, 'heading')?.text;
+const st = (s: any) => blockOf(s, 'subtitle')?.text;
+
+const navMenu = [
+  { t: 'Главная', href: withBase('/') },
+  { t: 'Дома', href: withBase('/accommodation/house-1') },
+  { t: 'Искусство отдыха', href: '#' },
+  { t: 'Атмосфера для двоих', href: '#' },
+  { t: 'Наш мир', href: withBase('/about') },
+  { t: 'Истории', href: withBase('/news') },
+];
+const booking = site.contacts.bookingHref;
+const c = site.contacts;
+const reviewItems = reviews?.items ?? [];
+---
+<SiteLayout title={page.seo.title}>
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="wrap">
+      <a class="nav__logo" href={withBase('/')}>ПАРК СЕВЕР</a>
+      <div class="nav__menu">
+        {navMenu.map((m) => <a href={m.href}>{m.t}</a>)}
+      </div>
+      <a class="nav__book" href={booking}>Забронировать</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero__media">
+      {heroDesktop && (
+        <video class="video-desktop" autoplay loop muted playsinline poster={withBase(heroDesktop.poster)}>
+          <source src={withBase(heroDesktop.src)} type="video/mp4" />
+        </video>
+      )}
+      {heroMobile && (
+        <video class="video-mobile" autoplay loop muted playsinline poster={withBase(heroMobile.poster)}>
+          <source src={withBase(heroMobile.src)} type="video/mp4" />
+        </video>
+      )}
+    </div>
+    <div class="hero__scrim"></div>
+    <div class="wrap">
+      {heroEyebrow && <div class="hero__eyebrow">{heroEyebrow}</div>}
+      <h1 class="h1">{heroTitle}</h1>
+      {heroLinks.length > 0 && (
+        <div class="hero__links">
+          {heroLinks.map((l: any) => <a href={withBase(l.href)}>{l.text}</a>)}
+        </div>
+      )}
+      <div class="hero__cta">
+        <a class="btn btn--light" href={booking}>Забронировать</a>
+        <a class="btn btn--outline-light" href={withBase('/accommodation/house-1')}>Смотреть домики</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- WELCOME -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="split2">
+        <div>
+          <div class="eyebrow" style="margin-bottom:14px">Добро пожаловать</div>
+          <h2 class="h2">{welcomeTitle}</h2>
+          {welcomeParas.map((p: any) => <p class="body" style="margin-top:14px">{p.text}</p>)}
+          {welcomeBtn && <a class="btn btn--ghost" style="margin-top:24px" href={withBase(welcomeBtn.href)}>{welcomeBtn.text}</a>}
+        </div>
+        {welcomeGallery.length > 0 && (
+          <div class="gallery">
+            {welcomeGallery.map((src: string) => <a href={withBase(src)}><img src={withBase(src)} alt="Парк Север" loading="lazy" /></a>)}
+          </div>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN MENU -->
+  <section class="sec sec--navy">
+    <div class="wrap">
+      <div class="shead">
+        {ot(mm) && <div class="eyebrow">{ot(mm)}</div>}
+        <h2 class="h2">{hd(mm)}</h2>
+        {st(mm) && <p class="sub">{st(mm)}</p>}
+      </div>
+      <div class="grid3" style="margin-top:34px">
+        {mmItems.map((i: any) => (
+          <a class="card" href={withBase(i.href)}>
+            <div class="card__pic" style="height:210px"><img src={withBase(i.image)} alt={i.title} loading="lazy" /></div>
+            <div class="card__body">
+              <div class="card__title">{i.title}</div>
+              <span class="link-gold" style="margin-top:10px;display:inline-block">Подробнее →</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ADVANTAGES -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="shead">
+        {ot(adv) && <div class="eyebrow">{ot(adv)}</div>}
+        <h2 class="h2">{hd(adv)}</h2>
+        {st(adv) && <p class="sub">{st(adv)}</p>}
+      </div>
+      <div class="grid4" style="margin-top:34px">
+        {advItems.map((i: any) => (
+          <div class="card">
+            <div class="card__pic" style="height:160px"><img src={withBase(i.image)} alt="" loading="lazy" /></div>
+            <div class="card__body"><p class="card__text">{i.text}</p></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT (navy) -->
+  <section class="sec sec--navy">
+    <div class="wrap">
+      <div class="shead">
+        {ot(about) && <div class="eyebrow">{ot(about)}</div>}
+        {st(about) && <h2 class="h2">{st(about)}</h2>}
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEWS -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="shead">
+        {ot(reviewsSec) && <div class="eyebrow">{ot(reviewsSec)}</div>}
+        <h2 class="h2">{hd(reviewsSec)}</h2>
+      </div>
+      {reviewItems.length > 0 ? (
+        <div class="grid3" style="margin-top:30px">
+          {reviewItems.map((r: any) => (
+            <div class="rcard">
+              <p class="rcard__q">«{r.text}»</p>
+              <div class="rcard__a">— {r.author}</div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div class="empty-note" style="margin-top:24px">Скоро здесь появятся отзывы наших гостей.</div>
+      )}
+    </div>
+  </section>
+
+  <!-- CONTACT + MAP -->
+  <section class="sec sec--navy">
+    <div class="wrap">
+      <div id="znms-widget-1" style="margin-bottom:40px"></div>
+      <div class="cmap">
+        <div class="cbox">
+          {ot(contact) && <div class="eyebrow">{ot(contact)}</div>}
+          <h2 class="h2" style="margin-top:14px">{hd(contact)}</h2>
+          {st(contact) && <p class="body" style="margin-top:14px">{st(contact)}</p>}
+          <p><a class="tel" href={c.phoneHref}>{c.phone}</a></p>
+          <p>{c.address}</p>
+          <div class="hero__cta" style="margin-top:18px;justify-content:flex-start">
+            <a class="btn btn--light" href={booking}>Забронировать</a>
+            <a class="btn btn--wa" href={c.whatsapp}>Написать в WhatsApp</a>
+          </div>
+        </div>
+        <div class="map-frame">
+          {blockOf(map, 'iframe') && (
+            <iframe src={blockOf(map, 'iframe').src} title={blockOf(map, 'iframe').title} loading="lazy"></iframe>
+          )}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="foot">
+    <div class="wrap">
+      <div class="foot__cols">
+        <div>
+          <div class="foot__logo">ПАРК СЕВЕР</div>
+          <p class="body" style="color:#cfd6d2;margin-top:12px;max-width:40ch">Загородный парк со стеклянными гостевыми домиками в 80 км от Москвы.</p>
+          <div class="socials">
+            {site.socials.map((s: any) => <a href={s.href}>{s.type}</a>)}
+          </div>
+        </div>
+        <div>
+          <h4>Разделы</h4>
+          {navMenu.slice(1).map((m) => <a href={m.href}>{m.t}</a>)}
+        </div>
+        <div>
+          <h4>Контакты</h4>
+          <a href={c.phoneHref}>{c.phone}</a>
+          <a href={c.emailHref}>{c.email}</a>
+          <a href={c.whatsapp}>WhatsApp</a>
+          <span style="display:block;padding-top:8px;color:#cfd6d2;font-family:var(--font-head);font-size:14px">{c.address}</span>
+        </div>
+      </div>
+      <div class="foot__cp">© {site.company} · {site.requisites.entity} · {site.requisites.note}</div>
+    </div>
+  </footer>
+</SiteLayout>

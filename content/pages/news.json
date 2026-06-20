@@ -1,0 +1,23 @@
+{
+  "id": "news",
+  "route": "/news",
+  "seo": {
+    "title": "Новости"
+  },
+  "sections": [
+    {
+      "id": "news",
+      "kind": "news",
+      "blocks": [
+        {
+          "type": "html",
+          "raw": "<div id=\"vk_groups\"></div>"
+        }
+      ],
+      "widget": {
+        "type": "vk-groups",
+        "container": "vk_groups"
+      }
+    }
+  ]
+}

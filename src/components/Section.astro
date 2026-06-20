@@ -1,0 +1,30 @@
+---
+import Block from './Block.astro';
+const { section: s } = Astro.props;
+const blocks = (s.blocks || []).filter((b: any) => !b.disabled);
+const items = (s.items || []).filter((i: any) => !i.disabled);
+const phone = s.phone;
+---
+{!s.disabled && (
+  <section id={s.anchor} class={`sec sec-${s.kind}`}>
+    <div class="container">
+      {blocks.map((b: any) => <Block block={b} />)}
+
+      {items.length > 0 && (
+        <div class="items">
+          {items.map((it: any) => (
+            <a class="item" href={it.href || undefined}>
+              {it.image && <img src={it.image} alt={it.title || ''} loading="lazy" />}
+              {it.title && <h3>{it.title}</h3>}
+              {it.text && <p>{it.text}</p>}
+            </a>
+          ))}
+        </div>
+      )}
+
+      {phone && (
+        <a class="phone" href={phone.href}>{phone.label} <strong>{phone.text}</strong></a>
+      )}
+    </div>
+  </section>
+)}

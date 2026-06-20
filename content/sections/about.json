@@ -1,0 +1,9 @@
+{
+  "id": "about",
+  "kind": "about",
+  "anchor": "about",
+  "blocks": [
+    { "type": "overtitle", "text": "О парке" },
+    { "type": "subtitle", "text": "«Парк Север» — это уютный уголок в Подмосковье, куда вы точно захотите вернуться." }
+  ]
+}

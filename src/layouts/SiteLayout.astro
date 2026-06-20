@@ -1,0 +1,28 @@
+---
+import { site, withBase } from '../lib/content';
+import '../styles/design-system.css';
+const { title } = Astro.props;
+const booking = site.integrations.booking;
+const initJs = `window.addEventListener('load',function(){try{window.znmsWidget&&window.znmsWidget.init(${JSON.stringify(booking.container)},${JSON.stringify(booking.initConfig)})}catch(e){console.warn('znms widget:',e)}});`;
+// @font-face объявляем здесь (а не в CSS), чтобы url() ассетов получал base-префикс.
+const fontFace = `@font-face{font-family:"Monotype Corsiva";src:url(${JSON.stringify(withBase('/fonts/monotype-corsiva.woff2'))}) format("woff2"),url(${JSON.stringify(withBase('/fonts/monotype-corsiva.woff'))}) format("woff");font-weight:400 700;font-style:normal;font-display:swap;}`;
+---
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <!-- Заголовки: Monotype Corsiva (локально, @font-face). Наборный/UI: Lora (Google). -->
+    <style is:inline set:html={fontFace}></style>
+    <link rel="preload" href={withBase('/fonts/monotype-corsiva.woff2')} as="font" type="font/woff2" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <slot />
+    <script src={booking.scriptSrc} is:inline></script>
+    <script is:inline set:html={initJs}></script>
+  </body>
+</html>

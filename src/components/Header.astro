@@ -1,0 +1,11 @@
+---
+import { sections } from '../lib/content';
+const h = sections['header'];
+---
+<header class="site-header">
+  <a class="logo" href={h.logo.href}>{h.logo.text}</a>
+  <nav>
+    {h.menu.filter((m: any) => !m.disabled).map((m: any) => <a href={m.href}>{m.text}</a>)}
+  </nav>
+  <a class="button" href={h.button.href}>{h.button.text}</a>
+</header>

@@ -1,0 +1,22 @@
+---
+import { sections } from '../lib/content';
+const f = sections['footer'];
+const year = new Date().getFullYear();
+const copyright = (f.copyright || '').replace('#{year}', String(year));
+---
+<footer class="site-footer">
+  <div class="col">
+    <strong>{f.logo}</strong>
+    <p>{f.description}</p>
+  </div>
+  <nav class="col">
+    {f.menu.filter((m: any) => !m.disabled).map((m: any) => <a href={m.href}>{m.text}</a>)}
+  </nav>
+  <div class="col">
+    {f.contacts.map((c: any) => (
+      c.href ? <a href={c.href}>{c.label}: {c.text}</a> : <p>{c.label}: {c.text}</p>
+    ))}
+    <p>{f.socialsLabel}: {f.socials.map((s: any) => <a href={s.href}>{s.type} </a>)}</p>
+  </div>
+  <p class="copyright">{copyright}</p>
+</footer>

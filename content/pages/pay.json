@@ -1,0 +1,29 @@
+{
+  "id": "pay",
+  "route": "/pay",
+  "seo": {
+    "title": "Оплата"
+  },
+  "sections": [
+    {
+      "id": "info",
+      "kind": "info",
+      "blocks": [
+        { "type": "overtitle", "text": "Сервис" },
+        { "type": "heading", "level": 2, "text": "Онлайн-оплата" }
+      ]
+    },
+    {
+      "id": "pay",
+      "kind": "pay",
+      "blocks": [
+        { "type": "paragraph", "text": "Введите сумму для оплаты, а также ваше ФИО и номер телефона. После заполнения формы произойдёт переход в платежный шлюз Альфа Банка. Выберите удобный способ оплаты и завершите покупку." },
+        {
+          "type": "iframe",
+          "src": "https://alfa.rbsuat.com/ab/shortlink/QT7ajAJB",
+          "title": "Онлайн-оплата"
+        }
+      ]
+    }
+  ]
+}

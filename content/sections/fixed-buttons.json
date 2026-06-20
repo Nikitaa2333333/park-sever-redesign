@@ -1,0 +1,9 @@
+{
+  "id": "fixed-buttons",
+  "kind": "fixed-buttons",
+  "hidden": true,
+  "blocks": [
+    { "type": "button", "text": "Забронировать", "href": "?znms_widget_open=5558", "style": "primary" },
+    { "type": "button", "text": "", "href": "https://wa.me/79296060045", "style": "whatsapp" }
+  ]
+}

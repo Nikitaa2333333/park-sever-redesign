@@ -1,0 +1,22 @@
+{
+  "id": "header",
+  "kind": "header",
+  "logo": {
+    "text": "Парк Север",
+    "href": "/",
+    "image": "/images/logo-blue.png?2"
+  },
+  "menu": [
+    { "text": "Главная", "href": "/" },
+    { "text": "Проживание", "href": "/accommodation/house-1" },
+    { "text": "Досуг", "href": "/entertainment" },
+    { "text": "Новый Год", "href": "/new-year" },
+    { "text": "14 и 23 Февраля", "href": "/february", "disabled": true },
+    { "text": "Спецпредложения", "href": "/special-offers" },
+    { "text": "Оплата", "href": "/pay", "disabled": true },
+    { "text": "Новости", "href": "/news" },
+    { "text": "О нас", "href": "/about" },
+    { "text": "Контакты", "href": "/contacts" }
+  ],
+  "button": { "text": "Забронировать", "href": "?znms_widget_open=5558", "style": "primary" }
+}
