@@ -1,0 +1,13 @@
+# Insert into the host project's deploy workflow, BEFORE the build step.
+# Add VK_SERVICE_TOKEN under: repo → Settings → Secrets and variables → Actions.
+
+      - name: Fetch VK News
+        run: npm run fetch-news        # "fetch-news": "node scripts/fetch-vk-posts.js"
+        env:
+          VK_SERVICE_TOKEN: ${{ secrets.VK_SERVICE_TOKEN }}
+
+      - name: Build
+        run: npm run build
+
+# Note: fetch-news exits 0 even on VK error, so a fetch failure never blocks deploy.
+# The build then uses the previously-committed vk-news.json (if any) or the seed array.

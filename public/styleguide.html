@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Парк Север — Дизайн-система</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  @font-face{
+    font-family:"Monotype Corsiva";
+    src:url("fonts/monotype-corsiva.woff2") format("woff2"),
+        url("fonts/monotype-corsiva.woff") format("woff");
+    font-weight:400 700; font-style:normal; font-display:swap;
+  }
+  :root{
+    /* поверхности */
+    --canvas:#ffffff; --cream:#f3f1eb; --sand:#FAF2DA;
+    --bark:#573B38; --green:#5F7D63; --forest:#385751;
+    /* текст */
+    --ink:#28262a;
+    /* акценты */
+    --navy:#0F2A47; --gold:#C9A86A; --copper:#A67C52;
+    /* линии */
+    --fog:#dddcdd; --hair-gold:rgba(201,168,106,.45);
+    /* радиусы */
+    --r-btn:0;
+    --font-display:"Monotype Corsiva","Segoe Script",cursive;
+    --font-body:"Lora",Georgia,"Times New Roman",serif;
+    --wrap:1100px;
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; background:var(--canvas); color:var(--ink);
+    font-family:var(--font-body); font-weight:500; font-size:16px; line-height:1.6;
+    letter-spacing:-0.01em; -webkit-font-smoothing:antialiased;
+  }
+  img{ max-width:100%; display:block; }
+
+  /* контейнер / секции */
+  .wrap{ max-width:var(--wrap); margin:0 auto; padding:0 40px; }
+  .sec{ padding:64px 0; border-top:1px solid var(--fog); }
+  .sec--cream{ background:var(--cream); border-top:none; }
+  .sec--bark{ background:var(--bark); color:#fff; border-top:none; }
+
+  /* типографика */
+  .display{ font-family:var(--font-display); font-weight:500; letter-spacing:0; line-height:1.02; margin:0; }
+  .d1{ font-size:clamp(56px,9vw,104px); }
+  .d2{ font-size:clamp(36px,5vw,60px); }
+  .d3{ font-size:clamp(26px,3vw,34px); }
+  .lead{ font-weight:500; font-size:20px; line-height:1.4; max-width:60ch; margin:0; }
+  .body{ font-weight:500; font-size:16px; line-height:1.6; max-width:64ch; margin:0; }
+  .sec--bark .display,.sec--bark .lead,.sec--bark .body,.sec--bark .kicker,.sec--bark .meta{ color:#fff; }
+
+  /* служебные надписи самой страницы-гайда (не часть канона сайта) */
+  .kicker{ font-family:var(--font-body); font-weight:600; font-size:13px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--navy); margin:0 0 28px; }
+  .meta{ font-family:var(--font-body); font-weight:600; font-size:13px; color:var(--ink); margin:14px 0 0; }
+  .note{ font-size:14px; line-height:1.5; color:var(--ink); max-width:62ch; }
+  .grid{ display:grid; gap:28px; }
+  .row{ display:flex; flex-wrap:wrap; gap:20px; align-items:center; }
+
+  /* ─── обложка ─── */
+  .cover{ padding:96px 0 80px; }
+  .cover .d1{ margin-bottom:18px; }
+  .cover .rule{ width:64px; height:2px; background:var(--navy); margin:0 0 26px; }
+
+  /* ─── шрифты ─── */
+  .type-card{ border:1px solid var(--fog); padding:34px 36px; }
+  .type-card + .type-card{ margin-top:24px; }
+  .type-spec{ font-size:13px; font-weight:600; letter-spacing:.04em; color:var(--navy); margin:0 0 14px; }
+  .type-sample-display{ font-family:var(--font-display); font-size:clamp(40px,6vw,72px); line-height:1.05; }
+  .type-sample-body{ font-family:var(--font-body); }
+  .glyphs{ font-size:30px; letter-spacing:.04em; margin-top:14px; color:var(--ink); }
+  .weights span{ display:inline-block; margin-right:26px; }
+
+  /* ─── цвет ─── */
+  .swatches{ grid-template-columns:repeat(3,1fr); }
+  .sw{ border:1px solid var(--fog); }
+  .sw__chip{ height:148px; }
+  .sw__body{ padding:18px 20px; }
+  .sw__name{ font-weight:600; font-size:17px; margin:0; }
+  .sw__hex{ font-size:14px; font-weight:600; color:var(--navy); margin:4px 0 8px; letter-spacing:.02em; }
+  .sw__use{ font-size:13.5px; line-height:1.45; color:var(--ink); margin:0; }
+  .palette-line{ display:flex; height:18px; margin-bottom:40px; }
+  .palette-line span{ flex:1; }
+
+  /* ─── кнопки ─── */
+  .btn{ font-family:var(--font-body); font-size:16px; font-weight:600; padding:14px 30px;
+    border:0; border-radius:var(--r-btn); cursor:pointer; display:inline-block; letter-spacing:.01em;
+    transition:filter .15s ease, background .15s ease, color .15s ease; }
+  .btn:hover{ filter:brightness(.93); }
+  .btn--navy{ background:var(--navy); color:#fff; }
+  .btn--bark{ background:var(--bark); color:#fff; }
+  .btn--green{ background:var(--green); color:#fff; }
+  .btn--outline{ background:transparent; color:var(--navy); border:1px solid var(--navy); }
+  .btn--outline:hover{ background:var(--navy); color:#fff; filter:none; }
+  .btn--outline-light{ background:transparent; color:#fff; border:1px solid #fff; }
+  .btn--outline-light:hover{ background:#fff; color:var(--bark); filter:none; }
+  .btn-cell{ display:flex; flex-direction:column; gap:12px; align-items:flex-start; }
+  .btn-cell small{ font-size:12.5px; font-weight:600; color:var(--navy); letter-spacing:.04em; }
+  .sec--bark .btn-cell small{ color:var(--gold); }
+
+  /* ─── фото ─── */
+  .photos{ grid-template-columns:repeat(2,1fr); gap:36px; }
+  .ph{ position:relative; }
+  .ph img{ width:100%; height:340px; object-fit:cover; border-radius:0; }
+  .ph--frame{ background:#fff; padding:14px; border:1px solid var(--fog); }
+  .ph--frame img{ height:312px; }
+  /* эффект погружения — тёплый коричневый градиент снизу, фото «уходит» в сцену */
+  .ph--immersion::after{ content:""; position:absolute; inset:0;
+    background:linear-gradient(to top, var(--bark) 0%, rgba(87,59,56,.65) 26%, rgba(87,59,56,0) 60%); }
+  .ph--immersion .ph__cap{ position:absolute; left:28px; right:28px; bottom:24px; z-index:2; }
+  .ph__num{ font-family:var(--font-display); font-size:46px; color:#fff; line-height:1; margin:0 0 6px; }
+  .ph__t{ font-family:var(--font-display); font-size:30px; color:#fff; margin:0 0 6px; }
+  .ph__d{ font-size:15px; color:#fff; margin:0; max-width:34ch; }
+  /* правый край-фейд карусели в сцену */
+  .ph--edge::after{ content:""; position:absolute; inset:0;
+    background:linear-gradient(to right, rgba(87,59,56,0) 55%, var(--bark) 100%); }
+  .ph__label{ font-size:13.5px; font-weight:600; color:var(--ink); margin:14px 0 0; }
+  .sec--bark .ph__label{ color:#fff; }
+
+  /* ─── карточки ─── */
+  .cards{ grid-template-columns:repeat(3,1fr); gap:28px; }
+  .card{ border:1px solid var(--fog); background:#fff; }
+  .card img{ width:100%; height:200px; object-fit:cover; }
+  .card__b{ padding:22px 24px 26px; }
+  .card__t{ font-family:var(--font-display); font-size:26px; margin:0 0 10px; line-height:1.05; }
+  .card__d{ font-size:15px; line-height:1.5; color:var(--ink); margin:0 0 18px; }
+  /* карточка-сцена с фото и текстом поверх (как блок «Искусство отдыха») */
+  .card-photo{ position:relative; overflow:hidden; }
+  .card-photo img{ height:300px; }
+  .card-photo::after{ content:""; position:absolute; inset:0;
+    background:linear-gradient(to top, var(--bark) 4%, rgba(87,59,56,.2) 50%, rgba(87,59,56,0) 75%); }
+  .card-photo__b{ position:absolute; left:24px; right:24px; bottom:22px; z-index:2; }
+  .card-photo__t{ font-family:var(--font-display); font-size:30px; color:#fff; margin:0 0 6px; }
+  .card-photo__d{ font-size:14.5px; color:#fff; margin:0; }
+
+  .legend{ font-size:14px; font-weight:600; color:var(--navy); margin:0 0 22px; letter-spacing:.02em; }
+  .sec--bark .legend{ color:var(--gold); }
+
+  @media(max-width:760px){
+    .swatches,.photos,.cards{ grid-template-columns:1fr; }
+    .wrap{ padding:0 24px; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ОБЛОЖКА -->
+  <header class="sec cover" style="border-top:none">
+    <div class="wrap">
+      <p class="kicker">Парк Север · дизайн-система</p>
+      <h1 class="display d1">Тишина среди&nbsp;леса</h1>
+      <div class="rule"></div>
+      <p class="lead">Тёплый редакционный премиум: уединение, благородство, много воздуха.
+      Дорого, но не кричаще. Ниже — зафиксированные основы, от которых мы не&nbsp;отходим.</p>
+    </div>
+  </header>
+
+  <!-- ШРИФТЫ -->
+  <section class="sec">
+    <div class="wrap">
+      <p class="kicker">01 — Шрифты · ровно два</p>
+
+      <div class="type-card">
+        <p class="type-spec">Monotype Corsiva · заказной курсив — заголовки и акценты</p>
+        <p class="type-sample-display">Отдых для&nbsp;двоих</p>
+        <p class="glyphs type-sample-display">Аа Бб Вв Гг · Парк Север · 1 2 3</p>
+        <p class="note" style="margin-top:18px">Только h1–h3, hero-title и акцентные строки. Крупно, трекинг&nbsp;0 — это «голос бренда», им не злоупотребляем в мелочах.</p>
+      </div>
+
+      <div class="type-card">
+        <p class="type-spec">Lora · наборный и UI — весь остальной текст</p>
+        <p class="type-sample-body" style="font-size:30px;font-weight:600;line-height:1.3">Спокойное, уверенное пространство среди&nbsp;природы.</p>
+        <p class="type-sample-body weights" style="font-size:18px;margin-top:18px">
+          <span style="font-weight:400">Regular 400</span>
+          <span style="font-weight:500">Medium 500</span>
+          <span style="font-weight:600">SemiBold 600</span>
+          <span style="font-weight:700">Bold 700</span>
+        </p>
+        <p class="note" style="margin-top:16px">Абзацы, лиды, подписи, кнопки, меню, числа. Эталон наборного абзаца — 20px / 1.4 / вес&nbsp;500. Третьих шрифтов и sans-serif не вводим.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ЦВЕТ -->
+  <section class="sec sec--cream">
+    <div class="wrap">
+      <p class="kicker">02 — Цвет · три + чёрный/белый</p>
+
+      <div class="palette-line">
+        <span style="background:var(--bark)"></span>
+        <span style="background:var(--navy)"></span>
+        <span style="background:var(--green)"></span>
+        <span style="background:var(--ink)"></span>
+        <span style="background:var(--canvas);border:1px solid var(--fog)"></span>
+      </div>
+
+      <div class="grid swatches">
+        <div class="sw">
+          <div class="sw__chip" style="background:var(--bark)"></div>
+          <div class="sw__body">
+            <p class="sw__name">Коричневый · bark</p>
+            <p class="sw__hex">#573B38</p>
+            <p class="sw__use">Тёплые тёмные сцены и градиенты поверх фото. Главный «уютный» тон.</p>
+          </div>
+        </div>
+        <div class="sw">
+          <div class="sw__chip" style="background:var(--navy)"></div>
+          <div class="sw__body">
+            <p class="sw__name">Синий · navy</p>
+            <p class="sw__hex">#0F2A47</p>
+            <p class="sw__use">Главный структурный акцент: кнопки, ссылки, числа. Преобладает.</p>
+          </div>
+        </div>
+        <div class="sw">
+          <div class="sw__chip" style="background:var(--green)"></div>
+          <div class="sw__body">
+            <p class="sw__name">Зелёный · green</p>
+            <p class="sw__hex">#5F7D63</p>
+            <p class="sw__use">Природный фон блоков и карточек. Лес, спокойствие.</p>
+          </div>
+        </div>
+      </div>
+
+      <p class="note" style="margin-top:30px">Базовые — чёрный текст <b>ink #28262A</b> и чистый белый. Светлые поверхности: холст #FFF, парчмент #F3F1EB, песок #FAF2DA. Ритм сцен — чередование светлых и тёплых тёмных. Глубина строится контрастом поверхностей, а не тенями.</p>
+    </div>
+  </section>
+
+  <!-- КНОПКИ -->
+  <section class="sec">
+    <div class="wrap">
+      <p class="kicker">03 — Кнопки · прямые углы, без теней</p>
+
+      <p class="legend">Заполненные</p>
+      <div class="row" style="margin-bottom:40px">
+        <div class="btn-cell"><a class="btn btn--navy">Забронировать</a><small>navy — основная</small></div>
+        <div class="btn-cell"><a class="btn btn--bark">Подробнее</a><small>bark</small></div>
+        <div class="btn-cell"><a class="btn btn--green">Смотреть дома</a><small>green</small></div>
+      </div>
+
+      <p class="legend">С обводкой</p>
+      <div class="row">
+        <div class="btn-cell"><a class="btn btn--outline">Узнать больше</a><small>outline navy</small></div>
+      </div>
+
+      <p class="note" style="margin-top:34px">Углы всегда прямые (radius 0), без капсул. Теней нет. Состояние hover — лёгкое затемнение заливки или инверсия обводки.</p>
+    </div>
+  </section>
+
+  <!-- КНОПКИ НА ТЁМНОМ -->
+  <section class="sec sec--bark">
+    <div class="wrap">
+      <p class="kicker">03 — Кнопки на тёмной сцене</p>
+      <div class="row">
+        <div class="btn-cell"><a class="btn btn--navy">Забронировать</a><small>navy</small></div>
+        <div class="btn-cell"><a class="btn btn--outline-light">Все направления</a><small>outline light</small></div>
+      </div>
+      <p class="note" style="margin-top:30px;color:#fff">На тёмном фоне текст и обводка — чисто белые. Никакой серости и прозрачности.</p>
+    </div>
+  </section>
+
+  <!-- ФОТО -->
+  <section class="sec sec--bark">
+    <div class="wrap">
+      <p class="kicker">04 — Фотографии</p>
+
+      <div class="grid photos">
+        <div>
+          <div class="ph"><img src="images/home/oasis/1.2.jpg" alt="" /></div>
+          <p class="ph__label">Без рамки — фото от края до края, прямые углы</p>
+        </div>
+        <div>
+          <div class="ph ph--frame"><img src="images/home/world/2.4.jpg" alt="" /></div>
+          <p class="ph__label">В рамке — белое паспарту, тонкая линия</p>
+        </div>
+        <div>
+          <div class="ph ph--immersion">
+            <img src="images/home/accommodation/4.2.jpg" alt="" />
+            <div class="ph__cap">
+              <p class="ph__num">01</p>
+              <p class="ph__t">Дом среди&nbsp;леса</p>
+              <p class="ph__d">Эффект погружения: коричневый градиент снизу, фото «уходит» в&nbsp;сцену.</p>
+            </div>
+          </div>
+          <p class="ph__label">Заливка градиентом — текст поверх фото</p>
+        </div>
+        <div>
+          <div class="ph ph--edge"><img src="images/home/atmosphere/5.3.jpg" alt="" /></div>
+          <p class="ph__label">Край-фейд — фото утопает в фоне сцены (карусель)</p>
+        </div>
+      </div>
+
+      <p class="note" style="margin-top:34px;color:#fff">Кадры крупные, природные, тёплые — лес, дом, животные, свет золотого часа. Эффект погружения — тёплый коричневый градиент <b>bark</b>: фото плавно перетекает в сцену, будто заходишь вглубь леса. Текст поверх фото — всегда чисто-белый сплошной.</p>
+    </div>
+  </section>
+
+  <!-- КАРТОЧКИ -->
+  <section class="sec">
+    <div class="wrap">
+      <p class="kicker">05 — Карточки · прямые углы</p>
+
+      <p class="legend">Контентная карточка — фото + текст под ним</p>
+      <div class="grid cards" style="margin-bottom:48px">
+        <div class="card">
+          <img src="images/home/oasis/1.3.jpg" alt="" />
+          <div class="card__b">
+            <h3 class="card__t">Стеклянный дом</h3>
+            <p class="card__d">Панорамное остекление, тёплый интерьер, тишина и лес за&nbsp;стеклом.</p>
+            <a class="btn btn--outline">Подробнее</a>
+          </div>
+        </div>
+        <div class="card">
+          <img src="images/home/atmosphere/5.5.jpg" alt="" />
+          <div class="card__b">
+            <h3 class="card__t">Атмосфера для&nbsp;двоих</h3>
+            <p class="card__d">Уединение, ужин у&nbsp;камина, банный ритуал под звёздным небом.</p>
+            <a class="btn btn--outline">Подробнее</a>
+          </div>
+        </div>
+        <div class="card">
+          <img src="images/home/world/2.5.jpg" alt="" />
+          <div class="card__b">
+            <h3 class="card__t">Наш мир</h3>
+            <p class="card__d">Олени, пруд, сосны и&nbsp;дорожки — парк живёт своей спокойной жизнью.</p>
+            <a class="btn btn--outline">Подробнее</a>
+          </div>
+        </div>
+      </div>
+
+      <p class="legend">Карточка-сцена — текст поверх фото на градиенте</p>
+      <div class="grid cards">
+        <div class="card card-photo">
+          <img src="images/home/art/art-step-2.jpg" alt="" />
+          <div class="card-photo__b">
+            <p class="card-photo__t">Баня</p>
+            <p class="card-photo__d">Пар, прохлада пруда, чай на&nbsp;террасе.</p>
+          </div>
+        </div>
+        <div class="card card-photo">
+          <img src="images/home/art/art-step-4.jpg" alt="" />
+          <div class="card-photo__b">
+            <p class="card-photo__t">Ужин</p>
+            <p class="card-photo__d">Свет золотого часа и&nbsp;тишина леса.</p>
+          </div>
+        </div>
+        <div class="card card-photo">
+          <img src="images/home/accommodation/4.4.jpg" alt="" />
+          <div class="card-photo__b">
+            <p class="card-photo__t">Прогулка</p>
+            <p class="card-photo__d">Тропы, сосны и&nbsp;встречи с&nbsp;оленями.</p>
+          </div>
+        </div>
+      </div>
+
+      <p class="note" style="margin-top:34px">Карточки прямоугольные, прямые углы, без теней — глубина даётся тонкой линией и контрастом. Два типа: фото + текст под ним и фото-сцена с текстом поверх на коричневом градиенте.</p>
+    </div>
+  </section>
+
+  <footer class="sec sec--cream" style="text-align:left">
+    <div class="wrap">
+      <p class="display d3" style="margin-bottom:10px">Парк Север</p>
+      <p class="note">Дизайн-канон зафиксирован. Любое новое решение — сначала визуал, потом всё остальное, и от канона мы не&nbsp;отходим.</p>
+    </div>
+  </footer>
+
+</body>
+</html>

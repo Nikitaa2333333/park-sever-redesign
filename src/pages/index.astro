@@ -1,6 +1,7 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
 import { getPage, site, reviews, withBase } from '../lib/content';
+import vkNewsJson from '../../public/vk-news.json';
 
 const page = getPage('home');
 const byId: Record<string, any> = Object.fromEntries(page.sections.map((s: any) => [s.id, s]));
@@ -67,6 +68,15 @@ const atmosphereItems = atmosphere?.items ?? [];
 const world = byId['our-world'];
 const worldTitle = blockOf(world, 'heading')?.text;
 const worldItems = world?.items ?? [];
+// описания карточек «Наш мир» (инлайн — заказчик правит напрямую).
+// Порядок соответствует items: Собаки · Олени · Пруд · Велопрогулки · Интересные места рядом.
+const worldDesc: string[] = [
+  'Золотистые ретриверы парка свободно гуляют по территории и всегда рады гостям.',
+  'На территории — собственная ферма благородного оленя «Благородный Север».',
+  'Тихий лесной пруд — для неспешных прогулок и созерцания.',
+  'Скоростные велосипеды для прогулок по лесным маршрутам парка.',
+  'Рядом — Сергиев Посад и другие места, куда стоит выбраться.',
+];
 
 // — advantages («Почему стоит выбрать нас») —
 const advantages = byId['advantages'];
@@ -79,6 +89,51 @@ const hd = (s: any) => blockOf(s, 'heading')?.text;
 const reviewItems = reviews?.items ?? [];
 const vk = site.integrations.vkNews ?? {};
 const yandexReviewsSrc = site.integrations.yandexReviews?.iframeSrc;
+
+// — новости из ВК (build-time снапшот public/vk-news.json + seed-фолбэк) —
+// Уровни фолбэка: живой JSON (перегенерируется в CI парсером) → seed-массив ниже
+// (рендерится мгновенно без токена) → пустой блок-ссылка на группу. Сайт не ломается.
+// ВАЖНО: seed — это НЕ выдуманные новости, а реальный пост из vk.com/park_sever,
+// чтобы фолбэк был настоящим до подключения токена. После фетча его заменяет живая лента.
+const VK_NEWS_SEED = [
+  {
+    id: 'seed_1',
+    date: '15 июня 2026',
+    title: 'Как рассказать про Парк Север?',
+    text: 'Мы создавали это место таким, каким хотели видеть его для себя — чтобы утром открывать глаза и видеть лес.',
+    image: '/images/main-menu/deers.jpg',
+    link: vk.groupHref,
+  },
+  {
+    id: 'seed_2',
+    date: 'Июнь 2026',
+    title: 'Утро в стеклянном доме',
+    text: 'Туман над прудом, тишина и кофе у панорамного окна — так начинается день в парке.',
+    image: '/images/home/oasis/1.1.jpg',
+    link: vk.groupHref,
+  },
+  {
+    id: 'seed_3',
+    date: 'Июнь 2026',
+    title: 'Наши олени',
+    text: 'На территории — собственная ферма благородного оленя. Гости приходят понаблюдать за стадом и покормить его.',
+    image: '/images/home/world/2.3.jpg',
+    link: vk.groupHref,
+  },
+  {
+    id: 'seed_4',
+    date: 'Июнь 2026',
+    title: 'Вечер у огня',
+    text: 'Ужин на свежем воздухе и потрескивание костра — атмосфера для двоих, ради которой возвращаются.',
+    image: '/images/home/atmosphere/5.1.jpg',
+    link: vk.groupHref,
+  },
+];
+const vkNews = (Array.isArray(vkNewsJson) && vkNewsJson.length ? vkNewsJson : VK_NEWS_SEED) as Array<{
+  id: string; date: string; title: string; text: string; image: string; link: string;
+}>;
+// картинки ВК — абсолютные URL (отдаём как есть); локальные seed-пути — через withBase
+const newsImg = (src: string) => (/^https?:\/\//.test(src) ? src : withBase(src));
 
 const booking = site.contacts.bookingHref;
 const c = site.contacts;
@@ -247,7 +302,7 @@ const navMenu = [
               <p class="lead house__lead">{p.text}</p>
             ))}
             {houseForestBtn && (
-              <a class="btn btn--navy" href={houseForestBtn.href}>{houseForestBtn.text}</a>
+              <a class="btn btn--outline-light" href={houseForestBtn.href}>{houseForestBtn.text}</a>
             )}
           </div>
         </div>
@@ -331,8 +386,8 @@ const navMenu = [
 
   <!-- Блок 6: Наш мир -->
   {world && !world.disabled && (
-    <section class="sec section-calm" id="our-world">
-      <div class="wrap">
+    <section class="sec sec--green" id="our-world">
+      <div class="wrap wrap--flush">
         <div class="shead" style="margin-bottom:32px;">
           <h2 class="h2">{worldTitle}</h2>
         </div>
@@ -342,14 +397,17 @@ const navMenu = [
             <a class={`world-tile ${i < 2 ? 'world-tile--wide' : 'world-tile--med'}`} href={item.href}>
               <div class="world-tile__pic">
                 <img src={withBase(item.image)} alt={item.title} loading="lazy" />
+                <div class="world-tile__cap">
+                  <div class="world-tile__title">{item.title}</div>
+                  {worldDesc[i] && <p class="world-tile__desc">{worldDesc[i]}</p>}
+                </div>
               </div>
-              <div class="world-tile__title">{item.title}</div>
             </a>
           ))}
         </div>
         
         <div style="text-align: center; margin-top: 48px;">
-          <a class="btn btn--navy" href="/about">Исследовать наш мир</a>
+          <a class="btn btn--outline-light" href="/about">Исследовать наш мир</a>
         </div>
       </div>
     </section>
@@ -357,22 +415,22 @@ const navMenu = [
 
   <!-- Блок 7: Почему стоит выбрать нас -->
   {advantages && !advantages.disabled && (
-    <section class="sec sec--cream" id="advantages">
-      <div class="wrap">
+    <section class="sec sec--green" id="advantages">
+      <div class="wrap wrap--flush">
         <div class="shead" style="margin-bottom:40px;">
           <h2 class="h2">{hd(advantages)}</h2>
           {blockOf(advantages, 'subtitle')?.text && (
             <p class="lead" style="text-align:center; margin-top:8px;">{blockOf(advantages, 'subtitle').text}</p>
           )}
         </div>
-        <div class="grid4">
+        <div class="adv-grid">
           {advantagesItems.map((item: any) => (
-            <div class="card card--frame">
-              <div class="card__pic" style="aspect-ratio:4/3;">
+            <div class="world-tile">
+              <div class="world-tile__pic">
                 <img src={withBase(item.image)} alt={item.text} loading="lazy" />
-              </div>
-              <div class="card__body">
-                <p class="card__text">{item.text}</p>
+                <div class="world-tile__cap">
+                  <p class="world-tile__desc">{item.text}</p>
+                </div>
               </div>
             </div>
           ))}
@@ -389,11 +447,25 @@ const navMenu = [
           <h2 class="h2">{hd(storiesSec)}</h2>
         </div>
         <div class="stories-split">
-          <!-- Слева: новости из ВК -->
+          <!-- Слева: новости из ВК (build-time снапшот, см. scripts/fetch-vk-posts.js) -->
           <div class="stories-col">
             <h3 class="h3" style="margin-bottom:16px;">Наши истории</h3>
-            {vk.groupId ? (
-              <div id="vk_groups" data-group-id={String(vk.groupId)}></div>
+            {vkNews.length ? (
+              <div class="news-feed">
+                {vkNews.map((post) => (
+                  <a class="news-card" href={post.link} target="_blank" rel="noopener noreferrer">
+                    <div class="news-card__pic">
+                      <img src={newsImg(post.image)} alt={post.title} loading="lazy" />
+                    </div>
+                    <div class="news-card__body">
+                      <span class="news-card__date">{post.date}</span>
+                      <h4 class="news-card__title">{post.title}</h4>
+                      <p class="news-card__text">{post.text}</p>
+                      <span class="news-card__more">Читать в ВКонтакте →</span>
+                    </div>
+                  </a>
+                ))}
+              </div>
             ) : (
               <a class="empty-note" href={vk.groupHref} target="_blank" rel="noopener noreferrer" style="display:block;">
                 Лента ВКонтакте появится здесь. Открыть нашу группу →
@@ -418,24 +490,26 @@ const navMenu = [
 
   <!-- Блок 8: Контакты + Карта -->
   <section class="sec section-calm" id="contacts">
-    <div class="wrap">
+    <div class="wrap wrap--flush">
       <div class="cmap">
         <div class="cbox">
-          <h2 class="h2" style="margin-top:14px">Как добраться</h2>
-          <p class="body" style="margin-top:14px">Мы всегда на связи и с радостью ответим на ваши вопросы.</p>
+          <h2 class="h2">Как добраться</h2>
+          <p class="body" style="margin-top:14px; font-size:20px; line-height:1.4; font-weight:500;">Мы всегда на связи и с радостью ответим на ваши вопросы.</p>
           <p style="margin-top:16px;"><a class="tel" href={c.phoneHref} style="font-size:20px; font-weight:700;">{c.phone}</a></p>
-          <p style="font-size:15px; color:var(--graphite); margin-top:8px;">{c.address}</p>
           <div class="hero__cta" style="margin-top:24px; justify-content:flex-start;">
             <a class="btn btn--navy" href={booking}>Забронировать</a>
-            <a class="btn btn--wa" href={c.whatsapp} target="_blank" rel="noopener noreferrer">Написать в WhatsApp</a>
+            <a class="btn btn--ghost btn--wa-outline" href={c.whatsapp} target="_blank" rel="noopener noreferrer">Написать в WhatsApp</a>
           </div>
         </div>
-        <div class="map-frame">
-          <iframe 
-            src="https://yandex.ru/map-widget/v1/?org=145451177721&cx=37.781878&cy=56.257017&z=10" 
-            title="Карта проезда к Парк Север" 
-            loading="lazy">
-          </iframe>
+        <div class="cmap__right">
+          <div class="map-frame">
+            <iframe
+              src="https://yandex.ru/map-widget/v1/org/park_sever/145451177721/?from=mapframe&ll=37.817199%2C56.459295&source=mapframe&utm_source=mapframe&z=15"
+              title="Карта проезда к Парк Север"
+              loading="lazy">
+            </iframe>
+          </div>
+          <p class="contacts-addr">{c.address}</p>
         </div>
       </div>
     </div>
@@ -654,20 +728,4 @@ const navMenu = [
     })();
   </script>
 
-  <!-- VK-виджет сообщества (левая колонка «Истории»). Активируется, когда в site.json задан числовой vkNews.groupId -->
-  <script is:inline>
-    (function () {
-      const el = document.getElementById('vk_groups');
-      if (!el) return;
-      const gid = el.getAttribute('data-group-id');
-      if (!gid) return;
-      const s = document.createElement('script');
-      s.src = 'https://vk.com/js/api/openapi.js?168';
-      s.onload = function () {
-        try { VK.Widgets.Group('vk_groups', { mode: 4, width: 'auto', height: 560 }, parseInt(gid, 10)); }
-        catch (e) { console.warn('VK widget:', e); }
-      };
-      document.head.appendChild(s);
-    })();
-  </script>
 </SiteLayout>

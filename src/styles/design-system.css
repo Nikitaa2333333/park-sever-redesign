@@ -70,7 +70,7 @@ a{ color:inherit; text-decoration:none; }
 .wrap--narrow{ max-width:880px; }   /* узкий контейнер для блока «Дом» (инструмент, не центр) */
 .wrap--flush{ max-width:none; margin-left:0; }   /* прижат к левой линии экрана (как hero): контент стартует в 32px от края, тянется во всю ширину */
 .wrap--left{ margin-left:0; }   /* та же левая линия 32px, но ширина ограничена 1200px (контент не full-bleed) */
-.sec{ padding:96px 0; }
+.sec{ padding:56px 0; }
 .sec--tight{ padding-top:0; }
 .sec--cream{ background:var(--cream); }
 .sec--sand{ background:var(--sand); color:var(--ink); }   /* «Оазис» — светло-жёлтая тёплая сцена, текст тёмный */
@@ -80,7 +80,7 @@ a{ color:inherit; text-decoration:none; }
 .sec--bark{ background:var(--bark); color:#fff; }    /* «Оазис» — тёмно-коричневый */
 .sec--green{ background:var(--green); color:#fff; }  /* природный зелёный */
 .sec--copper{ background:var(--copper); color:#fff; }/* медь */
-@media(max-width:640px){ .sec{ padding:64px 0; } }
+@media(max-width:640px){ .sec{ padding:40px 0; } }
 
 /* ── типографика — плотный отрицательный трекинг ────── */
 h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
@@ -143,7 +143,7 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .btn--navy{ background:var(--navy); color:var(--on-navy); }       /* основной CTA */
 .btn--ghost{ background:transparent; color:var(--ink); border:1px solid var(--fog); }
 .btn--light{ background:#fff; color:var(--navy); }                /* CTA на тёмном/фото */
-.btn--outline-light{ background:transparent; color:#fff; border:1px solid rgba(255,255,255,.55); }
+.btn--outline-light{ background:transparent; color:#fff; border:1px solid #fff; }
 .btn--gold{ background:var(--gold); color:#2b2410; }              /* нарядный CTA в тёплых блоках */
 .btn--wa{ background:#25D366; color:#06310f; }
 
@@ -163,6 +163,23 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .card__body{ padding:24px; }
 .card__title{ font-family:var(--font-head); font-weight:600; font-size:20px; color:var(--ink); letter-spacing:-0.02em; }
 .card__text{ font-family:var(--font-body); font-weight:500; font-size:15px; line-height:1.55; color:var(--ink); margin-top:8px; }
+/* карточка без фото — текст по центру по вертикали, чтобы пустота не зияла */
+.card--text{ display:flex; align-items:center; }
+.card--text .card__body{ padding:32px 24px; }
+.card--text .card__text{ margin-top:0; font-size:17px; line-height:1.5; }
+
+/* блок «Почему стоит выбрать нас» — как «Наш мир»: фото + белый градиент снизу + текст поверх,
+   4 равные плитки в ряд (без выделенной «главной»). Переиспользуем .world-tile / __pic / __cap. */
+.adv-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:24px;
+  margin-top:32px;
+}
+.adv-grid .world-tile__pic{ aspect-ratio:3/4; }   /* выше кадр — тексты длиннее, фото не «съедается» */
+.adv-grid .world-tile__desc{ font-size:16px; font-weight:600; }
+@media (max-width:900px){ .adv-grid{ grid-template-columns:repeat(2,1fr); } }
+@media (max-width:520px){ .adv-grid{ grid-template-columns:1fr; } }
 /* вариант карточки с тонкой светлой золотистой обводкой (image5) */
 .card--frame{ border:1px solid var(--hair-gold); }
 .sec--cream .card--frame, .sec--bark .card--frame,
@@ -316,18 +333,40 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .stories-col h3{ color:var(--ink); }
 .reviews-frame{ border:1px solid var(--fog); border-radius:var(--r-card); overflow:hidden; height:560px; }
 .reviews-frame iframe{ width:100%; height:100%; border:0; }
-#vk_groups{ min-height:560px; }
+
+/* Лента новостей из ВК (build-time снапшот). Карточки в каноне: сплошной текст,
+   прямые углы, без теней — глубина строится тонкой линией и контрастом фото. */
+.news-feed{ display:flex; flex-direction:column; gap:18px; max-height:560px; overflow-y:auto; padding-right:6px; }
+.news-card{ display:grid; grid-template-columns:140px 1fr; gap:18px; align-items:start;
+  text-decoration:none; border-bottom:1px solid var(--fog); padding-bottom:18px; }
+.news-card:last-child{ border-bottom:0; padding-bottom:0; }
+.news-card__pic{ width:140px; aspect-ratio:4/3; overflow:hidden; }
+.news-card__pic img{ display:block; width:100%; height:100%; object-fit:cover; transition:transform .5s ease; }
+.news-card:hover .news-card__pic img{ transform:scale(1.04); }
+.news-card__body{ display:flex; flex-direction:column; }
+.news-card__date{ font-family:var(--font-body); font-weight:600; font-size:13px; color:var(--navy); letter-spacing:-0.01em; }
+.news-card__title{ font-family:var(--font-head); font-weight:700; font-size:18px; line-height:1.2;
+  letter-spacing:-0.02em; color:var(--ink); margin:4px 0 0; }
+.news-card__text{ font-family:var(--font-body); font-weight:500; font-size:14px; line-height:1.45;
+  color:var(--ink); margin:6px 0 0;
+  display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+.news-card__more{ font-family:var(--font-head); font-weight:600; font-size:13px; color:var(--navy); margin-top:auto; padding-top:10px; }
+@media(max-width:520px){ .news-card{ grid-template-columns:110px 1fr; gap:14px; } .news-card__pic{ width:110px; } }
 
 /* ── контакты + карта ───────────────────────────────── */
-.cmap{ display:grid; grid-template-columns:1fr 1.2fr; gap:48px; align-items:stretch; }
+.cmap{ display:grid; grid-template-columns:1fr 1.2fr; gap:48px; align-items:start; }   /* верх колонок по линии заголовка */
 @media(max-width:860px){ .cmap{ grid-template-columns:1fr; } }
+.contacts-addr{ font-family:var(--font-body); font-weight:500; font-size:16px; line-height:1.5; color:var(--ink); margin:16px 0 0; }
 .cbox p{ font-family:var(--font-body); font-weight:500; font-size:16px; line-height:1.7; color:var(--ink); margin:8px 0 0; }
 .cbox a.tel{ color:var(--navy); font-family:var(--font-head); font-weight:600; }
-.map-frame{ border-radius:var(--r-img); overflow:hidden; min-height:360px; border:1px solid var(--fog); }
+.map-frame{ border-radius:0; overflow:hidden; min-height:360px; border:1px solid var(--fog); }   /* прямые углы — по канону */
+/* вторичная кнопка «Написать в WhatsApp» — в нашей палитре: прозрачная + синяя обводка */
+.btn--wa-outline{ background:transparent; color:var(--navy); border:1px solid var(--navy); }
+.btn--wa-outline:hover{ background:var(--navy); color:#fff; }
 .map-frame iframe{ width:100%; height:100%; min-height:360px; border:0; }
 
 /* ── футер (тёмный, тихий, редакционный) ───────────── */
-.foot{ background:var(--bark); color:#fff; padding:96px 0 36px; }
+.foot{ background:var(--navy); color:#fff; padding:96px 0 36px; }
 .foot__cols{ display:grid; grid-template-columns:1.7fr 1fr 1.1fr; gap:64px; }
 @media(max-width:860px){ .foot__cols{ grid-template-columns:1fr; gap:44px; } }
 
@@ -522,12 +561,12 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 /* коллаж: два вертикальных кадра в ряд (по половине ширины, на всю высоту) */
 .house .slider-snap__slide--pair{ display:flex; gap:0; }
 .house .slider-snap__slide--pair img{ width:50%; }
-/* коричневый градиент для контраста текста (плотный снизу и слева) */
+/* синий градиент для контраста текста (плотный снизу и слева) */
 .house__scrim{
   position:absolute; inset:0; z-index:1; pointer-events:none;
   background:
-    linear-gradient(to top, var(--bark) 6%, rgba(87,59,56,.6) 34%, rgba(87,59,56,0) 72%),
-    linear-gradient(to right, rgba(87,59,56,.55), rgba(87,59,56,0) 58%);
+    linear-gradient(to top, var(--navy) 6%, rgba(15,42,71,.6) 34%, rgba(15,42,71,0) 72%),
+    linear-gradient(to right, rgba(15,42,71,.55), rgba(15,42,71,0) 58%);
 }
 .house__content{ position:absolute; left:0; right:0; bottom:0; z-index:2; padding-bottom:64px; }
 .house__text{ max-width:620px; }
@@ -577,7 +616,7 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 56px;
+  gap: 32px;
   margin-bottom: 40px;
   text-align: center;
 }
@@ -590,9 +629,23 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   color: #fff;
 }
 .atmosphere-icon__svg {
-  width: 104px;
-  height: 104px;
+  width: 140px;
+  height: 140px;
   color: #fff;
+  transform-origin: center bottom;
+  animation: icon-breathe 4s ease-in-out infinite;
+}
+/* «дыхание» — лёгкая пульсация; разный сдвиг, чтобы значки не качались в унисон */
+@keyframes icon-breathe {
+  0%, 100% { transform: scale(1) translateY(0); }
+  50%      { transform: scale(1.06) translateY(-4px); }
+}
+.atmosphere-icon:nth-child(2) .atmosphere-icon__svg{ animation-delay: -.8s; animation-duration: 4.4s; }
+.atmosphere-icon:nth-child(3) .atmosphere-icon__svg{ animation-delay: -1.6s; animation-duration: 4.2s; }
+.atmosphere-icon:nth-child(4) .atmosphere-icon__svg{ animation-delay: -2.4s; animation-duration: 4.6s; }
+.atmosphere-icon:nth-child(5) .atmosphere-icon__svg{ animation-delay: -3.2s; animation-duration: 4.3s; }
+@media (prefers-reduced-motion: reduce) {
+  .atmosphere-icon__svg{ animation: none; }
 }
 /* песочно-золотые значки (заказчик: наряднее) */
 .atmosphere-icons--gold .atmosphere-icon__svg{ color: var(--copper); }
@@ -699,7 +752,7 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 
 /* "Наш мир" — сбалансированная редакционная мозаика: размеры разные (динамика),
    но без одиночного «героя» (две крупные сверху + три поменьше снизу, ни одна не выделена).
-   Подписи серифом ПОД фото сплошным цветом (без полупрозрачного градиента). */
+   Подпись + описание поверх фото на БЕЛОМ градиенте снизу (как «Искусство отдыха», но светлый). */
 .world-mosaic {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -710,6 +763,7 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .world-tile--wide { grid-column: span 3; }   /* верхний ряд — две крупные */
 .world-tile--med  { grid-column: span 2; }   /* нижний ряд — три поменьше */
 .world-tile__pic {
+  position: relative;
   overflow: hidden;     /* прямые углы — по канону */
   aspect-ratio: 4 / 3;
 }
@@ -720,16 +774,40 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   transition: transform 0.5s ease;
 }
 .world-tile:hover img { transform: scale(1.04); }
+/* подпись внизу фото: текст лежит на СПЛОШНОМ зелёном (цвет не мутнеет),
+   а мягкий переход в фото — отдельная декоративная полоска-фейд над ней */
+.world-tile__cap {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: 16px 22px 18px;
+  background: var(--green);
+}
+.world-tile__cap::before {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 100%;
+  height: 150px;   /* длинный плавный фейд в фото (как в блоке 3) */
+  background: linear-gradient(to top, var(--green), rgba(95,125,99,0));
+  pointer-events: none;
+}
 .world-tile__title {
   font-family: var(--font-head);
-  font-weight: 600;
-  font-size: 17px;
-  line-height: 1.25;
-  letter-spacing: -0.01em;
-  color: var(--ink);
-  margin-top: 12px;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #fff;
+  margin: 0;
 }
-.world-tile--wide .world-tile__title { font-size: 19px; }
+.world-tile--wide .world-tile__title { font-size: 24px; }
+.world-tile__desc {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 1.45;
+  color: #fff;
+  margin: 6px 0 0;
+}
 @media (max-width: 900px) {
   .world-mosaic { grid-template-columns: repeat(2, 1fr); }
   .world-tile--wide, .world-tile--med { grid-column: span 1; }
@@ -818,9 +896,7 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .oasis-carousel--sm::after{
   background:linear-gradient(to right, rgba(15,42,71,0), var(--navy));
 }
-.oasis-card--sm{ flex:0 0 clamp(200px, 26%, 300px); }
-@media (max-width: 760px){
-  .oasis-card--sm{ flex-basis:62%; }
-}
+/* «Атмосфера» — паспарту и размер карточек как в «Оазисе» (всё наследуется от .oasis-card);
+   отличается только цвет правого градиента (см. .oasis-carousel--sm выше) */
 
 
