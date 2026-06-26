@@ -28,7 +28,7 @@
     "yandexMetrika": { "id": "99962092" },
     "booking": {
       "provider": "bronirui-online (znms / модуль бронирования отеля)",
-      "scriptSrc": "//widget.bronirui-online.ru/js/app.js",
+      "scriptSrc": "https://widget.bronirui-online.ru/js/app.js",
       "globalObject": "window.znmsWidget",
       "container": "#znms-widget-1",
       "moduleId": 5558,
@@ -44,6 +44,11 @@
     "yandexMaps": {
       "org": "145451177721",
       "iframeSrc": "https://yandex.ru/map-widget/v1/?ll=37.814914%2C56.456567&mode=search&oid=145451177721&ol=biz&z=16.9"
+    },
+    "yandexReviews": {
+      "org": "145451177721",
+      "iframeSrc": "https://yandex.ru/maps-reviews-widget/145451177721?comments",
+      "note": "Официальный виджет отзывов Яндекс.Карт (правая колонка блока «Истории Парка»). Решение заказчика — отзывы подгружаются с Яндекса."
     },
     "jivo": {
       "active": false,
@@ -64,7 +69,10 @@
     "vkNews": {
       "openapi": "https://vk.com/js/api/openapi.js?168",
       "widget": "VK Groups",
-      "note": "Страницу «Новости» оставляем, VK-виджет заменим позже своим."
+      "screenName": "park_sever",
+      "groupHref": "https://vk.com/park_sever",
+      "groupId": null,
+      "note": "Лента ВК — левая колонка блока «Истории Парка» (как в «Благородном Севере»). VK.Widgets.Group требует ЧИСЛОВОЙ groupId — заполнить (сейчас null → показываем фолбэк-ссылку на vk.com/park_sever). Позже заменим своим решением."
     },
     "dropped": [
       "Instagram-лента (jquery.instagramFeed) — API сломан, удалить",

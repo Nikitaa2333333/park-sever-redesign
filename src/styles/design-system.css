@@ -1,10 +1,12 @@
 /* ============================================================
-   Design System «Север» — редакционно-тихий регистр (по референсу Alden)
-   Шрифты (2): Monotype Corsiva (заголовки — заказной) + Lora (наборный текст и весь UI, сплошной).
-   Палитра: White canvas · Parchment cream (2-я поверхность) · Ink текст ·
-   Navy — ЕДИНСТВЕННЫЙ акцент (кнопки, ссылки, выделенное слово). Золота нет.
-   Глубина — контрастом white/cream + волосяная линия. ТЕНЕЙ НЕТ.
-   Капсульные кнопки, плотный отрицательный трекинг, много воздуха.
+   Design System «Север» — тёплый редакционный премиум
+   Канон обновлён 2026-06-23 под принципы заказчика (verstka/CLAUDE.md, Главная.docx).
+   Шрифты (2): Monotype Corsiva (заголовки + .hero-accent — заказной курсив) + Lora (наборный/UI, сплошной).
+   Палитра: White canvas · Parchment cream · Ink текст ·
+   Акценты: Navy (структура) + Золото/Медь (заголовки нарядных блоков, номера).
+   Тёплые сцены: bark (тёмно-коричневый) · green · copper · navy.
+   Глубина — контрастом поверхностей + тонкая линия (--fog / --hair-gold). ТЕНЕЙ НЕТ.
+   Кнопки — ПРЯМЫЕ УГЛЫ (--r-btn:0). Много воздуха.
    ============================================================ */
 
 /* Заказной шрифт заголовков — Monotype Corsiva (локально, @font-face объявлен
@@ -15,25 +17,33 @@
   /* поверхности */
   --canvas:#ffffff;        /* основной холст */
   --cream:#f3f1eb;         /* парчмент — вторая поверхность (полосы/сцены) */
-  --card:#ffffff;          /* карточки — всегда белые, читаются контрастом к фону */
+  --paper:#f3f1eb;         /* плашка «как на бумаге» поверх тёмных сцен (= cream) */
+  --card:#ffffff;          /* карточки-по-умолчанию (читаются контрастом к фону) */
+  --bark:#573B38;          /* тёплый коричневый — единый цвет тёмных сцен и градиентов (блоки 2–4) */
+  --forest:#385751;        /* тёмный хвойно-зелёный — в палитре, пока НЕ используется (резерв) */
+  --sand:#FAF2DA;          /* светло-жёлтая тёплая пастельная сцена («Оазис») */
+  --green:#5F7D63;         /* природный зелёный фон блоков/карточек (заказчик) */
 
   /* текст */
   --ink:#28262a;           /* почти-чёрный с лёгким сливовым — заголовки/текст */
   --graphite:#4a4a4c;      /* вторичный текст, подписи */
 
-  /* единственный акцент */
-  --navy:#0F2A47;          /* кнопки, ссылки, выделенное слово, числа */
+  /* акценты: navy + тёплый металл */
+  --navy:#0F2A47;          /* структурный акцент: кнопки, ссылки, числа; фон «Атмосферы» */
   --on-navy:#ffffff;
+  --gold:#C9A86A;          /* золото — заголовки нарядных блоков, номера 01-06 (рабочий hex) */
+  --copper:#A67C52;        /* медь — тёплый акцент и фон-поверхность (заказчик) */
 
   /* линии */
   --fog:#dddcdd;           /* волосяная линия, бейдж-фон */
   --silver:#cbcbcb;
+  --hair-gold:rgba(201,168,106,.45); /* тонкая золотистая обводка карточки (image5) */
 
   /* радиус */
   --r-card:16px;
   --r-img:24px;
   --r-badge:30px;
-  --r-pill:100px;
+  --r-btn:0;               /* кнопки — прямые углы (капсула отменена) */
   --r-ui:4px;
 
   --font-display:"Monotype Corsiva","Segoe Script",cursive;  /* заголовки — заказной скрипт */
@@ -57,11 +67,19 @@ a{ color:inherit; text-decoration:none; }
 
 /* ── контейнер / секции (много воздуха, без теней) ──── */
 .wrap{ max-width:var(--wrap); margin:0 auto; padding:0 32px; }
+.wrap--narrow{ max-width:880px; }   /* узкий контейнер для блока «Дом» (инструмент, не центр) */
+.wrap--flush{ max-width:none; margin-left:0; }   /* прижат к левой линии экрана (как hero): контент стартует в 32px от края, тянется во всю ширину */
+.wrap--left{ margin-left:0; }   /* та же левая линия 32px, но ширина ограничена 1200px (контент не full-bleed) */
 .sec{ padding:96px 0; }
 .sec--tight{ padding-top:0; }
 .sec--cream{ background:var(--cream); }
+.sec--sand{ background:var(--sand); color:var(--ink); }   /* «Оазис» — светло-жёлтая тёплая сцена, текст тёмный */
 .sec--navy{ background:var(--navy); color:#fff; }
-.sec--ink{ background:var(--ink); color:#e9e7e2; }
+.sec--ink{ background:var(--ink); color:#fff; }
+/* тёплые сцены (заказчик: блоки не должны быть холодными/пустыми) */
+.sec--bark{ background:var(--bark); color:#fff; }    /* «Оазис» — тёмно-коричневый */
+.sec--green{ background:var(--green); color:#fff; }  /* природный зелёный */
+.sec--copper{ background:var(--copper); color:#fff; }/* медь */
 @media(max-width:640px){ .sec{ padding:64px 0; } }
 
 /* ── типографика — плотный отрицательный трекинг ────── */
@@ -72,6 +90,10 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 /* заголовки берут заказной каллиграфический шрифт: вес обычный, трекинг 0 (скрипт-глифы связные) */
 .hero-title,.h1,.h2,.h3{ font-family:var(--font-display); font-weight:500; letter-spacing:0; }
 .hero-title{ font-size:clamp(44px,7vw,84px); line-height:1.05; color:var(--ink); margin:0; }
+.hero .hero-title{ font-size:clamp(64px,11vw,143px); line-height:0.98; }
+/* надпись-оверлайн над титулом героя (Figma: Lora SemiBold 16, белая, без рамки) */
+.hero__overline{ font-family:var(--font-head); font-weight:600; font-size:16px;
+  color:#fff; margin:0 0 8px; }
 .lead{ font-weight:500; font-size:19px; line-height:1.55; color:var(--ink); max-width:60ch; letter-spacing:-0.01em; }
 .body{ font-weight:500; font-size:16px; line-height:1.6; color:var(--ink); max-width:64ch; }
 .eyebrow{ font-family:var(--font-head); font-size:14px; font-weight:600; color:var(--navy); letter-spacing:0; }
@@ -80,29 +102,49 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 
 /* на тёмной поверхности */
 .sec--ink .h1, .sec--ink .h2, .sec--ink .h3{ color:#fff; }
-.sec--ink .lead, .sec--ink .body{ color:#cfccc6; }
-.sec--ink .eyebrow{ color:#cfccc6; }
+.sec--ink .lead, .sec--ink .body{ color:#fff; }
+.sec--ink .eyebrow{ color:#fff; }
 .sec--ink .hl{ color:#fff; }
 
 /* navy-полоса: белый текст и белые числа на синем */
 .sec--navy .h1, .sec--navy .h2, .sec--navy .h3{ color:#fff; }
-.sec--navy .lead, .sec--navy .body, .sec--navy .shead .sub{ color:#dbe2ea; }
-.sec--navy .eyebrow{ color:#cdd6e0; }
+.sec--navy .lead, .sec--navy .body, .sec--navy .shead .sub{ color:#fff; }
+.sec--navy .eyebrow{ color:#fff; }
 .sec--navy .hl{ color:#fff; }
 .sec--navy .stat__v{ color:#fff; }
-.sec--navy .stat__l{ color:#cdd6e0; }
-.sec--navy .cbox p{ color:#dbe2ea; }
+.sec--navy .stat__l{ color:#fff; }
+.sec--navy .cbox p{ color:#fff; }
 .sec--navy .cbox a.tel{ color:#fff; }
 .sec--navy .map-frame{ border-color:rgba(255,255,255,.18); }
 
-/* ── кнопки — капсулы, без тени ─────────────────────── */
+/* тёплые тёмные/цветные сцены: заголовки и текст светлые, eyebrow золотом */
+.sec--bark .h1, .sec--bark .h2, .sec--bark .h3,
+.sec--green .h1, .sec--green .h2, .sec--green .h3,
+.sec--copper .h1, .sec--copper .h2, .sec--copper .h3{ color:#fff; }
+.sec--bark .lead, .sec--bark .body, .sec--bark .shead .sub,
+.sec--green .lead, .sec--green .body, .sec--green .shead .sub,
+.sec--copper .lead, .sec--copper .body, .sec--copper .shead .sub{ color:#fff; }
+.sec--bark .eyebrow, .sec--green .eyebrow, .sec--copper .eyebrow{ color:var(--gold); }
+
+/* золотой заголовок — нарядные блоки («Искусство отдыха», «Атмосфера для двоих») */
+.h--gold{ color:var(--gold); }
+.sec--bark .h--gold, .sec--green .h--gold, .sec--copper .h--gold,
+.sec--navy .h--gold, .sec--ink .h--gold{ color:var(--gold); }
+
+/* «текст как на бумаге» — светлая плашка поверх тёмной сцены */
+.paper-plate{ background:var(--paper); color:var(--ink); border-radius:var(--r-card); padding:32px; }
+.paper-plate .h1, .paper-plate .h2, .paper-plate .h3{ color:var(--ink); }
+.paper-plate .lead, .paper-plate .body{ color:var(--ink); }
+
+/* ── кнопки — ПРЯМЫЕ УГЛЫ, без тени ──────────────────── */
 .btn{ font-family:var(--font-head); font-size:16px; font-weight:600; padding:13px 26px;
-  border-radius:var(--r-pill); display:inline-block; cursor:pointer; transition:opacity .2s, background .2s, color .2s; letter-spacing:-0.01em; }
-.btn:hover{ opacity:.9; }
+  border-radius:var(--r-btn); display:inline-block; cursor:pointer; transition:background .2s, color .2s, filter .2s; letter-spacing:-0.01em; }
+.btn:hover{ filter:brightness(0.93); }
 .btn--navy{ background:var(--navy); color:var(--on-navy); }       /* основной CTA */
 .btn--ghost{ background:transparent; color:var(--ink); border:1px solid var(--fog); }
 .btn--light{ background:#fff; color:var(--navy); }                /* CTA на тёмном/фото */
 .btn--outline-light{ background:transparent; color:#fff; border:1px solid rgba(255,255,255,.55); }
+.btn--gold{ background:var(--gold); color:#2b2410; }              /* нарядный CTA в тёплых блоках */
 .btn--wa{ background:#25D366; color:#06310f; }
 
 /* ── ссылка-акцент ──────────────────────────────────── */
@@ -121,31 +163,116 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .card__body{ padding:24px; }
 .card__title{ font-family:var(--font-head); font-weight:600; font-size:20px; color:var(--ink); letter-spacing:-0.02em; }
 .card__text{ font-family:var(--font-body); font-weight:500; font-size:15px; line-height:1.55; color:var(--ink); margin-top:8px; }
+/* вариант карточки с тонкой светлой золотистой обводкой (image5) */
+.card--frame{ border:1px solid var(--hair-gold); }
+.sec--cream .card--frame, .sec--bark .card--frame,
+.sec--green .card--frame, .sec--copper .card--frame,
+.sec--navy .card--frame, .sec--ink .card--frame{ border-color:var(--hair-gold); }
+/* мелкая подпись под фото на тёмной плашке (карточка «Искусство отдыха») */
+.caption{ font-family:var(--font-body); font-weight:500; font-size:13px; line-height:1.4; color:#fff; background:var(--bark); padding:12px 14px; }
 
 /* ── навбар (прозрачный над hero, без тени/линии) ──── */
 .nav{ position:absolute; top:0; left:0; right:0; z-index:10; }
 .nav .wrap{ display:flex; align-items:center; gap:24px; height:80px; }
-.nav__logo{ font-family:var(--font-head); font-weight:700; font-size:19px; color:#fff; letter-spacing:.02em; }
-.nav__menu{ display:flex; gap:30px; margin-left:auto; font-family:var(--font-head); font-size:15px; font-weight:500; }
-.nav__menu a{ color:rgba(255,255,255,.92); }
+.nav__logo{ font-family:var(--font-display); font-weight:500; font-size:30px; line-height:1; color:#fff; letter-spacing:0; }
+.nav__menu{ display:flex; gap:30px; margin:0 auto; font-family:var(--font-head); font-size:15px; font-weight:600; }
+.nav__menu a{ color:#fff; }
 .nav__menu a:hover{ color:#fff; }
-.nav__book{ background:#fff; color:var(--navy); padding:11px 22px; border-radius:var(--r-pill); font-family:var(--font-head); font-weight:600; font-size:15px; }
+.nav__book{ background:#fff; color:var(--navy); padding:8px 16px; border-radius:var(--r-btn); font-family:var(--font-head); font-weight:600; font-size:13px; }
 @media(max-width:980px){ .nav__menu{ display:none; } }
 
 /* ── hero (видео full-bleed) ────────────────────────── */
-.hero{ position:relative; min-height:90vh; display:flex; align-items:center; color:#fff; overflow:hidden; }
+.hero{ position:relative; min-height:90vh; display:flex; align-items:flex-start; color:#fff; overflow:hidden; }
 .hero__media{ position:absolute; inset:0; z-index:0; }
 .hero__media video, .hero__media img{ width:100%; height:100%; object-fit:cover; }
 .hero__scrim{ position:absolute; inset:0; z-index:1;
-  background:linear-gradient(180deg,rgba(20,24,22,.4),rgba(20,24,22,.2) 40%,rgba(20,24,22,.72)); }
+  background:
+    linear-gradient(90deg,rgba(15,42,71,1) 0%,rgba(15,42,71,.7) 28%,rgba(15,42,71,0) 62%),
+    linear-gradient(180deg,rgba(15,42,71,.4),rgba(15,42,71,.2) 40%,rgba(15,42,71,.72)); }
+@media(max-width:640px){
+  .hero__scrim{ background:
+    linear-gradient(180deg,rgba(15,42,71,.55),rgba(15,42,71,.35) 40%,rgba(15,42,71,.78)); }
+}
 .hero .wrap{ position:relative; z-index:2; padding-top:96px; padding-bottom:56px; text-align:center; }
-.hero__eyebrow{ font-family:var(--font-head); font-size:14px; font-weight:600; color:#fff; opacity:.9; margin:0 auto 18px; max-width:48ch; }
-.hero h1{ color:#fff; max-width:20ch; margin:0 auto; }
-.hero__sub{ font-family:var(--font-body); font-weight:500; font-size:19px; color:#fff; opacity:.95; margin:20px auto 0; max-width:54ch; }
-.hero__links{ display:flex; gap:24px; margin:18px auto 0; flex-wrap:wrap; justify-content:center; font-family:var(--font-head); font-size:14px; font-weight:600; opacity:.92; }
+.hero__eyebrow{ font-family:var(--font-head); font-size:14px; font-weight:600; color:#fff; margin:0 auto 18px; max-width:48ch; }
+.hero h1{ color:#fff; max-width:20ch; margin:0; }
+.hero__sub{ font-family:var(--font-body); font-weight:500; font-size:19px; line-height:1.35; color:#fff; margin:20px 0 0; max-width:54ch; }
+/* акцентная курсивная строка hero (display) — фирменный скрипт-эхо: заметно мельче .hero-title */
+.hero-accent{ font-family:var(--font-display); font-weight:500; letter-spacing:0;
+  font-size:clamp(28px,3vw,40px); line-height:1.05; color:#fff; margin:0; max-width:610px; }
+.hero__links{ display:flex; gap:24px; margin:18px auto 0; flex-wrap:wrap; justify-content:center; font-family:var(--font-head); font-size:14px; font-weight:600; }
 .hero__cta{ margin:30px auto 0; display:flex; gap:14px; flex-wrap:wrap; justify-content:center; }
+/* кнопки героя крупнее базовых (Figma-спека: px30/py16, 15px, скругление 4px) */
+.hero .btn{ font-size:15px; padding:16px 30px; border-radius:4px; }
 .video-mobile{ display:none; }
 @media(max-width:640px){ .video-desktop{ display:none; } .video-mobile{ display:block; } }
+
+/* ── строка бронирования в hero (наша, в каноне «Север») ──
+   Сторонний модуль znms (bronirui-online) переписан на свой Tailwind и режим задаётся
+   в их кабинете — под наш канон его не вписать. Поэтому строка СВОЯ: сплошная белая
+   плашка, волосяные разделители полей, navy-кнопка. По клику открываем модуль брони
+   через window.znmsWidget.open('#znms-widget-1') (fallback — deep-link ?znms_widget_open).
+   #znms-widget-1 скрыт — это только точка монтирования виджета. Без теней, без opacity. */
+.book-bar{
+  display:flex; align-items:stretch; flex-wrap:wrap; gap:0;
+  width:100%; max-width:720px; margin-top:8px;
+  background:#fff; border:1px solid var(--fog); border-radius:var(--r-ui);
+  overflow:hidden; cursor:pointer; color:var(--ink);
+  transition:border-color .2s;
+}
+.book-bar:hover{ border-color:var(--navy); }
+.book-bar__field{
+  flex:1 1 140px; min-width:120px;
+  display:flex; flex-direction:column; justify-content:center; gap:3px;
+  padding:14px 22px; border-right:1px solid var(--fog);
+}
+.book-bar__label{
+  font-family:var(--font-head); font-size:12px; font-weight:600;
+  letter-spacing:.04em; text-transform:uppercase; color:var(--graphite);
+}
+.book-bar__value{
+  font-family:var(--font-body); font-size:16px; font-weight:600; line-height:1.2; color:var(--ink);
+}
+.book-bar__go{
+  align-self:stretch; display:flex; align-items:center; white-space:nowrap;
+  background:var(--navy); color:#fff;
+  font-family:var(--font-head); font-size:15px; font-weight:600;
+  padding:0 32px; border-radius:0;
+  transition:filter .2s;
+}
+.book-bar:hover .book-bar__go{ filter:brightness(.93); }
+/* модуль бронирования znms — инлайновая форма в hero.
+   min-height резервирует место под форму, чтобы контент ниже не «прыгал» при её загрузке. */
+.hero__booking{ width:100%; max-width:720px; margin-top:16px; min-height:300px; }
+
+/* Сторонний виджет znms рисуется своим системным sans-serif — приводим его к канону.
+   Shadow DOM у виджета нет, font-family наследуется вниз по дереву и не завязан
+   на их хрупкие классы, поэтому переопределяем шрифт на контейнере + всех потомках. */
+#znms-widget-1, #znms-widget-1 *{ font-family:var(--font-body) !important; }
+
+/* Прямые углы по канону (--r-btn:0): поля и кнопка виджета приходят скруглёнными.
+   ВНИМАНИЕ: завязано на их Tailwind-классы border-radius — может отвалиться при
+   редеплое провайдера, тогда поправить заново (font-family выше — устойчивее). */
+#znms-widget-1 *{ border-radius:0 !important; }
+
+/* скелетон-заглушка, пока грузится сторонняя форма брони (шиммер на сплошных цветах, без opacity) */
+.znms-skeleton{ display:flex; flex-direction:column; gap:16px; }
+.znms-skeleton__title{ width:240px; height:22px; }
+.znms-skeleton__row{ display:flex; gap:16px; }
+.znms-skeleton__field{ flex:1 1 0; height:64px; border-radius:var(--r-ui); }
+.znms-skeleton__field--wide{ width:100%; }
+.znms-skeleton__btn{ width:100%; height:56px; border-radius:var(--r-ui); }
+.znms-skeleton__title,
+.znms-skeleton__field,
+.znms-skeleton__btn{
+  background:linear-gradient(90deg,#ffffff 25%,#e9edf2 37%,#ffffff 63%);
+  background-size:400% 100%;
+  animation:znms-shimmer 1.4s ease-in-out infinite;
+}
+@keyframes znms-shimmer{ 0%{ background-position:100% 0; } 100%{ background-position:-100% 0; } }
+@media(prefers-reduced-motion:reduce){
+  .znms-skeleton__title,.znms-skeleton__field,.znms-skeleton__btn{ animation:none; background:#eef1f5; }
+}
 
 /* ── секция-шапка: центрированная редакционная ─────── */
 .shead{ display:flex; flex-direction:column; gap:18px; max-width:60ch; margin:0 auto; text-align:center; align-items:center; }
@@ -154,7 +281,11 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 
 /* ── welcome: текст + галерея ──────────────────────── */
 .split2{ display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:center; }
-@media(max-width:860px){ .split2{ grid-template-columns:1fr; gap:36px; } }
+/* зеркальная раскладка — фото слева / текст справа (вариант блока «Дом») */
+.split2--rev > :first-child{ order:2; }
+.split2--rev > :last-child{ order:1; }
+@media(max-width:860px){ .split2{ grid-template-columns:1fr; gap:36px; }
+  .split2--rev > :first-child, .split2--rev > :last-child{ order:0; } }
 .gallery{ display:grid; grid-template-columns:2fr 1fr; grid-template-rows:1fr 1fr; gap:14px; height:420px; }
 .gallery a{ display:block; height:100%; overflow:hidden; border-radius:var(--r-img); }
 .gallery a:first-child{ grid-row:1/3; }
@@ -179,6 +310,14 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .rcard__a{ font-family:var(--font-head); font-weight:600; font-size:14px; color:var(--navy); margin-top:18px; }
 .empty-note{ background:var(--card); border-radius:var(--r-card); border:1px solid var(--fog); padding:32px; font-family:var(--font-body); font-weight:500; color:var(--graphite); text-align:center; }
 
+/* ── блок «Истории Парка»: ВК + отзывы Яндекс ───────── */
+.stories-split{ display:grid; grid-template-columns:1fr 1fr; gap:32px; align-items:start; }
+@media(max-width:860px){ .stories-split{ grid-template-columns:1fr; gap:28px; } }
+.stories-col h3{ color:var(--ink); }
+.reviews-frame{ border:1px solid var(--fog); border-radius:var(--r-card); overflow:hidden; height:560px; }
+.reviews-frame iframe{ width:100%; height:100%; border:0; }
+#vk_groups{ min-height:560px; }
+
 /* ── контакты + карта ───────────────────────────────── */
 .cmap{ display:grid; grid-template-columns:1fr 1.2fr; gap:48px; align-items:stretch; }
 @media(max-width:860px){ .cmap{ grid-template-columns:1fr; } }
@@ -187,18 +326,25 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .map-frame{ border-radius:var(--r-img); overflow:hidden; min-height:360px; border:1px solid var(--fog); }
 .map-frame iframe{ width:100%; height:100%; min-height:360px; border:0; }
 
-/* ── футер (тёмный, тихий) ─────────────────────────── */
-.foot{ background:var(--ink); color:#cfccc6; padding:64px 0 40px; }
-.foot__cols{ display:grid; grid-template-columns:2fr 1fr 1fr; gap:40px; }
-@media(max-width:860px){ .foot__cols{ grid-template-columns:1fr; gap:28px; } }
-.foot__logo{ font-family:var(--font-head); font-weight:700; font-size:18px; color:#fff; letter-spacing:.02em; }
-.foot h4{ font-family:var(--font-head); font-size:14px; font-weight:600; color:#fff; margin:0 0 14px; }
-.foot a{ display:block; padding:5px 0; color:#cfccc6; font-family:var(--font-head); font-size:15px; }
-.foot a:hover{ color:#fff; }
-.foot__cp{ font-family:var(--font-head); font-size:13px; color:#8b8983; margin-top:40px; line-height:1.6; }
-.socials{ display:flex; gap:16px; flex-wrap:wrap; margin-top:16px; }
-.socials a{ color:#cfccc6; font-weight:500; }
+/* ── футер (тёмный, тихий, редакционный) ───────────── */
+.foot{ background:var(--bark); color:#fff; padding:96px 0 36px; }
+.foot__cols{ display:grid; grid-template-columns:1.7fr 1fr 1.1fr; gap:64px; }
+@media(max-width:860px){ .foot__cols{ grid-template-columns:1fr; gap:44px; } }
+
+.foot__brand{ font-family:var(--font-display); font-size:42px; line-height:1; color:#fff; }
+.foot__about{ font-family:var(--font-body); font-weight:500; font-size:16px; line-height:1.55; color:#fff; max-width:42ch; margin:22px 0 0; }
+
+.foot h4{ font-family:var(--font-head); font-size:15px; font-weight:600; color:#fff; margin:0 0 20px; }
+.foot__col a{ display:block; padding:7px 0; color:#fff; font-family:var(--font-head); font-size:16px; width:max-content; max-width:100%; }
+.foot__col a:hover{ color:#fff; }
+.foot__addr{ display:block; margin-top:14px; color:#fff; font-family:var(--font-body); font-size:15px; line-height:1.5; }
+
+.socials{ display:flex; gap:6px 16px; flex-wrap:wrap; margin-top:30px; }
+.socials a{ color:#fff; font-family:var(--font-head); font-weight:500; font-size:15px; }
 .socials a:hover{ color:#fff; }
+
+.foot__rule{ border:0; border-top:1px solid rgba(255,255,255,.16); margin:72px 0 0; }
+.foot__cp{ font-family:var(--font-body); font-size:13px; color:#fff; margin-top:28px; line-height:1.7; max-width:90ch; }
 
 /* ── Дополнения для редизайна (слайдеры, навигация, плитки) ── */
 
@@ -214,7 +360,8 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   box-shadow: 0 2px 10px rgba(0,0,0,0.15);
 }
 .nav .wrap {
-  height: 70px;
+  height: 56px;
+  max-width: none;          /* во всю ширину: лого по левому краю контента, на линии заголовка hero */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -248,7 +395,7 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   }
   .nav__menu {
     position: fixed;
-    top: 70px;
+    top: 56px;
     left: 0;
     right: 0;
     bottom: 0;
@@ -300,10 +447,13 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .slider-snap__slide {
   flex: 0 0 100%;
   scroll-snap-align: start;
-  border-radius: var(--r-img);
+  border-radius: 0;                 /* «как картина» — без скругления фото */
   overflow: hidden;
   position: relative;
   aspect-ratio: 4 / 3;
+  background: var(--paper);         /* широкое паспарту вокруг фото */
+  padding: clamp(12px, 1.6vw, 22px);
+  border: 1px solid var(--hair-gold);
 }
 .slider-snap__slide img {
   width: 100%;
@@ -321,10 +471,10 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .slider-arrow {
   background: var(--cream);
   color: var(--navy);
-  border: none;
+  border: 1px solid var(--hair-gold);
   width: 40px;
   height: 40px;
-  border-radius: 50%;
+  border-radius: var(--r-btn);      /* прямые углы вместо круга */
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -354,9 +504,42 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   transition: background 0.2s, width 0.2s;
 }
 .slider-dot.active {
-  background: var(--navy);
-  width: 16px;
-  border-radius: 4px;
+  background: var(--gold);          /* активная — золотой кружок (форма та же, меняется только цвет) */
+}
+
+/* ── Блок «Дом среди леса» — полноэкранный фото-слайдер, текст поверх на коричневом градиенте ── */
+.house{ position:relative; }
+.house .slider-snap{ gap:0; }
+/* фото на весь экран — снимаем старое кремовое паспарту/рамку/aspect от базового слайдера */
+.house .slider-snap__slide{
+  height:82vh; min-height:520px;
+  aspect-ratio:auto;
+  background:none;
+  padding:0;
+  border:0;
+}
+.house .slider-snap__slide img{ height:100%; }
+/* коллаж: два вертикальных кадра в ряд (по половине ширины, на всю высоту) */
+.house .slider-snap__slide--pair{ display:flex; gap:0; }
+.house .slider-snap__slide--pair img{ width:50%; }
+/* коричневый градиент для контраста текста (плотный снизу и слева) */
+.house__scrim{
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:
+    linear-gradient(to top, var(--bark) 6%, rgba(87,59,56,.6) 34%, rgba(87,59,56,0) 72%),
+    linear-gradient(to right, rgba(87,59,56,.55), rgba(87,59,56,0) 58%);
+}
+.house__content{ position:absolute; left:0; right:0; bottom:0; z-index:2; padding-bottom:64px; }
+.house__text{ max-width:620px; }
+.house__title{ color:#fff; margin:0 0 18px; }
+.house__lead{ color:#fff; font-size:20px; line-height:1.4; margin:0 0 16px; }
+.house__lead:last-of-type{ margin-bottom:28px; }
+.house__arrows{ display:none; }   /* стрелки убраны — фото сменяются сами */
+.house__dots{ position:absolute; right:34px; bottom:34px; z-index:3; margin:0; }
+@media(max-width:640px){
+  .house .slider-snap__slide{ height:70vh; min-height:440px; }
+  .house__content{ padding-bottom:40px; }
+  .house__dots{ display:none; }
 }
 
 /* Драг-слайдер для "Атмосферы для двоих" */
@@ -391,12 +574,14 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 
 /* Иконки для Атмосферы */
 .atmosphere-icons {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 56px;
   margin-bottom: 40px;
   text-align: center;
 }
+.atmosphere-icon { flex: 0 0 auto; }
 .atmosphere-icon {
   display: flex;
   flex-direction: column;
@@ -405,10 +590,12 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   color: #fff;
 }
 .atmosphere-icon__svg {
-  width: 48px;
-  height: 48px;
+  width: 104px;
+  height: 104px;
   color: #fff;
 }
+/* песочно-золотые значки (заказчик: наряднее) */
+.atmosphere-icons--gold .atmosphere-icon__svg{ color: var(--copper); }
 .atmosphere-icon__title {
   font-family: var(--font-head);
   font-size: 14px;
@@ -432,21 +619,45 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   gap: 32px;
   margin-top: 48px;
 }
+/* карточка без рамок: текст лёг на фото поверх коричневого линейного градиента снизу */
 .art-step {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+}
+.art-step__overlay {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  z-index: 1;
+  padding: 64px 22px 22px;
+  /* линейный градиент в цвет сцены: текст всегда читается на сплошном низе */
+  background: linear-gradient(to top, var(--bark) 22%, rgba(87,59,56,.8) 62%, rgba(87,59,56,0));
 }
 .art-step__num {
+  display: block;
   font-family: var(--font-head);
-  font-size: 40px;
   font-weight: 700;
-  color: var(--navy);
+  font-size: 44px;
   line-height: 1;
-}
-/* Если на тёмном фоне, номер шага белый */
-.sec--ink .art-step__num, .sec--navy .art-step__num {
   color: #fff;
+  letter-spacing: -0.02em;
+  margin: 0 0 10px;
+}
+.art-step__title {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #fff;
+  margin: 0 0 10px;
+}
+.art-step__text {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #fff;
+  margin: 0;
 }
 .art-step__desc {
   font-family: var(--font-head);
@@ -457,19 +668,25 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 }
 .art-step__img {
   width: 100%;
-  aspect-ratio: 4 / 3;
-  border-radius: var(--r-img);
+  aspect-ratio: 8 / 9;            /* портрет, ~10% ниже 4:5: текст на градиенте внизу */
   overflow: hidden;
+  position: relative;             /* для номера поверх фото */
 }
 .art-step__img img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
+/* карточка-рамка: скругление целиком (заказчик оставил), фото и подпись встык */
+.art-step.card--frame{ gap:0; overflow:hidden; }   /* прямые углы — фото не скруглённые */
+.art-step.card--frame .art-step__img{ border-radius:0; }
+/* второй ряд карточек смещён правее (image5, вариант «шахматка») */
+.art-steps--offset .art-step:nth-child(n+4){ transform: translateX(18%); }
 @media (max-width: 860px) {
   .art-steps {
     grid-template-columns: 1fr 1fr;
   }
+  .art-steps--offset .art-step:nth-child(n+4){ transform: none; }
 }
 @media (max-width: 560px) {
   .art-steps {
@@ -480,58 +697,130 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   }
 }
 
-/* "Наш мир" - мелкие карточки */
-.world-grid {
+/* "Наш мир" — сбалансированная редакционная мозаика: размеры разные (динамика),
+   но без одиночного «героя» (две крупные сверху + три поменьше снизу, ни одна не выделена).
+   Подписи серифом ПОД фото сплошным цветом (без полупрозрачного градиента). */
+.world-mosaic {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 16px;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 28px 24px;
   margin-top: 32px;
 }
-.world-card {
-  position: relative;
-  aspect-ratio: 3 / 4;
-  border-radius: var(--r-img);
-  overflow: hidden;
-  display: block;
+.world-tile { display: block; }
+.world-tile--wide { grid-column: span 3; }   /* верхний ряд — две крупные */
+.world-tile--med  { grid-column: span 2; }   /* нижний ряд — три поменьше */
+.world-tile__pic {
+  overflow: hidden;     /* прямые углы — по канону */
+  aspect-ratio: 4 / 3;
 }
-.world-card img {
+.world-tile img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.4s ease;
+  transition: transform 0.5s ease;
 }
-.world-card:hover img {
-  transform: scale(1.04);
-}
-.world-card__overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(0deg, rgba(7, 23, 23, 0.8) 0%, rgba(7, 23, 23, 0.2) 50%, transparent 100%);
-  display: flex;
-  align-items: flex-end;
-  padding: 16px;
-}
-.world-card__title {
-  color: #fff;
+.world-tile:hover img { transform: scale(1.04); }
+.world-tile__title {
   font-family: var(--font-head);
-  font-weight: 700;
-  font-size: 16px;
-  line-height: 1.2;
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin-top: 12px;
 }
-@media (max-width: 980px) {
-  .world-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
+.world-tile--wide .world-tile__title { font-size: 19px; }
+@media (max-width: 900px) {
+  .world-mosaic { grid-template-columns: repeat(2, 1fr); }
+  .world-tile--wide, .world-tile--med { grid-column: span 1; }
 }
-@media (max-width: 640px) {
-  .world-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+@media (max-width: 520px) {
+  .world-mosaic { grid-template-columns: 1fr; }
+  .world-tile--wide, .world-tile--med { grid-column: span 1; }
 }
-@media (max-width: 480px) {
-  .world-grid {
-    grid-template-columns: 1fr;
-  }
+
+/* ── Блок «Оазис» — тёмная сцена (--bark) + зерно бумаги + карусель «фотокарточек» ──
+   Заголовок и текст идут прямо по тёмной сцене (светлый текст, eyebrow золотом).
+   Галерея — горизонтальная карусель прямых фото в белых рамках-паспарту со снапом. */
+.oasis-head{ max-width:62ch; margin:0 0 48px; }
+
+/* зерно бумаги поверх тёмной сцены.
+   Альфа запечена прямо в SVG (feFuncA), CSS opacity НЕ используем — по канону. */
+.sec--grain{ position:relative; isolation:isolate; }
+.sec--grain::before{
+  content:"";
+  position:absolute; inset:0;
+  pointer-events:none;
+  z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='200'%20height='200'%3E%3Cfilter%20id='n'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.8'%20numOctaves='4'%20stitchTiles='stitch'/%3E%3CfeColorMatrix%20type='saturate'%20values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA%20type='linear'%20slope='0.10'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect%20width='100%25'%20height='100%25'%20filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:200px 200px;
+  mix-blend-mode:overlay;
+}
+.sec--grain > .wrap{ position:relative; z-index:1; }
+
+/* строка-чипсы под текстом */
+.oasis-chips{
+  margin-top:24px;
+  font-family:var(--font-head);
+  font-weight:600;
+  font-size:16px;
+  color:var(--gold);
+  letter-spacing:0;
+}
+
+/* карусель — горизонтальный скролл; следующая карточка всегда выглядывает */
+.oasis-carousel{ position:relative; margin-right:-32px; }   /* правый full-bleed: карусель доходит до края экрана, карточка режется краем → видно, что листается */
+/* мягкое поле-градиент справа в цвет сцены: фотографии «уходят» под край у края экрана */
+.oasis-carousel::after{
+  content:""; position:absolute; top:0; bottom:0; right:0; width:90px;
+  pointer-events:none; z-index:2;
+  background:linear-gradient(to right, rgba(87,59,56,0), var(--bark));
+}
+.oasis-carousel__track{
+  display:flex;
+  gap:28px;
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
+  scroll-padding-left:4px;
+  scroll-behavior:smooth;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+  padding:4px;
+  cursor:grab;
+}
+.oasis-carousel__track::-webkit-scrollbar{ display:none; }
+.oasis-carousel__track.dragging{ cursor:grabbing; scroll-behavior:auto; }
+
+/* «фотокарточка» — белое паспарту + тонкая золотистая линия (теней нет).
+   Ширина подобрана так, что видно ~2 карточки и кусок третьей → ясно, что листается. */
+.oasis-card{
+  flex:0 0 clamp(300px, 44%, 480px);
+  scroll-snap-align:start;
+  margin:0;
+  background:#fff;   /* чистое белое паспарту, без рамки */
+  padding:8px 8px 10px;
+}
+.oasis-card img{
+  display:block;
+  width:100%;
+  aspect-ratio:3/4;
+  object-fit:cover;
+  user-select:none;
+  -webkit-user-drag:none;
+}
+
+@media (max-width: 760px){
+  .oasis-card{ flex-basis:82%; }   /* одна карточка + явный край следующей */
+}
+
+/* «Атмосфера для двоих» — та же карусель-«фотокарточки», но мельче.
+   Градиент справа — в цвет navy-сцены (а не bark). */
+.oasis-carousel--sm::after{
+  background:linear-gradient(to right, rgba(15,42,71,0), var(--navy));
+}
+.oasis-card--sm{ flex:0 0 clamp(200px, 26%, 300px); }
+@media (max-width: 760px){
+  .oasis-card--sm{ flex-basis:62%; }
 }
 
 

@@ -9,6 +9,6 @@ import { defineConfig } from 'astro/config';
 // withBase() из src/lib/content.ts, чтобы они резолвились под этим base.
 export default defineConfig({
   site: 'https://nikitaa2333333.github.io',
-  base: '/park-sever-redesign',
+  base: process.env.NODE_ENV === 'production' ? '/park-sever-redesign' : '/',
   server: { port: 4321 },
 });

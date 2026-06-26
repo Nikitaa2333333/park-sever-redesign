@@ -3,7 +3,25 @@ import { site, withBase } from '../lib/content';
 import '../styles/design-system.css';
 const { title } = Astro.props;
 const booking = site.integrations.booking;
-const initJs = `window.addEventListener('load',function(){try{window.znmsWidget&&window.znmsWidget.init(${JSON.stringify(booking.container)},${JSON.stringify(booking.initConfig)})}catch(e){console.warn('znms widget:',e)}});`;
+// Инициализация виджета брони: НЕ ждём window.load (он зависает на догрузке hero-видео).
+// Стартуем по DOMContentLoaded и опрашиваем готовность znmsWidget (скрипт грузится async).
+// Как только виджет добавит свой DOM — убираем скелетон-заглушку.
+const initJs = `(function(){
+  var c=${JSON.stringify(booking.container)},cfg=${JSON.stringify(booking.initConfig)};
+  function ready(fn){if(document.readyState!=='loading')fn();else document.addEventListener('DOMContentLoaded',fn);}
+  ready(function(){
+    var el=document.querySelector(c);
+    if(el){var obs=new MutationObserver(function(){
+      var sk=el.querySelector('.znms-skeleton');
+      var hasW=Array.prototype.some.call(el.children,function(x){return !(x.classList&&x.classList.contains('znms-skeleton'));});
+      if(hasW&&sk){sk.remove();obs.disconnect();}
+    });obs.observe(el,{childList:true});}
+    var t=0;(function tryInit(){t++;
+      if(window.znmsWidget&&window.znmsWidget.init){try{window.znmsWidget.init(c,cfg);}catch(e){console.warn('znms widget:',e);}return;}
+      if(t<120)setTimeout(tryInit,50);
+    })();
+  });
+})();`;
 // @font-face объявляем здесь (а не в CSS), чтобы url() ассетов получал base-префикс.
 const fontFace = `@font-face{font-family:"Monotype Corsiva";src:url(${JSON.stringify(withBase('/fonts/monotype-corsiva.woff2'))}) format("woff2"),url(${JSON.stringify(withBase('/fonts/monotype-corsiva.woff'))}) format("woff");font-weight:400 700;font-style:normal;font-display:swap;}`;
 ---
@@ -18,11 +36,14 @@ const fontFace = `@font-face{font-family:"Monotype Corsiva";src:url(${JSON.strin
     <link rel="preload" href={withBase('/fonts/monotype-corsiva.woff2')} as="font" type="font/woff2" crossorigin />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- раннее соединение с хостом виджета бронирования (ускоряет загрузку формы) -->
+    <link rel="preconnect" href="https://widget.bronirui-online.ru" crossorigin />
+    <link rel="dns-prefetch" href="//widget.bronirui-online.ru" />
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&display=swap" rel="stylesheet" />
   </head>
   <body>
     <slot />
-    <script src={booking.scriptSrc} is:inline></script>
+    <script src={booking.scriptSrc} async is:inline></script>
     <script is:inline set:html={initJs}></script>
   </body>
 </html>
