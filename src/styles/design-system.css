@@ -19,7 +19,7 @@
   --cream:#f3f1eb;         /* парчмент — вторая поверхность (полосы/сцены) */
   --paper:#f3f1eb;         /* плашка «как на бумаге» поверх тёмных сцен (= cream) */
   --card:#ffffff;          /* карточки-по-умолчанию (читаются контрастом к фону) */
-  --bark:#573B38;          /* тёплый коричневый — единый цвет тёмных сцен и градиентов (блоки 2–4) */
+  --bark:#4C4038;          /* тёмный тёплый нейтрал (тёмно-таупе) — единственная тёмная «визитка» (Оазис на главной). Коричневый #573B38 снят из палитры (заказчик 2026-07-04). */
   --forest:#385751;        /* тёмный хвойно-зелёный — в палитре, пока НЕ используется (резерв) */
   --sand:#FAF2DA;          /* светло-жёлтая тёплая пастельная сцена («Оазис») */
   --green:#5F7D63;         /* природный зелёный фон блоков/карточек (заказчик) */
@@ -30,14 +30,17 @@
 
   /* акценты: navy + тёплый металл */
   --navy:#0F2A47;          /* структурный акцент: кнопки, ссылки, числа; фон «Атмосферы» */
+  --navy-top:#0A1A2E;      /* ТЁМНЫЙ navy «верхней полосы/шапки» (свотч «Благородный Север», темнее основного) — ПОДТВЕРДИТЬ хекс */
   --on-navy:#ffffff;
-  --gold:#C9A86A;          /* золото — заголовки нарядных блоков, номера 01-06 (рабочий hex) */
+  --frost:#EEF4F8;         /* холодная светло-голубая сцена («Искусство отдыха») — текст тёмный --ink */
+  --gold:#d3b07a;          /* ЕДИНОЕ золото сайта = --gold-l (старый #C9A86A склеен, оттенок один) */
+  --gold-l:#d3b07a;        /* светлый тёплый золотой — единственный жёлтый оттенок сайта (кнопка брони и акценты) */
   --copper:#A67C52;        /* медь — тёплый акцент и фон-поверхность (заказчик) */
 
   /* линии */
   --fog:#dddcdd;           /* волосяная линия, бейдж-фон */
   --silver:#cbcbcb;
-  --hair-gold:rgba(201,168,106,.45); /* тонкая золотистая обводка карточки (image5) */
+  --hair-gold:rgba(211,176,122,.45); /* тонкая золотистая обводка — тот же единый золотой #d3b07a */
 
   /* радиус */
   --r-card:16px;
@@ -64,6 +67,10 @@ body{
 }
 img,video,iframe{ max-width:100%; display:block; }
 a{ color:inherit; text-decoration:none; }
+/* текстовые гиперссылки в контенте — ЧЁРНЫЕ в цвет текста, с подчёркиванием (заказчик 2026-07-08);
+   на тёмных сценах — белые с подчёркиванием */
+.sec a:not([class]){ color:var(--ink); text-decoration:underline; text-underline-offset:3px; }
+.sec--navy a:not([class]), .sec--green a:not([class]), .sec--ink a:not([class]), .sec--bark a:not([class]){ color:#fff; text-decoration:underline; }
 
 /* ── контейнер / секции (много воздуха, без теней) ──── */
 .wrap{ max-width:var(--wrap); margin:0 auto; padding:0 32px; }
@@ -80,6 +87,8 @@ a{ color:inherit; text-decoration:none; }
 .sec--bark{ background:var(--bark); color:#fff; }    /* «Оазис» — тёмно-коричневый */
 .sec--green{ background:var(--green); color:#fff; }  /* природный зелёный */
 .sec--copper{ background:var(--copper); color:#fff; }/* медь */
+.sec--gold{ background:var(--gold-l); color:var(--ink); }/* светлый золотой фон — текст тёмный */
+.sec--art{ background:var(--frost); color:var(--ink); }/* «Искусство отдыха» — холодная светло-голубая сцена, текст тёмный */
 @media(max-width:640px){ .sec{ padding:40px 0; } }
 
 /* ── типографика — плотный отрицательный трекинг ────── */
@@ -99,6 +108,7 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .eyebrow{ font-family:var(--font-head); font-size:14px; font-weight:600; color:var(--navy); letter-spacing:0; }
 /* акцент-слово в заголовке (фирменный приём) */
 .hl{ color:var(--navy); }
+.hero .hl{ color:var(--gold-l); }   /* в hero акцент-слово («Север») — золотой #d3b07a */
 
 /* на тёмной поверхности */
 .sec--ink .h1, .sec--ink .h2, .sec--ink .h3{ color:#fff; }
@@ -138,17 +148,18 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 
 /* ── кнопки — ПРЯМЫЕ УГЛЫ, без тени ──────────────────── */
 .btn{ font-family:var(--font-head); font-size:16px; font-weight:600; padding:13px 26px;
+  border:0; appearance:none; -webkit-appearance:none;   /* <button> без нативной обводки-фаски */
   border-radius:var(--r-btn); display:inline-block; cursor:pointer; transition:background .2s, color .2s, filter .2s; letter-spacing:-0.01em; }
 .btn:hover{ filter:brightness(0.93); }
 .btn--navy{ background:var(--navy); color:var(--on-navy); }       /* основной CTA */
 .btn--ghost{ background:transparent; color:var(--ink); border:1px solid var(--fog); }
 .btn--light{ background:#fff; color:var(--navy); }                /* CTA на тёмном/фото */
 .btn--outline-light{ background:transparent; color:#fff; border:1px solid #fff; }
-.btn--gold{ background:var(--gold); color:#2b2410; }              /* нарядный CTA в тёплых блоках */
+.btn--gold{ background:var(--gold-l); color:var(--ink); }         /* золотой CTA (#d3b07a), текст тёмный */
 .btn--wa{ background:#25D366; color:#06310f; }
 
 /* ── ссылка-акцент ──────────────────────────────────── */
-.link-accent, .link-gold{ font-family:var(--font-head); font-weight:600; font-size:15px; color:var(--navy); }
+.link-accent, .link-gold{ font-family:var(--font-head); font-weight:600; font-size:15px; color:var(--ink); text-decoration:underline; text-underline-offset:3px; }
 .link-accent:hover, .link-gold:hover{ text-decoration:underline; }
 
 /* ── бейдж-пилюля ───────────────────────────────────── */
@@ -180,6 +191,67 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .adv-grid .world-tile__desc{ font-size:16px; font-weight:600; }
 @media (max-width:900px){ .adv-grid{ grid-template-columns:repeat(2,1fr); } }
 @media (max-width:520px){ .adv-grid{ grid-template-columns:1fr; } }
+
+/* ── «Почему стоит выбрать нас» — карусель «фото + текст» с миниатюрами ── */
+.sec--advantages{ background:var(--frost); color:var(--ink); }
+.adv-carousel{ max-width:900px; margin:8px auto 0; }
+/* сцена: активный слайд — крупное фото слева + текст справа, в белой карточке с тонкой линией */
+.adv-stage{ position:relative; }
+.adv-slide{ display:none; }
+.adv-slide.is-active{
+  display:grid;
+  grid-template-columns:62% 1fr;
+  background:var(--canvas);
+  border:1px solid var(--fog);
+}
+.adv-slide__pic{ overflow:hidden; }
+.adv-slide__pic img{
+  display:block;
+  width:100%;
+  height:100%;
+  min-height:300px;
+  object-fit:cover;
+}
+.adv-slide__text{
+  display:flex;
+  align-items:flex-start;
+  padding:32px;
+}
+.adv-slide__desc{
+  font-family:var(--font-body);
+  font-weight:500;
+  font-size:19px;
+  line-height:1.5;
+  color:var(--ink);
+  margin:0;
+}
+/* ряд миниатюр под сценой */
+.adv-thumbs{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+  margin-top:14px;
+}
+.adv-thumb{
+  display:block;
+  padding:0;
+  border:2px solid transparent;
+  background:none;
+  cursor:pointer;
+  overflow:hidden;
+  aspect-ratio:16/10;
+}
+.adv-thumb img{ display:block; width:100%; height:100%; object-fit:cover; }
+.adv-thumb.is-active{ border-color:var(--navy); }
+@media (max-width:860px){
+  .adv-slide.is-active{ grid-template-columns:1fr; }
+  .adv-slide__pic img{ min-height:280px; }
+  .adv-slide__text{ padding:28px; }
+  .adv-slide__desc{ font-size:20px; }
+}
+@media (max-width:520px){
+  .adv-thumbs{ grid-template-columns:repeat(2,1fr); }
+}
 /* вариант карточки с тонкой светлой золотистой обводкой (image5) */
 .card--frame{ border:1px solid var(--hair-gold); }
 .sec--cream .card--frame, .sec--bark .card--frame,
@@ -193,9 +265,9 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .nav .wrap{ display:flex; align-items:center; gap:24px; height:80px; }
 .nav__logo{ font-family:var(--font-display); font-weight:500; font-size:30px; line-height:1; color:#fff; letter-spacing:0; }
 .nav__menu{ display:flex; gap:30px; margin:0 auto; font-family:var(--font-head); font-size:15px; font-weight:600; }
-.nav__menu a{ color:#fff; }
-.nav__menu a:hover{ color:#fff; }
-.nav__book{ background:#fff; color:var(--navy); padding:8px 16px; border-radius:var(--r-btn); font-family:var(--font-head); font-weight:600; font-size:13px; }
+.nav__menu a{ color:#fff; transition:color .2s; }
+.nav__menu a:hover{ color:var(--gold-l); }   /* наведение — золото сайта */
+.nav__book{ background:var(--gold-l); color:var(--ink); padding:8px 16px; border-radius:var(--r-btn); font-family:var(--font-head); font-weight:600; font-size:13px; }
 @media(max-width:980px){ .nav__menu{ display:none; } }
 
 /* ── hero (видео full-bleed) ────────────────────────── */
@@ -204,11 +276,11 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .hero__media video, .hero__media img{ width:100%; height:100%; object-fit:cover; }
 .hero__scrim{ position:absolute; inset:0; z-index:1;
   background:
-    linear-gradient(90deg,rgba(15,42,71,1) 0%,rgba(15,42,71,.7) 28%,rgba(15,42,71,0) 62%),
-    linear-gradient(180deg,rgba(15,42,71,.4),rgba(15,42,71,.2) 40%,rgba(15,42,71,.72)); }
+    linear-gradient(90deg,rgba(15,42,71,.88) 0%,rgba(15,42,71,.5) 26%,rgba(15,42,71,0) 56%),
+    linear-gradient(180deg,rgba(15,42,71,.26),rgba(15,42,71,.1) 40%,rgba(15,42,71,.58)); }
 @media(max-width:640px){
   .hero__scrim{ background:
-    linear-gradient(180deg,rgba(15,42,71,.55),rgba(15,42,71,.35) 40%,rgba(15,42,71,.78)); }
+    linear-gradient(180deg,rgba(15,42,71,.42),rgba(15,42,71,.24) 40%,rgba(15,42,71,.64)); }
 }
 .hero .wrap{ position:relative; z-index:2; padding-top:96px; padding-bottom:56px; text-align:center; }
 .hero__eyebrow{ font-family:var(--font-head); font-size:14px; font-weight:600; color:#fff; margin:0 auto 18px; max-width:48ch; }
@@ -216,7 +288,7 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .hero__sub{ font-family:var(--font-body); font-weight:500; font-size:19px; line-height:1.35; color:#fff; margin:20px 0 0; max-width:54ch; }
 /* акцентная курсивная строка hero (display) — фирменный скрипт-эхо: заметно мельче .hero-title */
 .hero-accent{ font-family:var(--font-display); font-weight:500; letter-spacing:0;
-  font-size:clamp(28px,3vw,40px); line-height:1.05; color:#fff; margin:0; max-width:610px; }
+  font-size:clamp(28px,3vw,40px); line-height:1.05; color:var(--gold-l); margin:0; max-width:610px; }
 .hero__links{ display:flex; gap:24px; margin:18px auto 0; flex-wrap:wrap; justify-content:center; font-family:var(--font-head); font-size:14px; font-weight:600; }
 .hero__cta{ margin:30px auto 0; display:flex; gap:14px; flex-wrap:wrap; justify-content:center; }
 /* кнопки героя крупнее базовых (Figma-спека: px30/py16, 15px, скругление 4px) */
@@ -292,7 +364,7 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 }
 
 /* ── секция-шапка: центрированная редакционная ─────── */
-.shead{ display:flex; flex-direction:column; gap:18px; max-width:60ch; margin:0 auto; text-align:center; align-items:center; }
+.shead{ display:flex; flex-direction:column; gap:8px; max-width:60ch; margin:0 auto; text-align:center; align-items:center; }   /* подпись-«гирка» вплотную к заголовку (заказчик 2026-07-07) */
 .shead .sub{ font-family:var(--font-body); font-weight:500; font-size:18px; line-height:1.55; color:var(--ink); }
 .shead--left{ margin:0; text-align:left; align-items:flex-start; }
 
@@ -324,18 +396,23 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .rcard{ background:var(--card); border-radius:var(--r-card); border:1px solid var(--fog); padding:32px; }
 .sec--cream .rcard{ border-color:transparent; }
 .rcard__q{ font-family:var(--font-body); font-weight:500; font-size:18px; line-height:1.55; color:var(--ink); letter-spacing:-0.01em; }
-.rcard__a{ font-family:var(--font-head); font-weight:600; font-size:14px; color:var(--navy); margin-top:18px; }
+.rcard__a{ font-family:var(--font-head); font-weight:600; font-size:14px; color:var(--ink); text-decoration:underline; text-underline-offset:3px; margin-top:18px; }
 .empty-note{ background:var(--card); border-radius:var(--r-card); border:1px solid var(--fog); padding:32px; font-family:var(--font-body); font-weight:500; color:var(--graphite); text-align:center; }
 
-/* ── блок «Истории Парка»: ВК + отзывы Яндекс ───────── */
+/* ── блок «Истории Парка» на главной: ВК + отзывы Яндекс ── */
 .stories-split{ display:grid; grid-template-columns:1fr 1fr; gap:32px; align-items:start; }
 @media(max-width:860px){ .stories-split{ grid-template-columns:1fr; gap:28px; } }
-.stories-col h3{ color:var(--ink); }
+.stories-col h3{
+  color:var(--ink);
+  font-size:clamp(26px,3vw,34px);
+  padding-bottom:10px;
+  border-bottom:2px solid var(--navy);
+}
 .reviews-frame{ border:1px solid var(--fog); border-radius:var(--r-card); overflow:hidden; height:560px; }
 .reviews-frame iframe{ width:100%; height:100%; border:0; }
 
-/* Лента новостей из ВК (build-time снапшот). Карточки в каноне: сплошной текст,
-   прямые углы, без теней — глубина строится тонкой линией и контрастом фото. */
+/* Компактная лента ВК на главной (build-time снапшот). Карточки в каноне: сплошной
+   текст, прямые углы, без теней — глубина строится тонкой линией и контрастом фото. */
 .news-feed{ display:flex; flex-direction:column; gap:18px; max-height:560px; overflow-y:auto; padding-right:6px; }
 .news-card{ display:grid; grid-template-columns:140px 1fr; gap:18px; align-items:start;
   text-decoration:none; border-bottom:1px solid var(--fog); padding-bottom:18px; }
@@ -350,8 +427,59 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .news-card__text{ font-family:var(--font-body); font-weight:500; font-size:14px; line-height:1.45;
   color:var(--ink); margin:6px 0 0;
   display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
-.news-card__more{ font-family:var(--font-head); font-weight:600; font-size:13px; color:var(--navy); margin-top:auto; padding-top:10px; }
+.news-card__more{ font-family:var(--font-head); font-weight:600; font-size:13px; color:var(--ink); text-decoration:underline; text-underline-offset:3px; margin-top:auto; padding-top:10px; }
 @media(max-width:520px){ .news-card{ grid-template-columns:110px 1fr; gap:14px; } .news-card__pic{ width:110px; } }
+
+/* ── вкладка «Истории» (/stories/): лента ВК крупно ────── */
+/* Журнальный разворот: свежий пост крупно слева, три компактных — колонкой справа,
+   остальные посты — рядом карточек ниже. Канон: сплошной текст (светлый фон → ink),
+   прямые углы, без теней; глубина — тонкая линия --fog и контраст фото. */
+.news-head{ display:flex; align-items:baseline; justify-content:space-between; gap:24px; margin-bottom:40px; }
+.news-head__vk{ font-family:var(--font-body); font-weight:600; font-size:16px; color:var(--ink); text-decoration:underline; text-underline-offset:3px; white-space:nowrap; }
+.news-head__vk:hover{ text-decoration:underline; }
+.news-spread{ display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,1fr); gap:56px; align-items:start; }
+.news-date{ font-family:var(--font-body); font-weight:600; font-size:13px; color:var(--navy); letter-spacing:-0.01em; }
+.news-more{ font-family:var(--font-body); font-weight:600; font-size:14px; color:var(--ink); text-decoration:underline; text-underline-offset:3px; }
+/* лид */
+.news-lead{ display:flex; flex-direction:column; text-decoration:none; color:var(--ink); }
+.news-lead__pic{ aspect-ratio:16/10; overflow:hidden; margin-bottom:20px; }
+.news-lead__pic img{ display:block; width:100%; height:100%; object-fit:cover; transition:transform .5s ease; }
+.news-lead:hover .news-lead__pic img{ transform:scale(1.04); }
+.news-lead__title{ font-family:var(--font-head); font-weight:700; font-size:clamp(22px,2.2vw,28px); line-height:1.2;
+  letter-spacing:-0.02em; color:var(--ink); margin:8px 0 10px; }
+.news-lead__text{ font-family:var(--font-body); font-weight:500; font-size:17px; line-height:1.5; color:var(--ink); margin:0 0 14px;
+  display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+/* компактные посты */
+.news-side{ display:flex; flex-direction:column; }
+.news-item{ display:grid; grid-template-columns:168px 1fr; gap:20px; align-items:start;
+  text-decoration:none; color:var(--ink); padding:22px 0; border-bottom:1px solid var(--fog); }
+.news-item:first-child{ padding-top:0; }
+.news-item:last-child{ border-bottom:0; padding-bottom:0; }
+.news-item__pic{ aspect-ratio:4/3; overflow:hidden; }
+.news-item__pic img{ display:block; width:100%; height:100%; object-fit:cover; transition:transform .5s ease; }
+.news-item:hover .news-item__pic img{ transform:scale(1.04); }
+.news-item__body{ display:flex; flex-direction:column; }
+.news-item__title{ font-family:var(--font-head); font-weight:700; font-size:18px; line-height:1.25;
+  letter-spacing:-0.02em; color:var(--ink); margin:5px 0 6px; }
+.news-item__text{ font-family:var(--font-body); font-weight:500; font-size:15px; line-height:1.45; color:var(--ink); margin:0 0 8px;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+@media(max-width:900px){ .news-spread{ grid-template-columns:1fr; gap:40px; } }
+@media(max-width:520px){ .news-item{ grid-template-columns:120px 1fr; gap:14px; } }
+/* остальные посты (после лида и колонки) — ряд карточек: фото 4/3, подпись под фото */
+.news-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:32px; margin-top:64px; }
+.news-cell{ display:flex; flex-direction:column; text-decoration:none; color:var(--ink); }
+.news-cell__pic{ aspect-ratio:4/3; overflow:hidden; margin-bottom:14px; }
+.news-cell__pic img{ display:block; width:100%; height:100%; object-fit:cover; transition:transform .5s ease; }
+.news-cell:hover .news-cell__pic img{ transform:scale(1.04); }
+.news-cell__title{ font-family:var(--font-head); font-weight:700; font-size:18px; line-height:1.25;
+  letter-spacing:-0.02em; color:var(--ink); margin:5px 0 6px; }
+.news-cell__text{ font-family:var(--font-body); font-weight:500; font-size:15px; line-height:1.45; color:var(--ink); margin:0 0 8px;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+@media(max-width:900px){ .news-grid{ grid-template-columns:repeat(2,1fr); gap:24px; } }
+@media(max-width:560px){ .news-grid{ grid-template-columns:1fr; } }
+/* низ ленты — приглашение в группу */
+.news-cta{ margin-top:72px; display:flex; align-items:center; gap:24px; flex-wrap:wrap; }
+.news-cta__note{ font-family:var(--font-display); font-size:27px; color:var(--navy); }
 
 /* ── контакты + карта ───────────────────────────────── */
 .cmap{ display:grid; grid-template-columns:1fr 1.2fr; gap:48px; align-items:start; }   /* верх колонок по линии заголовка */
@@ -366,7 +494,7 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .map-frame iframe{ width:100%; height:100%; min-height:360px; border:0; }
 
 /* ── футер (тёмный, тихий, редакционный) ───────────── */
-.foot{ background:var(--navy); color:#fff; padding:96px 0 36px; }
+.foot{ background:var(--navy-top); color:#fff; padding:96px 0 36px; }
 .foot__cols{ display:grid; grid-template-columns:1.7fr 1fr 1.1fr; gap:64px; }
 @media(max-width:860px){ .foot__cols{ grid-template-columns:1fr; gap:44px; } }
 
@@ -394,7 +522,7 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   left: 0;
   right: 0;
   z-index: 100;
-  background: var(--navy) !important; /* всегда темный фон согласно ТЗ */
+  background: var(--navy-top) !important; /* тёмный navy шапки (свотч «Благородный Север») */
   transition: background 0.3s, padding 0.3s;
   box-shadow: 0 2px 10px rgba(0,0,0,0.15);
 }
@@ -500,6 +628,9 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   object-fit: cover;
 }
 
+/* чистый кадр (без паспарту/рамки) — для контентных авто-слайдеров */
+.slider-snap__slide--clean{ background:none; padding:0; border:0; }
+
 /* Управление слайдером */
 .slider-arrows {
   display: flex;
@@ -558,15 +689,16 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   border:0;
 }
 .house .slider-snap__slide img{ height:100%; }
-/* коллаж: два вертикальных кадра в ряд (по половине ширины, на всю высоту) */
-.house .slider-snap__slide--pair{ display:flex; gap:0; }
+/* коллаж: два вертикальных кадра в ряд — второй приподнят для асимметрии */
+.house .slider-snap__slide--pair{ display:flex; gap:0; align-items:flex-end; }
 .house .slider-snap__slide--pair img{ width:50%; }
-/* синий градиент для контраста текста (плотный снизу и слева) */
+.house .slider-snap__slide--pair img:nth-child(2){ height:88%; align-self:flex-start; }
+/* синий градиент для контраста текста — лёгкий, чтобы фото сохраняли естественный цвет */
 .house__scrim{
   position:absolute; inset:0; z-index:1; pointer-events:none;
   background:
-    linear-gradient(to top, var(--navy) 6%, rgba(15,42,71,.6) 34%, rgba(15,42,71,0) 72%),
-    linear-gradient(to right, rgba(15,42,71,.55), rgba(15,42,71,0) 58%);
+    linear-gradient(to top, var(--navy) 1%, rgba(15,42,71,.3) 20%, rgba(15,42,71,0) 50%),
+    linear-gradient(to right, rgba(15,42,71,.24), rgba(15,42,71,0) 42%);
 }
 .house__content{ position:absolute; left:0; right:0; bottom:0; z-index:2; padding-bottom:64px; }
 .house__text{ max-width:620px; }
@@ -616,11 +748,13 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 32px;
+  gap: 56px;
   margin-bottom: 40px;
   text-align: center;
 }
-.atmosphere-icon { flex: 0 0 auto; }
+/* фиксированная ширина колонки → одинаковое расстояние между иконками,
+   а длинные подписи переносятся на две строки, не «раздвигая» соседей */
+.atmosphere-icon { flex: 0 0 132px; width: 132px; }
 .atmosphere-icon {
   display: flex;
   flex-direction: column;
@@ -629,8 +763,8 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   color: #fff;
 }
 .atmosphere-icon__svg {
-  width: 140px;
-  height: 140px;
+  width: 52px;
+  height: 52px;
   color: #fff;
   transform-origin: center bottom;
   animation: icon-breathe 4s ease-in-out infinite;
@@ -647,12 +781,30 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 @media (prefers-reduced-motion: reduce) {
   .atmosphere-icon__svg{ animation: none; }
 }
-/* песочно-золотые значки (заказчик: наряднее) */
-.atmosphere-icons--gold .atmosphere-icon__svg{ color: var(--copper); }
+/* значки — основным золотом сайта (как заголовок блока) */
+.atmosphere-icons--gold .atmosphere-icon__svg{ color: var(--gold-l); }
+
+/* Заголовок «Атмосфера для двоих» — золотистым (заказчик 2026-07-01) */
+#atmosphere .h2{ color: var(--gold-l); }
+
+/* Блок 5 «Атмосфера» целиком в одном экране без прокрутки */
+#atmosphere{
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+#atmosphere .shead{ margin-bottom: 24px !important; }
+#atmosphere .atmosphere-icons{ margin-bottom: 28px; }
+#atmosphere > .wrap:last-child > div{ margin-top: 28px !important; }
 .atmosphere-icon__title {
   font-family: var(--font-head);
   font-size: 14px;
   font-weight: 600;
+  line-height: 1.25;
 }
 @media (max-width: 768px) {
   .atmosphere-icons {
@@ -665,89 +817,66 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   }
 }
 
-/* "Искусство отдыха" - таймлайн шагов */
+/* ── Блок 3 «Искусство отдыха» — карточки-этапы в два ряда (3×2).
+   Текст лежит на фото поверх navy-градиента снизу. Карточки компактные
+   (портретный кадр), блок может немного прокручиваться — не форсируем «в один экран». */
+.sec--art { padding: 72px 0; }
+.sec--art .shead { margin-bottom: clamp(24px, 3vw, 40px); }
 .art-steps {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 32px;
-  margin-top: 48px;
+  gap: 22px;
+  margin-top: 24px;
 }
-/* карточка без рамок: текст лёг на фото поверх коричневого линейного градиента снизу */
-.art-step {
-  display: flex;
-  flex-direction: column;
+/* карточка без рамок: текст лёг на фото поверх navy-градиента снизу */
+.art-step { display: flex; flex-direction: column; }
+.art-step__img {
+  width: 100%;
+  overflow: hidden;          /* прямые углы — по канону */
+  aspect-ratio: 4 / 5;       /* компактный портретный кадр */
+  position: relative;
 }
+.art-step__img img { width: 100%; height: 100%; object-fit: cover; }
 .art-step__overlay {
   position: absolute;
   left: 0; right: 0; bottom: 0;
   z-index: 1;
-  padding: 64px 22px 22px;
-  /* линейный градиент в цвет сцены: текст всегда читается на сплошном низе */
-  background: linear-gradient(to top, var(--bark) 22%, rgba(87,59,56,.8) 62%, rgba(87,59,56,0));
+  padding: 56px 20px 20px;
+  /* линейный градиент в цвет сцены (navy): текст всегда читается на сплошном низе */
+  background: linear-gradient(to top, var(--navy) 10%, rgba(15,42,71,.55) 50%, rgba(15,42,71,0) 88%);
 }
 .art-step__num {
   display: block;
   font-family: var(--font-head);
   font-weight: 700;
-  font-size: 44px;
+  font-size: 34px;
   line-height: 1;
   color: #fff;
   letter-spacing: -0.02em;
-  margin: 0 0 10px;
+  margin: 0 0 8px;
 }
 .art-step__title {
   font-family: var(--font-head);
   font-weight: 700;
-  font-size: 22px;
+  font-size: 20px;
   line-height: 1.15;
   letter-spacing: -0.02em;
   color: #fff;
-  margin: 0 0 10px;
+  margin: 0 0 8px;
 }
 .art-step__text {
   font-family: var(--font-body);
   font-weight: 500;
-  font-size: 16px;
+  font-size: 15px;
   line-height: 1.5;
   color: #fff;
   margin: 0;
 }
-.art-step__desc {
-  font-family: var(--font-head);
-  font-size: 16px;
-  line-height: 1.4;
-  color: #fff;
-  min-height: 3.2em; /* выравнивание высоты описаний */
-}
-.art-step__img {
-  width: 100%;
-  aspect-ratio: 8 / 9;            /* портрет, ~10% ниже 4:5: текст на градиенте внизу */
-  overflow: hidden;
-  position: relative;             /* для номера поверх фото */
-}
-.art-step__img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-/* карточка-рамка: скругление целиком (заказчик оставил), фото и подпись встык */
-.art-step.card--frame{ gap:0; overflow:hidden; }   /* прямые углы — фото не скруглённые */
-.art-step.card--frame .art-step__img{ border-radius:0; }
-/* второй ряд карточек смещён правее (image5, вариант «шахматка») */
-.art-steps--offset .art-step:nth-child(n+4){ transform: translateX(18%); }
 @media (max-width: 860px) {
-  .art-steps {
-    grid-template-columns: 1fr 1fr;
-  }
-  .art-steps--offset .art-step:nth-child(n+4){ transform: none; }
+  .art-steps { grid-template-columns: 1fr 1fr; }
 }
-@media (max-width: 560px) {
-  .art-steps {
-    grid-template-columns: 1fr;
-  }
-  .art-step__desc {
-    min-height: auto;
-  }
+@media (max-width: 520px) {
+  .art-steps { grid-template-columns: 1fr; }
 }
 
 /* "Наш мир" — сбалансированная редакционная мозаика: размеры разные (динамика),
@@ -758,6 +887,43 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   grid-template-columns: repeat(6, 1fr);
   gap: 28px 24px;
   margin-top: 32px;
+}
+/* Блок 6 «Наш мир» целиком в одном экране без прокрутки:
+   секция = колонка на весь вьюпорт, мозаика занимает остаток высоты,
+   фото тянутся ПО ВЫСОТЕ (а не по aspect-ratio), поэтому не выходят за экран. */
+#our-world{
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+#our-world > .wrap{ width: 100%; }
+#our-world .shead{ margin-bottom: 16px !important; }
+/* ОДИН ряд из 5 вертикальных (портретных) карточек: фото высокие, всё видно,
+   и блок целиком помещается в экран. Не две «летербокс»-строки. */
+#our-world .world-mosaic{
+  margin-top: 16px;
+  grid-template-columns: repeat(5, 1fr);
+  grid-auto-rows: 60vh;
+  gap: 20px;
+}
+#our-world .world-tile,
+#our-world .world-tile--wide,
+#our-world .world-tile--med{ grid-column: span 1; height: 100%; }
+#our-world .world-tile__pic{
+  aspect-ratio: auto;        /* высоту задаёт ряд сетки (60vh), а не пропорция кадра */
+  height: 100%;
+}
+#our-world > .wrap > div:last-child{ margin-top: 20px !important; }
+@media (max-width: 900px){
+  #our-world{ min-height: 0; }
+  #our-world .world-mosaic{ grid-template-columns: repeat(2, 1fr); grid-auto-rows: 42vh; }
+}
+@media (max-width: 560px){
+  #our-world .world-mosaic{ grid-template-columns: 1fr; grid-auto-rows: 46vh; }
 }
 .world-tile { display: block; }
 .world-tile--wide { grid-column: span 3; }   /* верхний ряд — две крупные */
@@ -822,6 +988,31 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
    Галерея — горизонтальная карусель прямых фото в белых рамках-паспарту со снапом. */
 .oasis-head{ max-width:62ch; margin:0 0 48px; }
 
+/* «Оазис» = карточка-визитка «о нас»: слева текст на светлой бумаге, справа карусель.
+   Блок намеренно выбивается из ритма страницы (своя раскладка), шрифты/цвета — каноничные. */
+.oasis-layout{
+  display:grid;
+  grid-template-columns:minmax(320px, 46%) 1fr;
+  gap:44px;
+  align-items:start;
+}
+/* левая колонка = вырезанный лист бумаги (PNG/webp с рваным прозрачным краем) поверх
+   коричневой сцены, текст лежит НА листе. Фон-картинка тянется на весь лист (100% 100%),
+   чтобы торцы бумаги были видны, а коричневый проступал сквозь прозрачные края.
+   Фолбэка-прямоугольника НЕТ (иначе спрячет рваные края). Отступы крупнее — текст держится от края листа. */
+.oasis-paper{
+  background-color:transparent;
+  background-image:var(--paper-tex);
+  background-size:100% 100%;
+  background-position:center;
+  background-repeat:no-repeat;
+  padding:clamp(44px,4.4vw,72px) clamp(44px,4.4vw,68px);
+}
+.oasis-paper .h2, .oasis-paper .body, .oasis-paper .oasis-chips{ color:var(--ink); }
+@media (max-width:900px){
+  .oasis-layout{ grid-template-columns:1fr; gap:28px; }
+}
+
 /* зерно бумаги поверх тёмной сцены.
    Альфа запечена прямо в SVG (feFuncA), CSS opacity НЕ используем — по канону. */
 .sec--grain{ position:relative; isolation:isolate; }
@@ -836,13 +1027,14 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 }
 .sec--grain > .wrap{ position:relative; z-index:1; }
 
-/* строка-чипсы под текстом */
+/* строка-чипсы под текстом — курсивный скрипт (Monotype Corsiva), как в примере заказчицы */
 .oasis-chips{
-  margin-top:24px;
-  font-family:var(--font-head);
-  font-weight:600;
-  font-size:16px;
-  color:var(--gold);
+  margin-top:28px;
+  font-family:var(--font-display);
+  font-weight:400;
+  font-size:27px;
+  line-height:1.2;
+  color:var(--bark);
   letter-spacing:0;
 }
 
@@ -852,7 +1044,17 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .oasis-carousel::after{
   content:""; position:absolute; top:0; bottom:0; right:0; width:90px;
   pointer-events:none; z-index:2;
-  background:linear-gradient(to right, rgba(87,59,56,0), var(--bark));
+  background:linear-gradient(to right, rgba(76,64,56,0), var(--bark));
+}
+/* зеркальный градиент СЛЕВА (карусель «Оазиса»): при листании карточки уходят под край в цвет сцены,
+   левый край перестаёт быть «рваным-обрубленным». Сцена «Оазиса» — золотая (--gold-l), фейды в неё. */
+.oasis-carousel--wide::before{
+  content:""; position:absolute; top:0; bottom:0; left:0; width:90px;
+  pointer-events:none; z-index:2;
+  background:linear-gradient(to left, rgba(211,176,122,0), var(--gold-l));
+}
+.oasis-carousel--wide::after{
+  background:linear-gradient(to right, rgba(211,176,122,0), var(--gold-l));
 }
 .oasis-carousel__track{
   display:flex;
@@ -866,6 +1068,8 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   padding:4px;
   cursor:grab;
 }
+/* карусель «Оазиса» с наклонёнными бумажными карточками — вертикальный воздух, чтобы углы не резались */
+.oasis-carousel--wide .oasis-carousel__track{ padding:24px 4px; align-items:center; }
 .oasis-carousel__track::-webkit-scrollbar{ display:none; }
 .oasis-carousel__track.dragging{ cursor:grabbing; scroll-behavior:auto; }
 
@@ -881,14 +1085,40 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .oasis-card img{
   display:block;
   width:100%;
+  height:auto;              /* перебиваем height-атрибут <Image>, чтобы aspect-ratio держал высоту */
   aspect-ratio:3/4;
   object-fit:cover;
   user-select:none;
   -webkit-user-drag:none;
 }
 
+/* «фотокарточка» на бумаге: паспарту = тот же вырезанный лист (текстура из --paper-tex),
+   лист чуть повёрнут, а фото контр-поворотом остаётся прямым.
+   Рамка ШИРОКАЯ (как изначально просила заказчица — «в два раза смелее»), низ больше — как у фотопечати. */
+.oasis-card--paper{
+  background-color:transparent;
+  background-image:var(--paper-tex);
+  background-size:100% 100%;
+  background-position:center;
+  background-repeat:no-repeat;
+  padding:clamp(22px,2.4vw,34px) clamp(22px,2.4vw,34px) clamp(38px,4.4vw,60px);
+  transform:rotate(var(--tilt, -2deg));
+  transform-origin:center;
+}
+.oasis-card--paper img{
+  transform:rotate(calc(-1 * var(--tilt, -2deg)));   /* фото прямое, компенсирует наклон листа */
+}
+/* лёгкий разнобой наклонов — «разложенные» карточки */
+.oasis-card--paper:nth-child(2n){ --tilt:1.6deg; }
+.oasis-card--paper:nth-child(3n){ --tilt:-2.6deg; }
+.oasis-card--paper:nth-child(4n){ --tilt:2.2deg; }
+.oasis-carousel--wide .oasis-card{
+  flex:0 0 clamp(280px, 64%, 400px);
+}
+
 @media (max-width: 760px){
   .oasis-card{ flex-basis:82%; }   /* одна карточка + явный край следующей */
+  .oasis-carousel--wide .oasis-card{ flex-basis:80%; }
 }
 
 /* «Атмосфера для двоих» — та же карусель-«фотокарточки», но мельче.
@@ -896,7 +1126,788 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .oasis-carousel--sm::after{
   background:linear-gradient(to right, rgba(15,42,71,0), var(--navy));
 }
+/* карточки мельче оазисных + кадр ниже (4/5 вместо 3/4), чтобы блок влезал в экран */
+.oasis-card--sm{ flex:0 0 clamp(220px, 30%, 340px); }
+.oasis-card--sm img{ aspect-ratio:4/5; }
 /* «Атмосфера» — паспарту и размер карточек как в «Оазисе» (всё наследуется от .oasis-card);
    отличается только цвет правого градиента (см. .oasis-carousel--sm выше) */
 
 
+/* ============================================================
+   ВКЛАДКА «ДОМ» (/accommodation/house-1)
+   Ритм: светлые сцены — база, тёмные фото-банды (для-кого, финал) — точечные акценты.
+   Канон: сплошной текст (тёмный на светлом / #fff на тёмном), прямые углы, теней нет.
+   ============================================================ */
+
+/* ── Блок 1: первый экран — текст слева, карусель фото справа (на синей сцене) ── */
+.hpage-hero{
+  padding-top:132px;           /* воздух под фиксированной шапкой (56px) */
+  padding-bottom:80px;
+  overflow:hidden;             /* правый full-bleed карусели не даёт горизонтальный скролл странице */
+}
+.hpage-hero .hh-lead{ color:#fff; }   /* синяя сцена → текст чисто-белый */
+.hh-grid{
+  display:grid;
+  grid-template-columns:minmax(320px, 42%) 1fr;
+  gap:56px;
+  align-items:center;
+}
+.hh-text{ max-width:560px; }
+.hh-lead{
+  font-family:var(--font-body); font-weight:500;
+  font-size:20px; line-height:1.45; color:var(--ink);
+  margin:0 0 16px;
+}
+.hh-lead:first-of-type{ margin-top:22px; }
+.hh-btn{ margin-top:16px; }
+@media(max-width:900px){
+  .hh-grid{ grid-template-columns:1fr; gap:32px; }
+  .hpage-hero{ padding-top:104px; }
+}
+/* карусель блока 1 живёт на синей сцене: правый градиент — в цвет --navy */
+.oasis-carousel--navy::after{
+  background:linear-gradient(to right, rgba(15,42,71,0), var(--navy));
+}
+
+/* ── Блок 2: «Для кого этот дом» — короткий блок на приглушённом фото ── */
+.forwhom{ position:relative; overflow:hidden; }
+.forwhom__bg{ position:absolute; inset:0; z-index:0; }
+.forwhom__bg img{ width:100%; height:100%; object-fit:cover; }
+/* приглушение фото — сплошной тёмный градиент (rgba запечён в цвет, не CSS opacity) */
+.forwhom__scrim{
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:linear-gradient(90deg, rgba(30,24,22,.8) 0%, rgba(30,24,22,.5) 45%, rgba(30,24,22,.12) 100%);
+}
+.forwhom .wrap{ position:relative; z-index:2; }
+.forwhom__inner{ max-width:640px; padding:100px 0; }
+.forwhom h2{ color:#fff; }
+.forwhom__intro{
+  font-family:var(--font-body); font-weight:600; font-size:20px; line-height:1.4;
+  color:#fff; margin:20px 0 22px;
+}
+.forwhom__list{ list-style:none; margin:0; padding:0; }
+.forwhom__list li{
+  position:relative; padding-left:20px; margin-bottom:8px;
+  font-family:var(--font-body); font-weight:500; font-size:19px; line-height:1.3; color:#fff;
+}
+.forwhom__list li::before{
+  content:""; position:absolute; left:0; top:.42em;
+  width:6px; height:6px; border-radius:50%; background:var(--gold-l);
+}
+@media(max-width:640px){ .forwhom__inner{ padding:72px 0; } }
+
+/* ── Блок 3: «Дом, который хочется рассматривать» — крупные карточки, подписи внизу ── */
+.details__intro{ max-width:70ch; margin:0 0 8px; }
+/* карточки мельче: ряд компактных портретных кадров, текст лежит на фото
+   поверх navy-градиента снизу — тот же приём, что «Искусство отдыха» на главной */
+.detail-grid{
+  display:grid; grid-template-columns:repeat(4,1fr); gap:20px; margin-top:40px;
+}
+@media(max-width:900px){ .detail-grid{ grid-template-columns:1fr 1fr; gap:24px; } }
+@media(max-width:520px){ .detail-grid{ grid-template-columns:1fr; gap:20px; } }
+.detail-card{ position:relative; display:flex; flex-direction:column; overflow:hidden; }
+.detail-card__media{
+  position:relative; aspect-ratio:3/4; overflow:hidden; background:var(--cream);
+}
+.detail-card__media img{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+  user-select:none; -webkit-user-drag:none;
+}
+/* слайд-шоу: видна только активная (жёсткая смена — visibility, без opacity) */
+.detail-card__media.is-slideshow img{ visibility:hidden; }
+.detail-card__media.is-slideshow img.is-active{ visibility:visible; }
+.detail-card__media--empty{
+  display:flex; align-items:center; justify-content:center; aspect-ratio:3/4;
+  border:1px solid var(--hair-gold);
+}
+.detail-card__soon{ font-family:var(--font-display); font-size:30px; color:var(--bark); }
+/* подпись — на фото у нижнего края, на сплошном navy-градиенте (белый текст) */
+.detail-card__cap{
+  position:absolute; left:0; right:0; bottom:0; z-index:1;
+  padding:48px 16px 16px;
+  background:linear-gradient(to top, var(--navy) 50%, rgba(15,42,71,.6) 78%, rgba(15,42,71,0));
+}
+.detail-card__title{
+  font-family:var(--font-head); font-weight:700; font-size:18px; letter-spacing:-.02em;
+  line-height:1.15; color:#fff; margin:0;
+}
+.detail-card__text{
+  font-family:var(--font-body); font-weight:500; font-size:14px; line-height:1.45;
+  color:#fff; margin:6px 0 0;
+  display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; overflow:hidden;
+}
+
+/* ── Блок 4: узкая карусель на всю ширину, клик → лайтбокс ── */
+.filmstrip-sec{ background:var(--canvas); overflow:hidden; }   /* белый холст (без кремовой полосы); клип: правый full-bleed не даёт горизонтальный скролл странице */
+.filmstrip{ position:relative; margin-right:-32px; }   /* правый край уходит за экран → видно, что листается */
+.filmstrip__track{
+  display:flex; gap:14px; overflow-x:auto; padding:4px 0;
+  scroll-snap-type:x proximity; -webkit-overflow-scrolling:touch;
+  scrollbar-width:none; cursor:grab;
+}
+.filmstrip__track::-webkit-scrollbar{ display:none; }
+.filmstrip__track.dragging{ cursor:grabbing; }
+.filmstrip__item{
+  flex:0 0 clamp(240px, 30%, 360px); scroll-snap-align:start;
+  aspect-ratio:16/10; overflow:hidden; padding:0; border:0; background:none; cursor:pointer;
+}
+.filmstrip__item img{ width:100%; height:100%; object-fit:cover; transition:transform .5s ease; }
+.filmstrip__item:hover img{ transform:scale(1.04); }
+
+/* лайтбокс — тёмная сцена-подложка (rgba запечён в цвет, не CSS opacity) */
+.lightbox{
+  position:fixed; inset:0; z-index:200; display:none;
+  align-items:center; justify-content:center;
+  background:rgba(20,15,14,.94);
+}
+.lightbox.open{ display:flex; }
+.lightbox__img{ max-width:92vw; max-height:86vh; object-fit:contain; }
+.lightbox__close{
+  position:absolute; top:20px; right:26px; z-index:2;
+  background:none; border:0; color:#fff; font-size:40px; line-height:1; cursor:pointer;
+}
+/* сцена лайтбокса обнимает кадр — стрелки лежат НА фото, у его краёв */
+.lightbox__stage{ position:relative; display:flex; align-items:center; justify-content:center; }
+.lightbox__nav{
+  position:absolute; top:0; bottom:0; z-index:2; width:26%; min-width:64px;
+  display:flex; align-items:center; padding:0 12px;
+  background:none; border:0; color:#fff; font-size:46px; line-height:1; cursor:pointer;
+  transition:color .2s;
+}
+.lightbox__nav:hover{ color:var(--gold-l); }
+.lightbox__nav--prev{ left:0; justify-content:flex-start; }
+.lightbox__nav--next{ right:0; justify-content:flex-end; }
+@media(max-width:640px){
+  .lightbox__nav{ font-size:38px; padding:0 8px; min-width:48px; }
+}
+
+/* ── Блок «Продумано до мелочей»: слева текст+чек-лист, справа обычная карусель ── */
+.kit-grid{ display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center; }
+@media(max-width:860px){ .kit-grid{ grid-template-columns:1fr; gap:36px; } }
+.kit__text{ max-width:560px; }
+.kit__p{ font-size:18px; line-height:1.55; margin:18px 0; }
+.kit__list{ list-style:none; margin:14px 0; padding:0; }
+.kit__list li{
+  position:relative; padding-left:32px; margin-bottom:7px;
+  font-family:var(--font-body); font-weight:500; font-size:17px; line-height:1.3; color:var(--ink);
+}
+.kit__list li::before{
+  content:"✓"; position:absolute; left:0; top:0;
+  color:var(--navy); font-weight:700; font-family:var(--font-head);
+}
+/* наш стиль: чистый кадр, прямые углы — без кремового паспарту и золотой обводки */
+
+/* ── Блок 5: «Отдых начинается ещё до приезда» — фото слева, текст справа ── */
+.arrival{ background:var(--cream); }
+.arrival-grid{ display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center; }
+@media(max-width:860px){ .arrival-grid{ grid-template-columns:1fr; gap:32px; } }
+.arrival__pic img{ width:100%; height:100%; object-fit:cover; aspect-ratio:4/5; }
+.arrival__text{ max-width:560px; }
+.arrival__p{ margin:16px 0 0; }
+.arrival__p:first-of-type{ margin-top:22px; }
+.arrival__cta{ display:flex; gap:14px; flex-wrap:wrap; margin-top:28px; }
+
+/* ── Финальный экран: фото 8 приглушено градиентом, текст по центру, иконки-настроения ── */
+.finale{
+  position:relative; min-height:86vh; display:flex; align-items:center;
+  text-align:center; overflow:hidden; padding:80px 0;
+}
+.finale__bg{ position:absolute; inset:0; z-index:0; }
+.finale__bg img{ width:100%; height:100%; object-fit:cover; }
+.finale__scrim{
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:
+    linear-gradient(180deg, rgba(15,42,71,.42) 0%, rgba(15,42,71,.26) 45%, rgba(15,42,71,.64) 100%),
+    radial-gradient(120% 90% at 50% 55%, rgba(15,42,71,.1), rgba(15,42,71,.52));
+}
+.finale .wrap{ position:relative; z-index:2; margin:0 auto; text-align:center; }
+.finale__title{
+  font-family:var(--font-display); font-weight:500; letter-spacing:0;
+  font-size:clamp(34px,5vw,60px); line-height:1.08; color:#fff;
+  max-width:20ch; margin:0 auto;
+}
+.finale__icons{
+  display:flex; flex-wrap:wrap; justify-content:center; gap:40px;
+  margin:44px auto 0;
+}
+.finale__icon{ display:flex; flex-direction:column; align-items:center; gap:10px; color:#fff; }
+.finale__icon-svg{ width:40px; height:40px; color:var(--gold-l); }
+.finale__icon-label{ font-family:var(--font-head); font-weight:600; font-size:15px; color:#fff; }
+.finale__cta{ margin-top:44px; }
+@media(max-width:560px){ .finale__icons{ gap:24px 30px; } }
+
+/* ── Модал: полная комплектация (боковая шторка) ── */
+.modal{ position:fixed; inset:0; z-index:210; display:none; }
+.modal.open{ display:block; }
+.modal__scrim{ position:absolute; inset:0; background:rgba(20,15,14,.6); }
+.modal__panel{
+  position:absolute; top:0; right:0; bottom:0; width:min(580px, 94vw);
+  background:var(--canvas); color:var(--ink);
+  overflow-y:auto; padding:56px 44px 64px;
+  border-left:1px solid var(--fog);
+}
+.modal__close{
+  position:absolute; top:18px; right:22px;
+  background:none; border:0; color:var(--ink); font-size:34px; line-height:1; cursor:pointer;
+}
+.modal__head{ border-bottom:1px solid var(--fog); padding-bottom:20px; margin-bottom:24px; }
+.modal__title{ font-family:var(--font-display); font-weight:500; font-size:34px; line-height:1.05; color:var(--ink); margin:0; }
+.modal__meta{ font-family:var(--font-body); font-weight:600; font-size:15px; color:var(--navy); margin:12px 0 0; }
+.modal__h{
+  font-family:var(--font-head); font-weight:700; font-size:19px; letter-spacing:-.02em;
+  color:var(--ink); margin:28px 0 12px;
+}
+.modal__list{ list-style:none; margin:0; padding:0; }
+.modal__list li{
+  position:relative; padding-left:18px; margin-bottom:7px;
+  font-family:var(--font-body); font-weight:500; font-size:15px; line-height:1.3; color:var(--ink);
+}
+.modal__list li::before{ content:""; position:absolute; left:0; top:.42em; width:5px; height:5px; border-radius:50%; background:var(--navy); }
+.modal__list li b{ font-weight:700; }
+.modal__cta{ margin-top:32px; }
+@media(max-width:560px){ .modal__panel{ padding:52px 28px 48px; } }
+
+
+/* ── Вкладка «Наш мир» (/our-world) ─────────────────────────────
+   По ТЗ (наш мир/Наш мир.docx): карусель вверху, интро, горизонтальное
+   меню слева, разделы-«страницы». Светлая база, текст сплошной --ink. */
+.ow-hero{ padding-top:calc(56px + 48px); padding-bottom:36px; background:var(--gold-l); }   /* вся шапка вкладки — золотая сцена, заголовок и интро на ней */
+.ow-hero__title{ margin:0 0 8px; }
+/* blob-карусель (по ТЗ: codepen.io/pehaa/pen/QYeqBO): фото в «каплях» (svg clip-path
+   с морфингом), бесконечная лента со сдвигом -50%, глубина слоёв — perspective+translateZ */
+.ow-blob__defs{ position:absolute; width:0; height:0; overflow:hidden; }
+.ow-blob__outer{
+  width:100%; height:76vh; min-height:560px;
+  display:flex; flex-direction:column; justify-content:center;
+  perspective:.5px; transform-style:preserve-3d; overflow:hidden;
+}
+.ow-blob__ctnr{
+  transform-style:preserve-3d;
+  display:inline-flex; align-items:center; margin:0 auto;
+  transform:translate3d(0,0,0); will-change:transform;
+  animation:ow-blob-slide 38s linear infinite;
+}
+@keyframes ow-blob-slide{ 100%{ transform:translate3d(-50%,0,0); } }
+/* капли крупные, разлёт по вертикали малый — ничего не срезается краями ленты */
+.ow-blob__div{ position:relative; transform:translate3d(0,-3vh,0); width:27vw; margin:0 -2vw; }
+.ow-blob__div--special { transform:translateZ(-0.2px)  scale(1.25) translateX(30px)   translateY(5vh); }
+.ow-blob__div--special1{ transform:translateZ(-0.25px) scale(1.25) translateX(-0.3vw) translateY(0); }
+.ow-blob__div--special2{ transform:translateZ(0.2px)   scale(1)    translateX(0.5vw)  translateY(-6vh); }
+.ow-blob__div--special3{ transform:translateZ(-0.5px)  scale(1.3)  translateX(-30px)  translateY(-7vh); }
+.ow-blob__div--special4{ transform:translateZ(-0.65px) scale(1.7)  translateX(30px)   translateY(-3vh); }
+.ow-blob__div *{ transform-origin:50% 50%; }
+.ow-blob__svg{ display:block; }
+@media(max-width:700px){
+  .ow-blob__outer{ height:48vh; min-height:320px; }
+  .ow-blob__svg{ width:300px; height:300px; }
+  .ow-blob__div{ width:46vw; }
+}
+.ow-hero__lead{
+  font-family:var(--font-body); font-weight:500; font-size:20px; line-height:1.4;
+  color:var(--ink); max-width:640px; margin:32px 0 0;
+}
+
+/* меню разделов — «переключалка» (сегмент-контрол) по центру: прямые углы,
+   тонкая navy-рамка, активный сегмент — сплошной navy с белым текстом */
+.ow-menubar{ background:var(--canvas); border-bottom:1px solid var(--fog); position:sticky; top:56px; z-index:20; padding:22px 0; }
+.ow-menu{ display:flex; justify-content:center; overflow-x:auto; scrollbar-width:none; }
+.ow-menu::-webkit-scrollbar{ display:none; }
+.ow-menu a{
+  font-family:var(--font-head); font-weight:600; font-size:15px; color:var(--ink);
+  padding:13px 26px; white-space:nowrap; cursor:pointer;
+  border:1px solid var(--navy); border-left:0;
+  transition:background .15s, color .15s;
+}
+.ow-menu a:first-child{ border-left:1px solid var(--navy); }
+.ow-menu a:hover{ background:var(--frost); color:var(--navy); }
+.ow-menu a.is-active{ background:var(--navy); color:#fff; }
+@media(max-width:900px){
+  .ow-menu{ justify-content:flex-start; }
+  .ow-menu a{ padding:11px 18px; }
+}
+/* «Искусство отдыха» — 7 сегментов: центр, но без обрезания левого края при переполнении */
+#aor-menubar .ow-menu{ justify-content:safe center; }
+#aor-menubar .ow-menu a{ padding:13px 20px; }
+
+.ow-section{ background:var(--canvas); }
+.ow-section .h2{ margin:0 0 26px; }
+.ow-par{
+  font-family:var(--font-body); font-weight:500; font-size:20px; line-height:1.4;
+  color:var(--ink); max-width:62ch; margin:0 0 18px;
+}
+/* текстовые блоки — две РАВНЫЕ колонки во всю ширину контента:
+   браузер сам делит ширину пополам, правая колонка доходит до правого края страницы */
+.ow-cols{ column-count:2; column-gap:72px; column-fill:balance; width:100%; }
+.ow-cols .ow-par{ break-inside:avoid; max-width:none; width:100%; }
+@media(max-width:860px){ .ow-cols{ column-count:1; } }
+
+/* текст + фото рядом, единым разворотом: колонки заданной ширины от левой линии,
+   фото сразу за текстом (не у правого края экрана — иначе между ними пустыня) */
+.ow-split{
+  grid-template-columns:minmax(0,600px) 1fr;   /* текст слева, остальное — до правого края */
+  gap:clamp(40px,5vw,80px);
+  align-items:start;
+}
+@media(max-width:860px){ .ow-split{ grid-template-columns:1fr; } }
+.ow-photo img{ display:block; width:100%; height:auto; object-fit:cover; }
+/* фото хозяйки — узкий вертикальный исходник 591×1048: держим компактный портрет */
+.ow-photo--owner{ max-width:400px; }
+.ow-photo--owner img{ aspect-ratio:3/4; }
+/* пруд: два кадра рядом, заполняют правую часть до края страницы */
+.ow-photo-stack{ display:grid; grid-template-columns:repeat(2,1fr); gap:24px; }
+.ow-photo-stack .ow-photo img{ aspect-ratio:4/3; height:100%; }
+@media(max-width:1100px){ .ow-photo-stack{ grid-template-columns:1fr; } }
+
+/* карточки собак */
+.ow-subhead{ margin:56px 0 24px; }
+.ow-dogs{ display:grid; grid-template-columns:repeat(3,1fr); gap:28px; }   /* во всю ширину контента */
+/* карточка собаки — «игральная карта»: лицо = крупное фото + кличка,
+   при наведении (или тапе) переворачивается на сплошную navy-сторону с текстом */
+.ow-dog{ perspective:1400px; cursor:pointer; }
+.ow-dog__inner{
+  position:relative; width:100%;
+  transform-style:preserve-3d;
+  transition:transform .65s cubic-bezier(.4,.1,.2,1);
+}
+.ow-dog:hover .ow-dog__inner,
+.ow-dog.is-flipped .ow-dog__inner{ transform:rotateY(180deg); }
+.ow-dog__front{ backface-visibility:hidden; -webkit-backface-visibility:hidden; }
+.ow-dog__front img{ display:block; width:100%; height:auto; aspect-ratio:3/4; object-fit:cover; }
+.ow-dog__name{
+  display:block; font-family:var(--font-display); font-weight:500; font-size:30px;
+  line-height:1.05; color:var(--ink); margin:16px 0 0;
+}
+.ow-dog__back{
+  position:absolute; inset:0;
+  transform:rotateY(180deg);
+  backface-visibility:hidden; -webkit-backface-visibility:hidden;
+  background:var(--navy);
+  padding:28px 26px;
+  overflow-y:auto; scrollbar-width:thin;
+}
+.ow-dog__name--back{ color:#fff; margin:0 0 14px; }
+.ow-dog__back p{
+  font-family:var(--font-body); font-weight:500; font-size:15px; line-height:1.5;
+  color:#fff; margin:0 0 10px;
+}
+@media(max-width:860px){ .ow-dogs{ grid-template-columns:1fr; max-width:480px; } }
+
+/* лента-карусель на светлой сцене: чистые кадры, правый край уходит в белый */
+.ow-strip{ position:relative; margin-right:-32px; margin-top:40px; }
+.ow-strip::after{
+  content:""; position:absolute; top:0; bottom:0; right:0; width:90px;
+  pointer-events:none; z-index:2;
+  background:linear-gradient(to right, rgba(255,255,255,0), var(--canvas));
+}
+.ow-strip .oasis-carousel__track{ padding:0 4px; }
+.ow-strip__item{ flex:0 0 clamp(260px, 30%, 380px); scroll-snap-align:start; margin:0; }
+.ow-strip__item img{
+  display:block; width:100%; height:auto; aspect-ratio:4/3; object-fit:cover;
+  user-select:none; pointer-events:none;
+}
+.ow-strip__item--sm{ flex:0 0 clamp(190px, 21%, 260px); }
+.ow-strip__item--sm img{ aspect-ratio:4/5; }
+.ow-cap{
+  font-family:var(--font-head); font-weight:600; font-size:16px; color:var(--ink);
+  margin-top:10px;
+}
+.ow-animals{ margin-top:64px; }
+.ow-animal-group .ow-subhead{ margin-top:44px; }
+.ow-animal-group .ow-strip{ margin-top:20px; }
+
+/* олени */
+.ow-deer-photos{ display:grid; grid-template-columns:repeat(3,1fr); gap:28px; margin:36px 0; }
+.ow-deer-photos .ow-photo img{ aspect-ratio:4/3; }
+@media(max-width:860px){ .ow-deer-photos{ grid-template-columns:1fr; max-width:520px; } }
+.ow-deer-note{ margin-top:8px; }
+.ow-links{ display:flex; flex-wrap:wrap; gap:14px; }
+
+/* интересные места: шапка по центру, чередование текст/фото */
+#places .h2{ text-align:center; }
+.ow-places-intro{ margin:0 auto 56px; text-align:center; max-width:56ch; }
+.ow-places{ display:grid; gap:72px; }
+.ow-place{ align-items:center; }
+/* собранный заголовок места: «Название: подзаголовок» одной строкой, единый стиль и цвет */
+.ow-place__title{
+  font-size:clamp(26px,2.4vw,34px); line-height:1.15;
+  color:var(--ink); margin:0 0 14px;
+}
+.ow-place__text .btn{ margin-top:8px; }
+.ow-place__addr{ font-size:16px; }
+.ow-place .ow-photo img{ aspect-ratio:4/3; }
+
+.ow-modal-photo{ margin:0 0 22px; }
+.ow-modal-photo img{ display:block; width:100%; height:auto; aspect-ratio:4/3; object-fit:cover; }
+
+@media(max-width:640px){
+  .ow-hero{ padding-top:calc(56px + 28px); }
+  .ow-menu{ gap:22px; }
+}
+
+/* ============================================================
+   Страница «Искусство отдыха» (/art-of-rest) — лонгрид-этапы.
+   Композиция по мокапам заказчицы, оформление — строго канон:
+   Corsiva + Lora, палитра-токены, прямые углы, без теней/opacity,
+   левая линия 32px, ритм сцен: светлые — база, тёмные — точечно.
+   ============================================================ */
+
+/* — hero: фото + мягкий navy-скрим, текст у нижней левой линии — */
+.aor-hero{ position:relative; min-height:78vh; display:flex; align-items:flex-end; color:#fff; overflow:hidden; }
+.aor-hero__media{ position:absolute; inset:0; }
+.aor-hero__media img{ width:100%; height:100%; object-fit:cover; }
+.aor-hero__scrim{ position:absolute; inset:0;
+  background:
+    linear-gradient(180deg,rgba(15,42,71,.42),rgba(15,42,71,0) 26%),
+    linear-gradient(180deg,rgba(15,42,71,0) 56%,rgba(15,42,71,.7)); }
+.aor-hero .wrap{ position:relative; z-index:2; padding-bottom:64px; padding-top:140px; }
+.aor-hero__title{ font-family:var(--font-display); font-weight:500; letter-spacing:0;
+  font-size:clamp(56px,8.5vw,110px); line-height:1.0; color:#fff; margin:0; }
+.aor-hero__lead{ font-family:var(--font-body); font-weight:500; font-size:20px; line-height:1.4;
+  color:#fff; max-width:56ch; margin:18px 0 0; }
+
+/* — общий ритм лонгрида — */
+.aor-sec{ padding:88px 0; }
+@media(max-width:640px){ .aor-sec{ padding:56px 0; } }
+
+/* шапка этапа */
+.aor-head{ max-width:880px; }
+.aor-head .h2{ margin:0; }
+.aor-head .aor-sub{ font-family:var(--font-body); font-weight:600; font-size:clamp(21px,2.2vw,26px);
+  line-height:1.25; color:var(--ink); margin:6px 0 0; }
+.sec--navy .aor-head .aor-sub{ color:#fff; }
+
+/* наборный абзац лонгрида — 18/1.5 (по рекомендациям для лонгридов: 16–19px, межстрочный 1.5) */
+.aor-p{ font-family:var(--font-body); font-weight:500; font-size:18px; line-height:1.5;
+  color:var(--ink); max-width:66ch; margin:0 0 16px; }
+.aor-p:last-child{ margin-bottom:0; }
+.sec--navy .aor-p{ color:#fff; }
+.aor-p--sm{ font-size:16px; line-height:1.55; }   /* второстепенная заметка — единственный младший кегль наборного */
+
+/* иконки — залитые Material Symbols (fill=currentColor, размер задаёт контейнер) */
+.aor-ico{ display:block; width:36px; height:36px; color:var(--navy); }
+.aor-plate .aor-ico{ margin-bottom:14px; }
+.aor-helper .aor-ico{ width:38px; height:38px; margin-bottom:16px; }
+.aor-tier__head{ display:flex; align-items:center; gap:14px; }
+.aor-tier .aor-ico{ width:40px; height:40px; flex:0 0 40px; margin-bottom:0; }
+/* строка-шапка карточки: иконка + заголовок в одну линию («Интересный факт», «Маленький ритуал») */
+.aor-card__head{ display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+.aor-card__head .aor-ico{ width:26px; height:26px; flex:0 0 26px; }
+.aor-card__head .aor-h3, .aor-card__head .aor-callout__strong{ margin:0; }
+
+/* текст + фото: кадр РОВНО по высоте текстового модуля (без разрывов),
+   правый край фото уходит до края экрана (журнальный разворот) */
+.aor-split{ display:grid; grid-template-columns:minmax(320px,1.15fr) minmax(280px,1fr); gap:48px; align-items:stretch; margin-top:36px; }
+.aor-split__pic img{ width:100%; height:auto; aspect-ratio:4/3; object-fit:cover; display:block; }
+.aor-split > .aor-split__pic{ position:relative; margin-right:-32px; min-height:380px; }
+.aor-split > .aor-split__pic img{ position:absolute; inset:0; height:100%; aspect-ratio:auto; }
+@media(max-width:860px){
+  .aor-split{ grid-template-columns:1fr; gap:28px; }
+  .aor-split > .aor-split__pic{ margin-right:0; min-height:0; }
+  .aor-split > .aor-split__pic img{ position:static; height:auto; aspect-ratio:4/3; }
+}
+
+/* ряд плашек (барьеры, «чего не требует вечер», «что меняется») */
+.aor-plates{ display:grid; grid-template-columns:repeat(4,1fr); gap:20px; margin-top:36px; }
+.aor-plates--3{ grid-template-columns:repeat(3,1fr); }
+.aor-plates--5{ grid-template-columns:repeat(5,1fr); }
+.aor-plate{ background:var(--frost); padding:26px 24px; }
+.sec--art .aor-plate{ background:var(--canvas); }
+.aor-plate__t{ font-family:var(--font-head); font-weight:600; font-size:18px; line-height:1.3; color:var(--ink); margin:0; }
+.aor-plate__x{ font-family:var(--font-body); font-weight:500; font-size:16px; line-height:1.5; color:var(--ink); margin:10px 0 0; }
+@media(max-width:900px){ .aor-plates, .aor-plates--5{ grid-template-columns:repeat(2,1fr); } }
+@media(max-width:520px){ .aor-plates, .aor-plates--5, .aor-plates--3{ grid-template-columns:1fr; } }
+@media(max-width:900px){ .aor-plates--3{ grid-template-columns:1fr; } }
+
+/* колонки «вопрос-ответ» введения */
+.aor-qa{ display:grid; grid-template-columns:repeat(3,1fr); gap:40px; margin-top:56px; }
+.aor-qa h3{ font-family:var(--font-head); font-weight:600; font-size:clamp(21px,2.2vw,26px); letter-spacing:-0.02em;
+  line-height:1.25; color:var(--ink); margin:0 0 12px; }
+.aor-qa p{ font-family:var(--font-body); font-weight:500; font-size:18px; line-height:1.5; color:var(--ink); margin:0 0 16px; }
+@media(max-width:900px){ .aor-qa{ grid-template-columns:1fr; gap:28px; } }
+
+/* выносная плашка-акцент (вывод, callout) */
+.aor-callout{ background:var(--frost); padding:32px; margin-top:28px; max-width:980px; }
+.sec--cream .aor-callout, .sec--art .aor-callout{ background:var(--canvas); }
+.aor-callout__strong{ font-family:var(--font-head); font-weight:600; font-size:18px; line-height:1.35; color:var(--ink); margin:0; }
+.aor-callout__text{ font-family:var(--font-body); font-weight:500; font-size:18px; line-height:1.5; color:var(--ink); margin:10px 0 0; }
+.aor-callout--navy{ background:var(--navy); }
+.aor-callout--navy .aor-callout__strong, .aor-callout--navy .aor-callout__text{ color:#fff; }
+
+/* финал сцены — крупная курсивная строка по центру, без фона;
+   отрицательный отступ сверху прижимает финал к своему разделу (принцип близости) */
+.aor-band{ padding:0 0 72px; margin-top:-32px; text-align:center; }
+.aor-band__line{ font-family:var(--font-display); font-weight:500; letter-spacing:0;
+  font-size:clamp(38px,4.6vw,60px); line-height:.9; color:var(--ink); margin:0 auto; max-width:30ch; text-wrap:balance; }
+.aor-band__note{ font-family:var(--font-body); font-weight:500; font-size:18px; line-height:1.5; color:var(--ink); margin:18px auto 0; max-width:58ch; }
+
+/* курсивная строка-финал внутри светлой сцены */
+.aor-line{ font-family:var(--font-display); font-weight:500; letter-spacing:0;
+  font-size:clamp(28px,3.2vw,40px); line-height:.9; color:var(--ink); margin:44px 0 0; max-width:30ch; }
+.aor-line--sm{ font-size:clamp(22px,2.2vw,28px); }
+.sec--navy .aor-line{ color:var(--gold-l); }
+
+/* термин с всплывающей научной справкой (лёгкая научность по docx) */
+.aor-term{ position:relative; border-bottom:1px dashed var(--gold-l); cursor:help; }
+.aor-term .aor-tip{ display:none; position:absolute; left:0; bottom:calc(100% + 12px); z-index:6;
+  width:min(440px,74vw); background:var(--sand); color:var(--ink); border:1px solid var(--hair-gold);
+  padding:18px 20px; font-family:var(--font-body); font-weight:500; font-size:16px; line-height:1.5; }
+.aor-term:hover .aor-tip, .aor-term:focus .aor-tip{ display:block; }
+.sec--navy .aor-term{ border-bottom-color:var(--gold-l); }
+
+/* двухколоночная связка блоков этапа */
+.aor-duo{ display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:start; margin-top:56px; }
+@media(max-width:860px){ .aor-duo{ grid-template-columns:1fr; gap:32px; } }
+
+/* две колонки наборного текста с иконкой (про женщин / про мужчин) — без плашек */
+.aor-genders{ margin-top:44px; }
+.aor-gender{ display:flex; align-items:flex-start; gap:16px; }
+.aor-gender .aor-ico{ flex:0 0 34px; width:34px; height:34px; margin-top:2px; }
+.aor-gender .aor-p{ margin:0; }
+.aor-h3{ font-family:var(--font-head); font-weight:600; font-size:clamp(21px,2.2vw,26px);
+  letter-spacing:-0.02em; line-height:1.25; color:var(--ink); margin:56px 0 12px; }
+.sec--navy .aor-h3{ color:#fff; }
+/* заголовок после шапки/внутри колонок и карточек — без верхнего отступа (воздух даёт контейнер) */
+.aor-duo > div .aor-h3:first-child, .aor-question .aor-h3{ margin-top:0; }
+/* сетка/плашки сразу после заголовка — прижаты к нему (20px), после текста — обычные 36px */
+.aor-h3 + .aor-plates, .aor-h3 + .aor-duo, .aor-h3 + .aor-tiles{ margin-top:20px; }
+
+/* карточка-«бумага» (эксперимент, факты) */
+.aor-card{ background:var(--frost); padding:32px; }
+.sec--cream .aor-card, .sec--sand .aor-card, .sec--art .aor-card{ background:var(--canvas); }
+.aor-card .aor-h3{ margin-bottom:14px; }
+.aor-card p{ font-family:var(--font-body); font-weight:500; font-size:16px; line-height:1.55; color:var(--ink); margin:0 0 10px; max-width:62ch; }
+.aor-card p:last-child{ margin-bottom:0; }
+.aor-card__strong{ font-family:var(--font-head); font-weight:600; font-size:17px; }
+
+/* ритуал — шаги с курсивными номерами */
+.aor-ritual{ background:var(--frost); padding:40px; margin-top:56px; }
+.sec--cream .aor-ritual{ background:var(--canvas); }
+.sec--navy .aor-ritual{ background:var(--frost); }
+.aor-ritual ol{ list-style:none; margin:20px 0 0; padding:0; display:grid; gap:18px; }
+.aor-ritual li{ display:grid; grid-template-columns:44px 1fr; gap:16px; align-items:start;
+  font-family:var(--font-body); font-weight:500; font-size:18px; line-height:1.45; color:var(--ink); }
+.aor-ritual li b{ font-family:var(--font-display); font-weight:500; font-size:34px; line-height:1; color:var(--gold-l); }
+.aor-ritual__note{ font-family:var(--font-body); font-weight:500; font-size:16px; line-height:1.5; color:var(--ink); margin:22px 0 0; }
+
+/* маркированный список с золотыми штрихами */
+.aor-list{ list-style:none; margin:10px 0 0; padding:0; }
+.aor-list li{ position:relative; padding-left:18px; margin-bottom:7px;
+  font-family:var(--font-body); font-weight:500; font-size:17px; line-height:1.3; color:var(--ink); }
+.aor-list li::before{ content:""; position:absolute; left:0; top:.42em; width:5px; height:5px; border-radius:50%; background:var(--gold-l); }
+.sec--navy .aor-list li{ color:#fff; }
+.sec--navy .aor-list li::before{ background:var(--gold-l); }
+
+/* гормоны — три бумажные карточки на тёмном */
+.aor-helpers{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:32px; }
+.aor-helper{ background:var(--frost); padding:30px 28px; }
+.aor-helper__name{ font-family:var(--font-display); font-weight:500; font-size:32px; line-height:1.05; color:var(--navy); margin:0; }
+.aor-helper__tag{ font-family:var(--font-head); font-weight:600; font-size:15px; line-height:1.35; color:var(--ink); margin:8px 0 0; }
+.aor-helper__text{ font-family:var(--font-body); font-weight:500; font-size:15px; line-height:1.5; color:var(--ink); margin:14px 0 0; }
+.aor-helper__fact{ font-family:var(--font-body); font-weight:500; font-size:14px; line-height:1.5; color:var(--ink); margin:16px 0 0; }
+@media(max-width:900px){ .aor-helpers{ grid-template-columns:1fr; } }
+
+/* атмосфера — пункты с золотыми иконками */
+.aor-atm{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px 40px; margin-top:28px; }
+.aor-atm div{ position:relative; padding-left:38px;
+  font-family:var(--font-body); font-weight:500; font-size:17px; line-height:1.45; color:#fff; }
+.aor-atm .aor-ico{ position:absolute; left:0; top:-1px; width:24px; height:24px; color:var(--gold-l); }
+.aor-atm__tail{ font-family:var(--font-display); font-weight:500; font-size:clamp(22px,2.4vw,30px);
+  line-height:1.2; color:var(--gold-l); margin:26px 0 0; text-align:right; }
+@media(max-width:900px){ .aor-atm{ grid-template-columns:repeat(2,1fr); } }
+@media(max-width:520px){ .aor-atm{ grid-template-columns:1fr; } }
+
+/* «маленькая мысль» — центральная кода этапа */
+.aor-thought{ margin-top:56px; text-align:center; }
+.aor-thought__title{ font-family:var(--font-display); font-weight:500; letter-spacing:0;
+  font-size:clamp(28px,3vw,38px); line-height:.9; color:var(--ink); margin:0 0 18px; }
+.sec--navy .aor-thought__title{ color:var(--gold-l); }
+.aor-thought p{ font-family:var(--font-body); font-weight:500; font-size:18px; line-height:1.5;
+  color:var(--ink); max-width:58ch; margin:0 auto 10px; }
+.sec--navy .aor-thought p{ color:#fff; }
+.aor-thought__accent{ font-family:var(--font-display); font-weight:500; letter-spacing:0;
+  font-size:clamp(26px,2.8vw,36px); line-height:.9; color:var(--ink); margin:26px auto 0; max-width:30ch; }
+.sec--navy .aor-thought__accent{ color:#fff; }
+
+/* «прислушайтесь к себе» — фото-плитки с подписями под кадром (как «Наш мир») */
+.aor-tiles{ display:grid; grid-template-columns:repeat(4,1fr); gap:20px; margin-top:36px; }
+.aor-tile{ margin:0; }
+.aor-tile img{ width:100%; height:auto; aspect-ratio:3/4; object-fit:cover; }
+.aor-tile figcaption{ font-family:var(--font-head); font-weight:600; font-size:16px; line-height:1.35; color:var(--ink); margin-top:12px; }
+@media(max-width:900px){ .aor-tiles{ grid-template-columns:repeat(2,1fr); } }
+@media(max-width:520px){ .aor-tiles{ grid-template-columns:1fr; } }
+
+/* вопрос второго дня — противопоставление курсивом */
+.aor-question{ margin-top:72px; text-align:center; }
+.aor-question__not{ font-family:var(--font-display); font-weight:500; font-size:clamp(24px,2.6vw,32px);
+  line-height:.9; color:var(--ink); margin:18px 0 0; }
+.aor-question__yes{ font-family:var(--font-display); font-weight:500; font-size:clamp(34px,4vw,52px);
+  line-height:.9; color:var(--ink); margin:8px 0 24px; }
+.aor-question p{ font-family:var(--font-body); font-weight:500; font-size:18px; line-height:1.5; color:var(--ink); max-width:58ch; margin:0 auto 8px; }
+
+/* — блок «Сколько времени нужно» — три уровня отдыха — */
+.aor-tiers{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:44px; }
+/* «небесный» mesh-фон: мягкие радиальные пятна frost + белый, эффект воздуха */
+.aor-tier{
+  background-color:var(--canvas);
+  background-image:
+    radial-gradient(110% 85% at 12% -6%, #fff 0%, rgba(255,255,255,0) 55%),
+    radial-gradient(120% 90% at 92% 12%, var(--frost) 0%, rgba(238,244,248,0) 62%),
+    radial-gradient(150% 110% at 50% 118%, var(--frost) 0%, #fff 78%);
+  padding:34px 30px; display:flex; flex-direction:column;
+  transition:transform .3s ease;
+}
+.aor-tier:hover{ transform:translateY(-10px); }
+.aor-tier__n{ font-family:var(--font-display); font-weight:500; font-size:clamp(38px,3.6vw,52px); line-height:1; color:var(--navy); margin:0; }
+.aor-tier__tag{ display:inline-block; align-self:flex-start; background:var(--navy); color:#fff;
+  font-family:var(--font-head); font-weight:600; font-size:15px; line-height:1.3;
+  padding:8px 16px; margin:6px 0 0; }
+.aor-tier__lead{ font-family:var(--font-body); font-weight:500; font-size:16px; line-height:1.5; color:var(--ink); margin:18px 0 0; }
+.aor-tier__lt{ font-family:var(--font-head); font-weight:600; font-size:16px; color:var(--ink); margin:18px 0 0; }
+.aor-tier .aor-list li{ font-size:16px; margin-bottom:8px; }
+.aor-tier__note{ font-family:var(--font-body); font-weight:500; font-size:16px; line-height:1.5; color:var(--ink); margin:16px 0 0; }
+.aor-tier__plate{ background:var(--frost); padding:16px 18px; margin-top:20px;
+  display:flex; align-items:center; min-height:78px; }   /* плашки-итоги одной высоты во всех трёх карточках */
+.aor-tier--navy .aor-tier__plate{ background:var(--canvas); }
+.aor-tier__plate p{ font-family:var(--font-head); font-weight:600; font-size:16px; line-height:1.4; color:var(--ink); margin:0; }
+.aor-tier__quotes{ margin:16px 0 0; }
+/* третья карточка (3+ ночи) — сплошной navy, текст белый, акценты единым золотом */
+.aor-tier--navy{ background-color:var(--navy); background-image:none; }
+.aor-tier--navy .aor-ico{ color:var(--gold-l); }
+.aor-tier--navy .aor-tier__n, .aor-tier--navy .aor-tier__lead, .aor-tier--navy .aor-tier__lt,
+.aor-tier--navy .aor-tier__note, .aor-tier--navy .aor-list li, .aor-tier--navy .aor-tier__quotes p{ color:#fff; }
+.aor-tier--navy .aor-tier__tag{ background:var(--gold-l); color:var(--ink); }
+.aor-tier__quotes p{ font-family:var(--font-body); font-weight:500; font-size:16px; line-height:1.5; color:var(--ink); margin:0 0 6px; }
+.aor-tier__spacer{ flex:1; }
+@media(max-width:900px){ .aor-tiers{ grid-template-columns:1fr; } }
+
+/* ритм ночей — обычный наборный текст одной колонкой, всё одним кеглем */
+.aor-rhythm{ margin-top:20px; }
+.aor-rhythm p{ font-family:var(--font-body); font-weight:500; font-size:18px;
+  line-height:1.5; color:var(--ink); margin:0 0 6px; }
+
+/* финал страницы — navy, текст по центру, CTA золотом */
+.aor-final{ background:var(--navy); padding:96px 0; text-align:center; }
+.aor-final__strong{ font-family:var(--font-display); font-weight:500; letter-spacing:0;
+  font-size:clamp(34px,4.4vw,56px); line-height:.9; color:#fff; margin:0 auto; }
+.aor-final__text{ font-family:var(--font-body); font-weight:500; font-size:19px; line-height:1.5; color:#fff; margin:18px auto 0; }
+.aor-final .btn{ margin-top:32px; }
+
+
+/* ══════════════ Вкладка «Атмосфера для двоих» (/atmosphere/) ══════════════ */
+
+/* — hero: тёмный кадр, текст слева на линии 32px — */
+.atm-hero{ position:relative; min-height:82vh; display:flex; align-items:center; overflow:hidden; }
+.atm-hero__bg{ position:absolute; inset:0; }
+.atm-hero__bg img{ width:100%; height:100%; object-fit:cover; display:block; }
+.atm-hero__scrim{ position:absolute; inset:0;
+  background:
+    linear-gradient(90deg, rgba(13,22,33,.78) 0%, rgba(13,22,33,.42) 36%, rgba(13,22,33,0) 64%),
+    linear-gradient(to top, rgba(13,22,33,.45) 0%, rgba(13,22,33,0) 26%); }
+.atm-hero .wrap{ position:relative; z-index:1; }
+.atm-hero__inner{ max-width:560px; padding:120px 0 80px; }
+.atm-hero__inner .h1{ color:#fff; }
+.atm-hero__lead{ font-family:var(--font-display); font-weight:500; letter-spacing:0;
+  font-size:clamp(26px,3.2vw,40px); line-height:1.15; color:var(--gold-l); margin:18px 0 0; }
+.atm-hero__text{ font-weight:500; font-size:20px; line-height:1.4; color:#fff; margin:16px 0 0; max-width:44ch; }
+.atm-hero .btn{ margin-top:30px; }
+
+/* — «Для вашей истории»: 4 карточки-повода — */
+/* карточки-поводы = канонный .detail-card (текст на фото поверх линейного navy-градиента);
+   своё здесь — только белая иконка на кадре, левый верхний угол (заказчик 2026-07-08) */
+.atm-occasions{ margin-top:0; }
+.atm-card__icon{ position:absolute; top:14px; left:14px; z-index:1; width:30px; height:30px; color:#fff; }
+
+/* — «что можем подготовить»: бегущая лента-полоса (иконки плывут по горизонтали,
+     бесшовный цикл из двух копий ряда; пауза при наведении) — */
+/* полоса full-bleed: вытягиваем на всю ширину экрана поверх паддингов .wrap (32px);
+   фона нет, лента живёт прямо на холсте; overflow:hidden держит край без гориз. скролла */
+.atm-marquee{ overflow:hidden; padding:12px 0; margin:8px -32px 0; }
+.atm-marquee__track{ display:flex; width:max-content; animation:atm-marquee 42s linear infinite; }
+.atm-marquee__group{ display:flex; align-items:flex-start; gap:72px; padding-right:72px; flex:0 0 auto; }
+@keyframes atm-marquee{ from{ transform:translate3d(0,0,0); } to{ transform:translate3d(-50%,0,0); } }
+@media (prefers-reduced-motion: reduce){ .atm-marquee__track{ animation:none; } }
+.atm-icons__item{ flex:0 0 128px; display:flex; flex-direction:column; align-items:center; gap:0; text-align:center; }
+.atm-icons__svg{ width:44px; height:44px; color:var(--gold-l); }
+.atm-icons__label{ font-family:var(--font-head); font-weight:500; font-size:14px; line-height:1.3; color:var(--ink); }
+
+/* — «Атмосфера сезона»: 8 карточек, второй ряд со смещением — */
+.season-row{ display:grid; grid-template-columns:repeat(4,1fr); gap:20px; }
+.season-row + .season-row{ margin-top:24px; }
+.season-row--offset{ padding-left:56px; }
+.season-card{ background:var(--canvas); border:0; padding:0; margin:0; text-align:left; cursor:pointer;
+  display:flex; flex-direction:column; font:inherit; color:inherit; }
+.season-card__pic{ position:relative; aspect-ratio:4/3; overflow:hidden; }
+.season-card__pic img{ display:block; width:100%; height:100%; object-fit:cover; transition:transform .5s ease; }
+.season-card:hover .season-card__pic img{ transform:scale(1.04); }
+.season-card__body{ padding:18px 20px 22px; display:flex; flex-direction:column; gap:8px; flex:1; }
+.season-card__label{ font-family:var(--font-head); font-weight:700; font-size:19px; line-height:1.3; color:var(--ink); letter-spacing:-0.01em; margin:0; }
+.season-card__text{ font-weight:500; font-size:15px; line-height:1.5; color:var(--ink); margin:0; }
+.season-card__more{ font-family:var(--font-head); font-weight:600; font-size:14px; color:var(--ink); margin-top:auto; padding-top:8px;
+  text-decoration:underline; text-underline-offset:3px; }
+
+/* — «Отдых начинается ещё до вашего приезда» (зелёная сцена) — */
+.atm-prep__grid{ display:grid; grid-template-columns:minmax(320px,46%) 1fr; gap:56px; align-items:center; }
+.atm-prep__p{ color:#fff; margin-top:16px; }
+.atm-prep__text .h2{ color:#fff; }
+.atm-prep__list{ list-style:none; margin:10px 0 0; padding:0; }
+.atm-prep__list li{ position:relative; padding-left:18px; font-weight:500; font-size:17px; line-height:1.3; color:#fff; margin-top:7px; }
+.atm-prep__list li::before{ content:""; position:absolute; left:0; top:.42em; width:5px; height:5px; border-radius:50%; background:var(--gold-l); }
+.atm-prep__accent{ font-family:var(--font-display); font-weight:500; letter-spacing:0;
+  font-size:clamp(26px,3vw,36px); line-height:1.15; color:#fff; margin:26px 0 0; }
+.atm-prep .btn{ margin-top:28px; }
+
+/* — «Примеры работ»: тексты по нажатию — */
+.atm-ex-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; align-items:start; }
+.atm-ex__title{ font-family:var(--font-head); font-weight:700; font-size:20px; line-height:1.25; color:var(--ink); letter-spacing:-0.01em; margin:18px 0 0; }
+.atm-ex__toggle{ display:inline-block; background:none; border:0; padding:0; margin:10px 0 0; cursor:pointer;
+  font-family:var(--font-head); font-weight:600; font-size:15px; color:var(--ink); text-decoration:underline; text-underline-offset:3px; }
+.atm-ex__toggle:hover{ text-decoration:none; }
+/* панель раскрывается плавно: grid-rows 0fr→1fr + лёгкий сдвиг содержимого */
+.atm-ex__panel{ display:grid; grid-template-rows:0fr; transition:grid-template-rows .45s ease, margin-top .45s ease; }
+.atm-ex__panel-in{ overflow:hidden; background:var(--cream); padding:0 22px; transform:translateY(-8px); transition:transform .45s ease; }
+.atm-ex__panel .atm-ex__list{ margin-top:20px; }
+.atm-ex__panel .atm-ex__total{ margin-bottom:20px; }
+.atm-ex__panel.open{ grid-template-rows:1fr; margin-top:14px; }
+.atm-ex__panel.open .atm-ex__panel-in{ transform:none; }
+@media (prefers-reduced-motion: reduce){
+  .atm-ex__panel, .atm-ex__panel-in{ transition:none; }
+}
+.atm-ex__list{ list-style:none; margin:0; padding:0; }
+.atm-ex__list li{ position:relative; padding-left:18px; font-weight:500; font-size:15.5px; line-height:1.3; color:var(--ink); }
+.atm-ex__list li + li{ margin-top:6px; }
+.atm-ex__list li::before{ content:""; position:absolute; left:0; top:.42em; width:5px; height:5px; border-radius:50%; background:var(--gold-l); }
+.atm-ex__total{ font-family:var(--font-head); font-weight:700; font-size:16px; color:var(--ink); margin-top:14px; }
+
+/* — финал «Каждая история не похожа на другую» + форма — */
+.atm-story{ display:grid; grid-template-columns:minmax(280px,380px) 1fr; gap:56px; align-items:center; }
+.atm-story__pic{ aspect-ratio:4/5; overflow:hidden; }
+.atm-story__pic img{ display:block; width:100%; height:100%; object-fit:cover; }
+.atm-story__p{ margin:16px 0 24px; }
+.atm-story__mess{ font-family:var(--font-head); font-weight:500; font-size:16px; color:var(--ink); margin:18px 0 0; }
+.atm-story__mess a{ font-weight:600; color:var(--ink); text-decoration:underline; text-underline-offset:3px; }
+.atm-story__mess a:hover{ text-decoration:none; }
+.atm-form{ display:none; margin-top:26px; max-width:560px; }
+.atm-form.open{ display:grid; gap:12px; }
+.atm-form__field{ font-family:var(--font-head); font-weight:500; font-size:16px; color:var(--ink);
+  background:#fff; border:1px solid var(--fog); border-radius:0; padding:13px 15px; width:100%; }
+.atm-form__field:focus{ outline:none; border-color:var(--navy); }
+.atm-form textarea{ resize:vertical; }
+.atm-form .btn{ justify-self:start; }
+
+/* — адаптив вкладки — */
+@media (max-width:1100px){
+  .season-row{ grid-template-columns:repeat(2,1fr); }
+  .season-row--offset{ padding-left:0; }
+}
+@media (max-width:900px){
+  .atm-prep__grid{ grid-template-columns:1fr; gap:36px; }
+  .atm-ex-grid{ grid-template-columns:1fr; max-width:620px; }
+  .atm-story{ grid-template-columns:1fr; gap:32px; }
+  .atm-story__pic{ max-width:380px; }
+  .atm-hero__inner{ padding:110px 0 70px; }
+}
+@media (max-width:560px){
+  .season-row{ grid-template-columns:1fr; }
+  .atm-marquee__group{ gap:44px; padding-right:44px; }
+  .atm-icons__item{ flex:0 0 112px; }
+}

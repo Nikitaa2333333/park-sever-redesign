@@ -1,0 +1,458 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import { site, withBase } from '../../lib/content';
+import { Image, getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import data from '../../data/atmosphere.json';
+
+// Вкладка «Атмосфера для двоих». Тексты — src/data/atmosphere.json (дословно из
+// «Атмосфера для двоих ч.2 04.07.docx» + макет из докса), генерится
+// scripts/extract-atmosphere.mjs. Фото ужаты scripts/optimize-atmosphere.mjs.
+const atmAssets = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/images/atmosphere/*.{jpg,jpeg,png}',
+  { eager: true },
+);
+const img = (name: string): ImageMetadata | undefined =>
+  atmAssets['/src/assets/images/atmosphere/' + name + '.jpg']?.default;
+// крупный webp для лайтбокса галерей праздников
+const bigOf = async (name: string) => {
+  const m = img(name);
+  return m ? (await getImage({ src: m, width: 1600, format: 'webp' })).src : '';
+};
+
+const c = site.contacts;
+const booking = site.contacts.bookingHref;
+
+const socialLabels: Record<string, string> = {
+  vk: 'ВКонтакте', whatsapp: 'WhatsApp', tiktok: 'TikTok',
+  instagram: 'Instagram', telegram: 'Telegram', youtube: 'YouTube', rutube: 'RUTUBE',
+};
+
+// меню — как на главной; «Атмосфера для двоих» = текущая страница
+const navMenu = [
+  { t: 'Главная', href: withBase('/') },
+  { t: 'Дома', href: withBase('/accommodation/house-1') },
+  { t: 'Искусство отдыха', href: withBase('/art-of-rest') },
+  { t: 'Атмосфера для двоих', href: withBase('/atmosphere/') },
+  { t: 'Наш мир', href: withBase('/our-world/') },
+  { t: 'Истории', href: withBase('/stories/') },
+];
+
+const { hero, forYourStory, seasons, prepared, story, examples } = data;
+
+// фото карточек «Для вашей истории» (подобраны из клиентских кадров)
+const storyCardPhotos = ['2.2', '11.3', '12.1', '11.1'];
+
+// иконки бегущей ленты «что можем подготовить» (порядок = forYourStory.icons) — Phosphor Fill
+const marqueeSvgs = [
+  '<svg viewBox="0 0 256 256" width="100%" height="100%" fill="currentColor"><path d="M210.35,129.36c-.81-.47-1.7-.92-2.62-1.36.92-.44,1.81-.89,2.62-1.36a40,40,0,1,0-40-69.28c-.81.47-1.65,1-2.48,1.59.08-1,.13-2,.13-3a40,40,0,0,0-80,0c0,.94,0,1.94.13,3-.83-.57-1.67-1.12-2.48-1.59a40,40,0,1,0-40,69.28c.81.47,1.7.92,2.62,1.36-.92.44-1.81.89-2.62,1.36a40,40,0,1,0,40,69.28c.81-.47,1.65-1,2.48-1.59-.08,1-.13,2-.13,2.95a40,40,0,0,0,80,0c0-.94-.05-1.94-.13-2.95.83.57,1.67,1.12,2.48,1.59A39.79,39.79,0,0,0,190.29,204a40.43,40.43,0,0,0,10.42-1.38,40,40,0,0,0,9.64-73.28ZM128,156a28,28,0,1,1,28-28A28,28,0,0,1,128,156Z"/></svg>',
+  '<svg viewBox="0 0 256 256" width="100%" height="100%" fill="currentColor"><path d="M173.79,51.48a221.25,221.25,0,0,0-41.67-34.34,8,8,0,0,0-8.24,0A221.25,221.25,0,0,0,82.21,51.48C54.59,80.48,40,112.47,40,144a88,88,0,0,0,176,0C216,112.47,201.41,80.48,173.79,51.48ZM96,184c0-27.67,22.53-47.28,32-54.3,9.48,7,32,26.63,32,54.3a32,32,0,0,1-64,0Z"/></svg>',
+  '<svg viewBox="0 0 256 256" width="100%" height="100%" fill="currentColor"><path d="M208,88H136V79a32.06,32.06,0,0,0,24-31c0-28-26.44-45.91-27.56-46.66a8,8,0,0,0-8.88,0C122.44,2.09,96,20,96,48a32.06,32.06,0,0,0,24,31v9H48a24,24,0,0,0-24,24v23.33a40.84,40.84,0,0,0,8,24.24V200a24,24,0,0,0,24,24H200a24,24,0,0,0,24-24V159.57a40.84,40.84,0,0,0,8-24.24V112A24,24,0,0,0,208,88ZM112,48c0-13.57,10-24.46,16-29.79,6,5.33,16,16.22,16,29.79a16,16,0,0,1-32,0Zm104,87.33c0,13.25-10.46,24.31-23.32,24.66A24,24,0,0,1,168,136a8,8,0,0,0-16,0,24,24,0,0,1-48,0,8,8,0,0,0-16,0,24,24,0,0,1-24.68,24C50.46,159.64,40,148.58,40,135.33V112a8,8,0,0,1,8-8H208a8,8,0,0,1,8,8Z"/></svg>',
+  '<svg viewBox="0 0 256 256" width="100%" height="100%" fill="currentColor"><path d="M224,48H32a8,8,0,0,0-8,8V192a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A8,8,0,0,0,224,48Zm-8,144H40V74.19l82.59,75.71a8,8,0,0,0,10.82,0L216,74.19V192Z"/></svg>',
+  '<svg viewBox="0 0 256 256" width="100%" height="100%" fill="currentColor"><path d="M111.49,52.63a15.8,15.8,0,0,0-26,5.77L33,202.78A15.83,15.83,0,0,0,47.76,224a16,16,0,0,0,5.46-1l144.37-52.5a15.8,15.8,0,0,0,5.78-26ZM65.14,161.13l19.2-52.79,63.32,63.32-52.8,19.2ZM160,72a37.8,37.8,0,0,1,3.84-15.58C169.14,45.83,179.14,40,192,40c6.7,0,11-2.29,13.65-7.21A22,22,0,0,0,208,23.94,8,8,0,0,1,224,24c0,12.86-8.52,32-32,32-6.7,0-11,2.29-13.65,7.21A22,22,0,0,0,176,72.06,8,8,0,0,1,160,72ZM136,40V16a8,8,0,0,1,16,0V40a8,8,0,0,1-16,0Zm101.66,82.34a8,8,0,1,1-11.32,11.31l-16-16a8,8,0,0,1,11.32-11.32Zm4.87-42.75-24,8a8,8,0,0,1-5.06-15.18l24-8a8,8,0,0,1,5.06,15.18Z"/></svg>',
+  '<svg viewBox="0 0 256 256" width="100%" height="100%" fill="currentColor"><path d="M216,72H180.92c.39-.33.79-.65,1.17-1A29.53,29.53,0,0,0,192,49.57,32.62,32.62,0,0,0,158.44,16,29.53,29.53,0,0,0,137,25.91a54.94,54.94,0,0,0-9,14.48,54.94,54.94,0,0,0-9-14.48A29.53,29.53,0,0,0,97.56,16,32.62,32.62,0,0,0,64,49.57,29.53,29.53,0,0,0,73.91,71c.38.33.78.65,1.17,1H40A16,16,0,0,0,24,88v32a16,16,0,0,0,16,16v64a16,16,0,0,0,16,16h60a4,4,0,0,0,4-4V120H40V88h80v32h16V88h80v32H136v92a4,4,0,0,0,4,4h60a16,16,0,0,0,16-16V136a16,16,0,0,0,16-16V88A16,16,0,0,0,216,72ZM84.51,59a13.69,13.69,0,0,1-4.5-10A16.62,16.62,0,0,1,96.59,32h.49a13.69,13.69,0,0,1,10,4.5c8.39,9.48,11.35,25.2,12.39,34.92C109.71,70.39,94,67.43,84.51,59Zm87,0c-9.49,8.4-25.24,11.36-35,12.4C137.7,60.89,141,45.5,149,36.51a13.69,13.69,0,0,1,10-4.5h.49A16.62,16.62,0,0,1,176,49.08,13.69,13.69,0,0,1,171.49,59Z"/></svg>',
+  '<svg viewBox="0 0 256 256" width="100%" height="100%" fill="currentColor"><path d="M246,98.73l-56-64A8,8,0,0,0,184,32H72a8,8,0,0,0-6,2.73l-56,64a8,8,0,0,0,.17,10.73l112,120a8,8,0,0,0,11.7,0l112-120A8,8,0,0,0,246,98.73ZM222.37,96H180L144,48h36.37ZM74.58,112l30.13,75.33L34.41,112Zm106.84,0h40.17l-70.3,75.33ZM75.63,48H112L76,96H33.63Z"/></svg>',
+];
+const marqueeItems = forYourStory.icons.map((label: string, i: number) => ({ label, svg: marqueeSvgs[i] }));
+
+// сезонные карточки: два ряда по 4, второй — со смещением (как просили в ТЗ)
+const seasonRows = [seasons.items.slice(0, 4), seasons.items.slice(4)];
+// галереи «внутри» карточек — крупные webp для лайтбокса
+const seasonGalleries: Record<string, string[]> = {};
+for (const s of seasons.items) seasonGalleries[s.id] = await Promise.all(s.photos.map(bigOf));
+
+const messengers = [
+  { label: 'WhatsApp', href: c.whatsapp },
+  { label: 'Telegram', href: 'https://t.me/park_sever' },
+  { label: 'ВКонтакте', href: 'https://vk.com/park_sever' },
+];
+---
+<SiteLayout title="Атмосфера для двоих — Парк Север">
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="wrap">
+      <a class="nav__logo" href={withBase('/')}>Парк Север</a>
+      <button class="nav__toggle" aria-label="Открыть меню">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav__menu">
+        {navMenu.map((m) => <a href={m.href}>{m.t}</a>)}
+      </div>
+      <a class="nav__book" href={booking}>Забронировать</a>
+    </div>
+  </nav>
+
+  <!-- HERO: тёмный кадр, текст слева на линии 32px -->
+  <section class="atm-hero" id="atm-hero">
+    <div class="atm-hero__bg">
+      <Image src={img('13.4')!} alt="Накрытый стол в стеклянном доме среди леса" widths={[960, 1440, 2000]} sizes="100vw" format="webp" quality={80} loading="eager" />
+    </div>
+    <div class="atm-hero__scrim"></div>
+    <div class="wrap wrap--flush">
+      <div class="atm-hero__inner">
+        <h1 class="h1">{hero.title}</h1>
+        <p class="atm-hero__lead">{hero.lead}</p>
+        <p class="atm-hero__text">{hero.text}</p>
+        <a class="btn btn--gold" href="#story">{hero.button}</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ДЛЯ ВАШЕЙ ИСТОРИИ: 4 повода -->
+  <section class="sec" id="for-your-story">
+    <div class="wrap wrap--flush">
+      <div class="shead" style="margin-bottom:44px;">
+        <h2 class="h2">{forYourStory.heading}</h2>
+        <p class="sub">{forYourStory.intro}</p>
+      </div>
+      <div class="detail-grid atm-occasions">
+        {forYourStory.cards.map((card: any, i: number) => (
+          <article class="detail-card">
+            <div class="detail-card__media">
+              <span class="atm-card__icon">
+                {card.icon === 'ring' && (
+                  <svg viewBox="0 0 256 256" width="100%" height="100%" fill="currentColor"><path d="M246,98.73l-56-64A8,8,0,0,0,184,32H72a8,8,0,0,0-6,2.73l-56,64a8,8,0,0,0,.17,10.73l112,120a8,8,0,0,0,11.7,0l112-120A8,8,0,0,0,246,98.73ZM222.37,96H180L144,48h36.37ZM74.58,112l30.13,75.33L34.41,112Zm106.84,0h40.17l-70.3,75.33ZM75.63,48H112L76,96H33.63Z"/></svg>
+                )}
+                {card.icon === 'cake' && (
+                  <svg viewBox="0 0 256 256" width="100%" height="100%" fill="currentColor"><path d="M208,88H136V79a32.06,32.06,0,0,0,24-31c0-28-26.44-45.91-27.56-46.66a8,8,0,0,0-8.88,0C122.44,2.09,96,20,96,48a32.06,32.06,0,0,0,24,31v9H48a24,24,0,0,0-24,24v23.33a40.84,40.84,0,0,0,8,24.24V200a24,24,0,0,0,24,24H200a24,24,0,0,0,24-24V159.57a40.84,40.84,0,0,0,8-24.24V112A24,24,0,0,0,208,88ZM112,48c0-13.57,10-24.46,16-29.79,6,5.33,16,16.22,16,29.79a16,16,0,0,1-32,0Zm104,87.33c0,13.25-10.46,24.31-23.32,24.66A24,24,0,0,1,168,136a8,8,0,0,0-16,0,24,24,0,0,1-48,0,8,8,0,0,0-16,0,24,24,0,0,1-24.68,24C50.46,159.64,40,148.58,40,135.33V112a8,8,0,0,1,8-8H208a8,8,0,0,1,8,8Z"/></svg>
+                )}
+                {card.icon === 'hearts' && (
+                  <svg viewBox="0 0 256 256" width="100%" height="100%" fill="currentColor"><path d="M240,102c0,70-103.79,126.66-108.21,129a8,8,0,0,1-7.58,0C119.79,228.66,16,172,16,102A62.07,62.07,0,0,1,78,40c20.65,0,38.73,8.88,50,23.89C139.27,48.88,157.35,40,178,40A62.07,62.07,0,0,1,240,102Z"/></svg>
+                )}
+                {card.icon === 'heart' && (
+                  <svg viewBox="0 0 256 256" width="100%" height="100%" fill="currentColor"><path d="M216,72H180.92c.39-.33.79-.65,1.17-1A29.53,29.53,0,0,0,192,49.57,32.62,32.62,0,0,0,158.44,16,29.53,29.53,0,0,0,137,25.91a54.94,54.94,0,0,0-9,14.48,54.94,54.94,0,0,0-9-14.48A29.53,29.53,0,0,0,97.56,16,32.62,32.62,0,0,0,64,49.57,29.53,29.53,0,0,0,73.91,71c.38.33.78.65,1.17,1H40A16,16,0,0,0,24,88v32a16,16,0,0,0,16,16v64a16,16,0,0,0,16,16h60a4,4,0,0,0,4-4V120H40V88h80v32h16V88h80v32H136v92a4,4,0,0,0,4,4h60a16,16,0,0,0,16-16V136a16,16,0,0,0,16-16V88A16,16,0,0,0,216,72ZM84.51,59a13.69,13.69,0,0,1-4.5-10A16.62,16.62,0,0,1,96.59,32h.49a13.69,13.69,0,0,1,10,4.5c8.39,9.48,11.35,25.2,12.39,34.92C109.71,70.39,94,67.43,84.51,59Zm87,0c-9.49,8.4-25.24,11.36-35,12.4C137.7,60.89,141,45.5,149,36.51a13.69,13.69,0,0,1,10-4.5h.49A16.62,16.62,0,0,1,176,49.08,13.69,13.69,0,0,1,171.49,59Z"/></svg>
+                )}
+              </span>
+              <Image src={img(storyCardPhotos[i])!} alt={card.title} widths={[420, 640, 900]} sizes="(max-width:1000px) 46vw, 290px" format="webp" quality={82} loading="lazy" draggable={false} />
+            </div>
+            <div class="detail-card__cap">
+              <h3 class="detail-card__title">{card.title}</h3>
+              <p class="detail-card__text">{card.text}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <!-- что можем подготовить: бегущая лента-полоса с иконками -->
+      <div class="atm-marquee" aria-label="Что можем подготовить">
+        <div class="atm-marquee__track">
+          {[0, 1].map((copy) => (
+            <div class="atm-marquee__group" aria-hidden={copy === 1 ? 'true' : undefined}>
+              {marqueeItems.map((it: any) => (
+                <div class="atm-icons__item">
+                  <span class="atm-icons__svg" set:html={it.svg} />
+                  <span class="atm-icons__label">{it.label}</span>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- АТМОСФЕРА СЕЗОНА: 8 праздников, два ряда, второй со смещением -->
+  <section class="sec sec--cream" id="seasons">
+    <div class="wrap wrap--flush">
+      <div class="shead" style="margin-bottom:44px;">
+        <h2 class="h2">{seasons.heading}</h2>
+        <p class="sub">{seasons.subtitle}</p>
+      </div>
+      {seasonRows.map((row, ri) => (
+        <div class={`season-row${ri === 1 ? ' season-row--offset' : ''}`}>
+          {row.map((s: any) => (
+            <article class="season-card" data-gallery={JSON.stringify(seasonGalleries[s.id])} role="button" tabindex="0" aria-label={`Фото: ${s.label}`}>
+              <div class="season-card__pic">
+                <Image src={img(s.cover)!} alt={s.label} widths={[420, 640, 900]} sizes="(max-width:1000px) 46vw, 290px" format="webp" quality={82} loading="lazy" draggable={false} />
+              </div>
+              <div class="season-card__body">
+                <h3 class="season-card__label">{s.label}: {s.title.toLowerCase()}</h3>
+                {s.paragraphs.map((p: string) => <p class="season-card__text">{p}</p>)}
+                <span class="season-card__more">Смотреть фото</span>
+              </div>
+            </article>
+          ))}
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ОТДЫХ НАЧИНАЕТСЯ ЕЩЁ ДО ВАШЕГО ПРИЕЗДА: карусель слева, текст справа -->
+  <section class="sec sec--green atm-prep" id="prepared">
+    <div class="wrap wrap--flush">
+      <div class="atm-prep__grid">
+        <div class="slider-container">
+          <div class="slider-snap">
+            {prepared.carousel.map((name: string) => (
+              <div class="slider-snap__slide slider-snap__slide--clean">
+                <Image src={img(name)!} alt="Дом подготовлен к приезду гостей" widths={[640, 960, 1280]} sizes="(max-width:900px) 100vw, 560px" format="webp" quality={82} loading="lazy" draggable={false} />
+              </div>
+            ))}
+          </div>
+          <div class="slider-dots">
+            {prepared.carousel.map((_: string, idx: number) => (
+              <button class={`slider-dot ${idx === 0 ? 'active' : ''}`} data-index={idx} aria-label={`Слайд ${idx + 1}`}></button>
+            ))}
+          </div>
+        </div>
+
+        <div class="atm-prep__text">
+          <h2 class="h2">{prepared.heading}</h2>
+          {prepared.paragraphs.map((p: string) => <p class="lead atm-prep__p">{p}</p>)}
+          <p class="lead atm-prep__p">{prepared.extrasIntro}</p>
+          <ul class="atm-prep__list">
+            {prepared.extras.map((li: string) => <li>{li}</li>)}
+          </ul>
+          <p class="atm-prep__accent">{prepared.accent}</p>
+          <a class="btn btn--gold" href="#story">{prepared.button}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ПРИМЕРЫ РАБОТ: тексты открываются по нажатию -->
+  <section class="sec" id="examples">
+    <div class="wrap wrap--flush">
+      <div class="shead shead--left" style="margin-bottom:40px;">
+        <h2 class="h2">{examples.heading}</h2>
+      </div>
+      <div class="atm-ex-grid">
+        {examples.items.map((ex: any) => (
+          <article class="atm-ex">
+            <div class="slider-container">
+              <div class="slider-snap">
+                {ex.photos.map((name: string) => (
+                  <div class="slider-snap__slide slider-snap__slide--clean">
+                    <Image src={img(name)!} alt={ex.title} widths={[420, 640, 900]} sizes="(max-width:900px) 100vw, 380px" format="webp" quality={82} loading="lazy" draggable={false} />
+                  </div>
+                ))}
+              </div>
+              <div class="slider-dots">
+                {ex.photos.map((_: string, idx: number) => (
+                  <button class={`slider-dot ${idx === 0 ? 'active' : ''}`} data-index={idx} aria-label={`Слайд ${idx + 1}`}></button>
+                ))}
+              </div>
+            </div>
+            <h3 class="atm-ex__title">{ex.title}</h3>
+            <button class="atm-ex__toggle" data-ex-toggle>Что было подготовлено</button>
+            <div class="atm-ex__panel">
+              <div class="atm-ex__panel-in">
+                <ul class="atm-ex__list">
+                  {ex.prepared.map((li: string) => <li>{li}</li>)}
+                </ul>
+                <div class="atm-ex__total">{ex.total}</div>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- КАЖДАЯ ИСТОРИЯ НЕ ПОХОЖА НА ДРУГУЮ: фото 9 + форма -->
+  <section class="sec sec--cream" id="story">
+    <div class="wrap wrap--flush">
+      <div class="atm-story">
+        <div class="atm-story__pic">
+          <Image src={img('9')!} alt="Ретривер с запиской" widths={[420, 640, 900]} sizes="(max-width:900px) 100vw, 380px" format="webp" quality={82} loading="lazy" draggable={false} />
+        </div>
+        <div class="atm-story__text">
+          <h2 class="h2">{story.heading}</h2>
+          <p class="lead atm-story__p">{story.text}</p>
+          <button class="btn btn--navy" data-form-toggle>{story.button}</button>
+          <p class="atm-story__mess">или напишите нам в мессенджере: {messengers.map((m, i) => (
+            <Fragment>{i > 0 && ' · '}<a href={m.href} target="_blank" rel="noopener noreferrer">{m.label}</a></Fragment>
+          ))}</p>
+
+          <form class="atm-form" id="story-form" data-email={story.email}>
+            <input class="atm-form__field" type="text" name="name" placeholder="Имя" required />
+            <input class="atm-form__field" type="tel" name="phone" placeholder="Телефон" required />
+            <input class="atm-form__field" type="email" name="email" placeholder="Эл. почта" />
+            <textarea class="atm-form__field" name="text" rows="4" placeholder="Расскажите о вашем поводе" required></textarea>
+            <button class="btn btn--navy" type="submit">Отправить</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="foot">
+    <div class="wrap wrap--flush">
+      <div class="foot__cols">
+        <div>
+          <div class="foot__brand">Парк Север</div>
+          <p class="foot__about">Пространство на краю леса для тех, кто выбирает тишину. Приватный дом без потока людей и лишнего, на территории 12,4 га. Без соседей. Только природа, животные и ощущение, что никуда не нужно спешить.</p>
+          <div class="socials">
+            {site.socials.map((s: any) => <a href={s.href} target="_blank" rel="noopener noreferrer">{socialLabels[s.type] ?? s.type}</a>)}
+          </div>
+        </div>
+        <div class="foot__col">
+          <h4>Разделы</h4>
+          {navMenu.map((m) => <a href={m.href}>{m.t}</a>)}
+        </div>
+        <div class="foot__col">
+          <h4>Контакты</h4>
+          <a href={c.phoneHref}>{c.phone}</a>
+          <a href={c.emailHref}>{c.email}</a>
+          <a href={c.whatsapp} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+          <span class="foot__addr">{c.address}</span>
+        </div>
+      </div>
+      <hr class="foot__rule" />
+      <div class="foot__cp">© {site.company} · {site.requisites.entity} · {site.requisites.note}</div>
+    </div>
+  </footer>
+
+  <!-- ЛАЙТБОКС галерей праздников -->
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button class="lightbox__close" aria-label="Закрыть">&times;</button>
+    <div class="lightbox__stage">
+      <button class="lightbox__nav lightbox__nav--prev" aria-label="Предыдущее">&#8249;</button>
+      <img class="lightbox__img" src="" alt="Фото крупно" />
+      <button class="lightbox__nav lightbox__nav--next" aria-label="Следующее">&#8250;</button>
+    </div>
+  </div>
+
+  <!-- КЛИЕНТСКИЕ СКРИПТЫ -->
+  <script is:inline>
+    // 1. Мобильное меню
+    const toggle = document.querySelector('.nav__toggle');
+    const menu = document.querySelector('.nav__menu');
+    if (toggle && menu) {
+      toggle.addEventListener('click', () => {
+        toggle.classList.toggle('active');
+        menu.classList.toggle('open');
+      });
+      menu.querySelectorAll('a').forEach(l => l.addEventListener('click', () => {
+        toggle.classList.remove('active');
+        menu.classList.remove('open');
+      }));
+    }
+
+    // 2. Слайдеры «как на главной» (блок «Дом среди леса»): фото сменяются сами,
+    //    внизу аккуратные точки; стрелок нет. Точки кликабельны, свайп — нативный.
+    //    Автосмена — вразнобой: у каждого слайдера свой стартовый сдвиг и чуть
+    //    разный интервал, чтобы все фото не листались одновременно.
+    document.querySelectorAll('.slider-container').forEach((container, si) => {
+      const track = container.querySelector('.slider-snap');
+      const dots = container.querySelectorAll('.slider-dot');
+      if (!track) return;
+      track.addEventListener('scroll', () => {
+        const index = Math.round(track.scrollLeft / track.offsetWidth);
+        dots.forEach((dot, idx) => dot.classList.toggle('active', idx === index));
+      });
+      dots.forEach((dot, idx) => dot.addEventListener('click', () => track.scrollTo({ left: idx * track.offsetWidth, behavior: 'smooth' })));
+      const n = track.querySelectorAll('.slider-snap__slide').length;
+      if (n > 1) setTimeout(() => {
+        const next = () => {
+          const i = Math.round(track.scrollLeft / track.offsetWidth);
+          track.scrollTo({ left: ((i + 1) % n) * track.offsetWidth, behavior: 'smooth' });
+        };
+        next();
+        setInterval(next, 5000 + si * 650);
+      }, 3500 + si * 1400);
+    });
+
+    // 3. Лайтбокс: клик по карточке праздника открывает её галерею.
+    //    Крупные кадры ПРЕДЗАГРУЖАЕМ, чтобы не было пустого экрана после клика:
+    //    первый кадр каждой галереи — сразу после загрузки страницы (в простое),
+    //    всю галерею карточки — при наведении, соседние кадры — при листании.
+    (function () {
+      const box = document.getElementById('lightbox');
+      if (!box) return;
+      const warmed = new Set();
+      const warm = (u) => { if (u && !warmed.has(u)) { warmed.add(u); new Image().src = u; } };
+      const imgEl = box.querySelector('.lightbox__img');
+      let urls = [], cur = 0;
+      const show = () => {
+        imgEl.src = urls[cur];
+        warm(urls[(cur + 1) % urls.length]);
+        warm(urls[(cur - 1 + urls.length) % urls.length]);
+      };
+      const open = (list) => { urls = list; cur = 0; show(); box.classList.add('open'); box.setAttribute('aria-hidden', 'false'); };
+      const close = () => { box.classList.remove('open'); box.setAttribute('aria-hidden', 'true'); imgEl.src = ''; };
+      const step = (d) => { cur = (cur + d + urls.length) % urls.length; show(); };
+      const galleries = [];
+      document.querySelectorAll('.season-card').forEach(card => {
+        let list = [];
+        try { list = JSON.parse(card.dataset.gallery) || []; } catch (e) { /* нет галереи */ }
+        galleries.push(list);
+        const warmAll = () => list.forEach(warm);
+        card.addEventListener('pointerenter', warmAll, { once: true });
+        card.addEventListener('focus', warmAll, { once: true });
+        const openCard = () => { if (list.length) open(list); };
+        card.addEventListener('click', openCard);
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openCard(); }
+        });
+      });
+      // первый кадр каждой галереи греем заранее (когда браузер свободен)
+      const warmCovers = () => galleries.forEach(list => warm(list[0]));
+      if ('requestIdleCallback' in window) requestIdleCallback(warmCovers, { timeout: 3000 });
+      else setTimeout(warmCovers, 1200);
+      box.querySelector('.lightbox__close').addEventListener('click', close);
+      box.querySelector('.lightbox__nav--prev').addEventListener('click', (e) => { e.stopPropagation(); step(-1); });
+      box.querySelector('.lightbox__nav--next').addEventListener('click', (e) => { e.stopPropagation(); step(1); });
+      box.addEventListener('click', (e) => { if (e.target === box) close(); });
+      document.addEventListener('keydown', (e) => {
+        if (!box.classList.contains('open')) return;
+        if (e.key === 'Escape') close();
+        else if (e.key === 'ArrowLeft') step(-1);
+        else if (e.key === 'ArrowRight') step(1);
+      });
+    })();
+
+    // 4. «Примеры работ»: текст открывается по нажатию
+    document.querySelectorAll('[data-ex-toggle]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const panel = btn.parentElement.querySelector('.atm-ex__panel');
+        const opened = panel.classList.toggle('open');
+        btn.textContent = opened ? 'Свернуть' : 'Что было подготовлено';
+      });
+    });
+
+    // 5. Форма «Рассказать о своей истории»: кнопка раскрывает поля,
+    //    отправка — письмом на почту парка (через почтовый клиент гостя)
+    (function () {
+      const form = document.getElementById('story-form');
+      const btn = document.querySelector('[data-form-toggle]');
+      if (!form || !btn) return;
+      btn.addEventListener('click', () => {
+        form.classList.toggle('open');
+        if (form.classList.contains('open')) form.querySelector('input').focus();
+      });
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const v = (n) => form.querySelector(`[name="${n}"]`).value.trim();
+        const body = `Имя: ${v('name')}\nТелефон: ${v('phone')}\nПочта: ${v('email')}\n\n${v('text')}`;
+        location.href = `mailto:${form.dataset.email}?subject=${encodeURIComponent('Моя история — Парк Север')}&body=${encodeURIComponent(body)}`;
+      });
+    })();
+
+    // 6. Русский типограф — короткие слова (1–2 буквы) клеим к следующему
+    //    слову неразрывным пробелом, чтобы не висели в конце строки.
+    (function () {
+      const glue = (s) => {
+        let out = s, prev;
+        do { prev = out; out = out.replace(/(^|[\s(«"—])([А-ЯЁа-яёA-Za-z]{1,2})[ \t]+/g, '$1$2 '); }
+        while (out !== prev);
+        return out;
+      };
+      const SKIP = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'TEXTAREA', 'INPUT']);
+      const walk = (node) => {
+        for (const child of Array.from(node.childNodes)) {
+          if (child.nodeType === 3) {
+            if (/[А-Яа-яЁё]/.test(child.nodeValue)) {
+              const glued = glue(child.nodeValue);
+              if (glued !== child.nodeValue) child.nodeValue = glued;
+            }
+          } else if (child.nodeType === 1 && !SKIP.has(child.tagName)) {
+            walk(child);
+          }
+        }
+      };
+      walk(document.body);
+    })();
+  </script>
+</SiteLayout>

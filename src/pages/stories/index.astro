@@ -1,0 +1,137 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import { site, withBase } from '../../lib/content';
+import { vkNews, vkGroupHref, newsImg } from '../../lib/vk-news';
+
+// Вкладка «Истории» — лента постов из ВК (build-time снапшот, см. src/lib/vk-news.ts).
+// Композиция — журнальный разворот: свежий пост крупно (лид), следующие три —
+// компактной колонкой, остальные — рядом карточек ниже.
+const newsLead = vkNews[0];
+const newsSide = vkNews.slice(1, 4);
+const newsMore = vkNews.slice(4);
+
+const c = site.contacts;
+const booking = site.contacts.bookingHref;
+
+const socialLabels: Record<string, string> = {
+  vk: 'ВКонтакте', whatsapp: 'WhatsApp', tiktok: 'TikTok',
+  instagram: 'Instagram', telegram: 'Telegram', youtube: 'YouTube', rutube: 'RUTUBE',
+};
+
+// меню — как на главной; «Истории» = текущая страница
+const navMenu = [
+  { t: 'Главная', href: withBase('/') },
+  { t: 'Дома', href: withBase('/accommodation/house-1') },
+  { t: 'Искусство отдыха', href: withBase('/art-of-rest') },
+  { t: 'Атмосфера для двоих', href: withBase('/atmosphere/') },
+  { t: 'Наш мир', href: withBase('/our-world/') },
+  { t: 'Истории', href: withBase('/stories/') },
+];
+---
+<SiteLayout title="Истории — Парк Север">
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="wrap">
+      <a class="nav__logo" href={withBase('/')}>Парк Север</a>
+      <button class="nav__toggle" aria-label="Открыть меню">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav__menu">
+        {navMenu.map((m) => <a href={m.href}>{m.t}</a>)}
+      </div>
+      <a class="nav__book" href={booking}>Забронировать</a>
+    </div>
+  </nav>
+
+  <!-- Лента историй (посты из ВК) -->
+  <section class="sec" id="stories">
+    <div class="wrap wrap--flush">
+      <div class="news-head">
+        <h1 class="h1">Наши истории</h1>
+        <a class="news-head__vk" href={vkGroupHref} target="_blank" rel="noopener noreferrer">Мы ВКонтакте →</a>
+      </div>
+
+      {newsLead && (
+        <div class="news-spread">
+          <!-- Лид: свежий пост крупно -->
+          <a class="news-lead" href={newsLead.link} target="_blank" rel="noopener noreferrer">
+            <div class="news-lead__pic">
+              <img src={newsImg(newsLead.image)} alt={newsLead.title} loading="eager" />
+            </div>
+            <span class="news-date">{newsLead.date}</span>
+            <h2 class="news-lead__title">{newsLead.title}</h2>
+            <p class="news-lead__text">{newsLead.text}</p>
+            <span class="news-more">Читать в ВКонтакте →</span>
+          </a>
+          <!-- Колонка: следующие посты компактно -->
+          <div class="news-side">
+            {newsSide.map((post) => (
+              <a class="news-item" href={post.link} target="_blank" rel="noopener noreferrer">
+                <div class="news-item__pic">
+                  <img src={newsImg(post.image)} alt={post.title} loading="lazy" />
+                </div>
+                <div class="news-item__body">
+                  <span class="news-date">{post.date}</span>
+                  <h3 class="news-item__title">{post.title}</h3>
+                  <p class="news-item__text">{post.text}</p>
+                  <span class="news-more">Читать в ВКонтакте →</span>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <!-- Остальные посты — ряд карточек -->
+      {newsMore.length > 0 && (
+        <div class="news-grid">
+          {newsMore.map((post) => (
+            <a class="news-cell" href={post.link} target="_blank" rel="noopener noreferrer">
+              <div class="news-cell__pic">
+                <img src={newsImg(post.image)} alt={post.title} loading="lazy" />
+              </div>
+              <span class="news-date">{post.date}</span>
+              <h3 class="news-cell__title">{post.title}</h3>
+              <p class="news-cell__text">{post.text}</p>
+              <span class="news-more">Читать в ВКонтакте →</span>
+            </a>
+          ))}
+        </div>
+      )}
+
+      <!-- Приглашение в группу -->
+      <div class="news-cta">
+        <span class="news-cta__note">Больше историй — в нашей группе</span>
+        <a class="btn btn--navy" href={vkGroupHref} target="_blank" rel="noopener noreferrer">Открыть ВКонтакте</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="foot">
+    <div class="wrap wrap--flush">
+      <div class="foot__cols">
+        <div>
+          <div class="foot__brand">Парк Север</div>
+          <p class="foot__about">Пространство на краю леса для тех, кто выбирает тишину. Приватный дом без потока людей и лишнего, на территории 12,4 га. Без соседей. Только природа, животные и ощущение, что никуда не нужно спешить.</p>
+          <div class="socials">
+            {site.socials.map((s: any) => <a href={s.href} target="_blank" rel="noopener noreferrer">{socialLabels[s.type] ?? s.type}</a>)}
+          </div>
+        </div>
+        <div class="foot__col">
+          <h4>Разделы</h4>
+          {navMenu.map((m) => <a href={m.href}>{m.t}</a>)}
+        </div>
+        <div class="foot__col">
+          <h4>Контакты</h4>
+          <a href={c.phoneHref}>{c.phone}</a>
+          <a href={c.emailHref}>{c.email}</a>
+          <a href={c.whatsapp} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+          <span class="foot__addr">{c.address}</span>
+        </div>
+      </div>
+      <hr class="foot__rule" />
+      <div class="foot__cp">© {site.company} · {site.requisites.entity} · {site.requisites.note}</div>
+    </div>
+  </footer>
+</SiteLayout>

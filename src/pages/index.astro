@@ -1,7 +1,23 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
-import { getPage, site, reviews, withBase } from '../lib/content';
-import vkNewsJson from '../../public/vk-news.json';
+import { getPage, site, withBase } from '../lib/content';
+import { vkNews, vkGroupHref, newsImg } from '../lib/vk-news';
+import { Image, getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+// Картинки главной лежат в src/assets/images и оптимизируются Astro (webp + адаптивный srcset).
+// Резолвер переводит путь из JSON ("/images/...") в импортированный ассет.
+const imgAssets = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/images/**/*.{jpg,jpeg,png}',
+  { eager: true },
+);
+const img = (p?: string): ImageMetadata | undefined =>
+  p ? imgAssets['/src/assets' + p.split('?')[0]]?.default : undefined;
+// оптимизированный постер для <video> (webp через getImage)
+const posterOf = async (p: string | undefined, width: number) => {
+  const m = img(p);
+  return m ? (await getImage({ src: m, width, format: 'webp' })).src : undefined;
+};
 
 const page = getPage('home');
 const byId: Record<string, any> = Object.fromEntries(page.sections.map((s: any) => [s.id, s]));
@@ -16,9 +32,19 @@ const heroDesktop = heroVideos.find((v: any) => v.variant === 'desktop');
 const heroMobile = heroVideos.find((v: any) => v.variant === 'mobile');
 const heroAutumn = heroVideos.find((v: any) => v.variant === 'autumn-desktop');
 const heroWinter = heroVideos.find((v: any) => v.variant === 'winter-desktop');
+const heroCover = img('/images/hero-cover.jpg'); // статичная обложка hero (вместо видео)
+const _paperMeta = img('/images/paper.png'); // вырезанный лист бумаги (прозрачный фон) — фон плашки «Оазиса»
+const paperTexUrl = _paperMeta ? (await getImage({ src: _paperMeta, width: 1120, format: 'webp' })).src : undefined;
+const heroDesktopPoster = await posterOf(heroDesktop?.poster, 1920);
+const heroMobilePoster = await posterOf(heroMobile?.poster, 1080);
+const heroAutumnPoster = await posterOf(heroAutumn?.poster, 1920);
+const heroWinterPoster = await posterOf(heroWinter?.poster, 1920);
 
 const heroEyebrow = blockOf(slider, 'subtitle')?.text; // "Отдых для двоих среди леса"
 const heroTitle = blockOf(slider, 'heading')?.text; // "Парк Север"
+const _htWords = (heroTitle ?? '').trim().split(/\s+/);
+const heroTitleAccent = _htWords.length > 1 ? _htWords.pop() : ''; // последнее слово — золотой акцент («Север»)
+const heroTitleMain = _htWords.join(' ');
 const heroParas = (slider?.blocks ?? []).filter((b: any) => b.type === 'paragraph' && !b.disabled && b.variant !== 'accent' && !b.text.includes('Деятельность'));
 const heroAccent = (slider?.blocks ?? []).find((b: any) => b.type === 'paragraph' && b.variant === 'accent')?.text; // курсивная строка hero (1.4)
 const activityBadge = (slider?.blocks ?? []).find((b: any) => b.type === 'paragraph' && b.text.includes('Деятельность'))?.text;
@@ -28,7 +54,7 @@ const oasis = byId['oasis'];
 const oasisTitle = blockOf(oasis, 'heading')?.text;
 const oasisParas = blocksOf(oasis, 'paragraph').filter((b: any) => b.variant !== 'chips');
 const oasisChips = blocksOf(oasis, 'paragraph').find((b: any) => b.variant === 'chips')?.text;
-const oasisGallery = blockOf(oasis, 'gallery')?.images ?? [];
+const oasisGallery = (blockOf(oasis, 'gallery')?.images ?? []).slice(0, 3);   // только первые 3 фото
 
 // — art-of-rest (new) —
 const art = byId['art-of-rest'];
@@ -82,58 +108,10 @@ const worldDesc: string[] = [
 const advantages = byId['advantages'];
 const advantagesItems = advantages?.items ?? [];
 
-// — stories (ВК + отзывы Яндекс) —
+// — истории (ВК + отзывы Яндекс); лента новостей — из общего модуля src/lib/vk-news.ts —
 const storiesSec = byId['reviews'];
-const ot = (s: any) => blockOf(s, 'overtitle')?.text;
 const hd = (s: any) => blockOf(s, 'heading')?.text;
-const reviewItems = reviews?.items ?? [];
-const vk = site.integrations.vkNews ?? {};
 const yandexReviewsSrc = site.integrations.yandexReviews?.iframeSrc;
-
-// — новости из ВК (build-time снапшот public/vk-news.json + seed-фолбэк) —
-// Уровни фолбэка: живой JSON (перегенерируется в CI парсером) → seed-массив ниже
-// (рендерится мгновенно без токена) → пустой блок-ссылка на группу. Сайт не ломается.
-// ВАЖНО: seed — это НЕ выдуманные новости, а реальный пост из vk.com/park_sever,
-// чтобы фолбэк был настоящим до подключения токена. После фетча его заменяет живая лента.
-const VK_NEWS_SEED = [
-  {
-    id: 'seed_1',
-    date: '15 июня 2026',
-    title: 'Как рассказать про Парк Север?',
-    text: 'Мы создавали это место таким, каким хотели видеть его для себя — чтобы утром открывать глаза и видеть лес.',
-    image: '/images/main-menu/deers.jpg',
-    link: vk.groupHref,
-  },
-  {
-    id: 'seed_2',
-    date: 'Июнь 2026',
-    title: 'Утро в стеклянном доме',
-    text: 'Туман над прудом, тишина и кофе у панорамного окна — так начинается день в парке.',
-    image: '/images/home/oasis/1.1.jpg',
-    link: vk.groupHref,
-  },
-  {
-    id: 'seed_3',
-    date: 'Июнь 2026',
-    title: 'Наши олени',
-    text: 'На территории — собственная ферма благородного оленя. Гости приходят понаблюдать за стадом и покормить его.',
-    image: '/images/home/world/2.3.jpg',
-    link: vk.groupHref,
-  },
-  {
-    id: 'seed_4',
-    date: 'Июнь 2026',
-    title: 'Вечер у огня',
-    text: 'Ужин на свежем воздухе и потрескивание костра — атмосфера для двоих, ради которой возвращаются.',
-    image: '/images/home/atmosphere/5.1.jpg',
-    link: vk.groupHref,
-  },
-];
-const vkNews = (Array.isArray(vkNewsJson) && vkNewsJson.length ? vkNewsJson : VK_NEWS_SEED) as Array<{
-  id: string; date: string; title: string; text: string; image: string; link: string;
-}>;
-// картинки ВК — абсолютные URL (отдаём как есть); локальные seed-пути — через withBase
-const newsImg = (src: string) => (/^https?:\/\//.test(src) ? src : withBase(src));
 
 const booking = site.contacts.bookingHref;
 const c = site.contacts;
@@ -146,10 +124,10 @@ const socialLabels: Record<string, string> = {
 const navMenu = [
   { t: 'Главная', href: '/' },
   { t: 'Дома', href: '/accommodation/house-1' },
-  { t: 'Искусство отдыха', href: '#art-of-rest' },
-  { t: 'Атмосфера для двоих', href: '#atmosphere' },
-  { t: 'Наш мир', href: '#our-world' },
-  { t: 'Истории', href: '#reviews' },
+  { t: 'Искусство отдыха', href: withBase('/art-of-rest') },
+  { t: 'Атмосфера для двоих', href: withBase('/atmosphere/') },
+  { t: 'Наш мир', href: withBase('/our-world/') },
+  { t: 'Истории', href: withBase('/stories/') },
 ];
 ---
 <SiteLayout title={page.seo.title}>
@@ -175,31 +153,14 @@ const navMenu = [
   <!-- HERO (Seasonal video background, Overlay content) -->
   <header class="hero">
     <div class="hero__media">
-      {heroDesktop && (
-        <video id="video-summer" class="video-desktop" autoplay loop muted playsinline poster={withBase(heroDesktop.poster)}>
-          <source src={withBase(heroDesktop.src)} type="video/mp4" />
-        </video>
-      )}
-      {heroMobile && (
-        <video id="video-summer-mob" class="video-mobile" autoplay loop muted playsinline poster={withBase(heroMobile.poster)}>
-          <source src={withBase(heroMobile.src)} type="video/mp4" />
-        </video>
-      )}
-      {heroAutumn && (
-        <video id="video-autumn" class="video-desktop" loop muted playsinline poster={withBase(heroAutumn.poster)} style="display:none">
-          <source src={withBase(heroAutumn.src)} type="video/mp4" />
-        </video>
-      )}
-      {heroWinter && (
-        <video id="video-winter" class="video-desktop" loop muted playsinline poster={withBase(heroWinter.poster)} style="display:none">
-          <source src={withBase(heroWinter.src)} type="video/mp4" />
-        </video>
+      {heroCover && (
+        <Image class="hero__img" src={heroCover} alt="Парк Север — стеклянный дом среди леса" widths={[960, 1280, 1600, 2000, 2560]} sizes="100vw" format="webp" quality={82} loading="eager" fetchpriority="high" />
       )}
     </div>
     <div class="hero__scrim"></div>
     <div class="wrap" style="text-align: left; max-width: 800px; margin-left: 0; padding-top: 140px; padding-bottom: 80px;">
       {heroEyebrow && <div class="hero__overline">{heroEyebrow.replace(/\s*\.\s*$/, '')}</div>}
-      <h1 class="hero-title" style="color:#fff; margin:0;">{heroTitle}</h1>
+      <h1 class="hero-title" style="color:#fff; margin:0;">{heroTitleMain}{heroTitleAccent && <> <span class="hl">{heroTitleAccent}</span></>}</h1>
 
       {heroAccent && <p class="hero-accent" style="margin:16px 0 28px;">{heroAccent}</p>}
 
@@ -230,23 +191,23 @@ const navMenu = [
 
   <!-- Блок 2: Оазис спокойствия среди леса (тёмная сцена с зерном бумаги + карусель «фотокарточек») -->
   {oasis && !oasis.disabled && (
-    <section class="sec sec--bark" id="oasis">
-      <div class="wrap wrap--flush">
-        <div class="oasis-head">
+    <section class="sec sec--gold" id="oasis" style={paperTexUrl ? `--paper-tex:url(${paperTexUrl})` : undefined}>
+      <div class="wrap wrap--flush oasis-layout">
+        <div class="oasis-paper">
           <h2 class="h2" style="margin-bottom:24px;">{oasisTitle}</h2>
           {oasisParas.map((p: any) => (
-            <p class="body" style="font-size:20px; line-height:1.4; font-weight:500; margin-bottom:16px;">{p.text}</p>
+            <p class="body" style="font-size:18px; line-height:1.5; font-weight:500; margin-bottom:14px;">{p.text}</p>
           ))}
           {oasisChips && (
             <p class="oasis-chips">{oasisChips}</p>
           )}
         </div>
 
-        <div class="oasis-carousel" data-carousel>
+        <div class="oasis-carousel oasis-carousel--wide" data-carousel>
           <div class="oasis-carousel__track">
             {oasisGallery.map((src: string) => (
-              <figure class="oasis-card">
-                <img src={withBase(src)} alt="Оазис спокойствия среди леса" loading="lazy" draggable="false" />
+              <figure class="oasis-card oasis-card--paper">
+                <Image src={img(src)!} alt="Оазис спокойствия среди леса" widths={[400, 640, 960]} sizes="(max-width:900px) 80vw, 420px" format="webp" quality={82} loading="lazy" draggable={false} />
               </figure>
             ))}
           </div>
@@ -257,17 +218,17 @@ const navMenu = [
 
   <!-- Блок 3: Искусство отдыха (Шаги-таймлайн) -->
   {art && !art.disabled && (
-    <section class="sec sec--bark" id="art-of-rest">
+    <section class="sec sec--art" id="art-of-rest">
       <div class="wrap wrap--flush">
         <div class="shead">
           <h2 class="h2">{artTitle}</h2>
-          {artSubtitle && <p class="lead" style="margin-top:8px;">{artSubtitle}</p>}
+          {artSubtitle && <p class="lead">{artSubtitle}</p>}
         </div>
         <div class="art-steps">
           {artSteps.map((step: any) => (
             <div class="art-step">
               <div class="art-step__img">
-                <img src={withBase(step.image)} alt={step.title} loading="lazy" />
+                <Image src={img(step.image)!} alt={step.title} widths={[400, 640, 800]} sizes="(max-width:860px) 50vw, 33vw" format="webp" quality={82} loading="lazy" />
                 <div class="art-step__overlay">
                   <span class="art-step__num">{step.step}</span>
                   <h3 class="art-step__title">{step.title}</h3>
@@ -289,7 +250,7 @@ const navMenu = [
           {houseSlides.map((group: string[]) => (
             <div class:list={["slider-snap__slide", { "slider-snap__slide--pair": group.length === 2 }]}>
               {group.map((src: string) => (
-                <img src={withBase(src)} alt="Дом среди леса" loading="lazy" />
+                <Image src={img(src)!} alt="Дом среди леса" widths={[640, 960, 1280, 1600, 2000]} sizes={group.length === 2 ? "50vw" : "100vw"} format="webp" quality={82} loading="lazy" />
               ))}
             </div>
           ))}
@@ -325,7 +286,7 @@ const navMenu = [
       <div class="wrap">
         <div class="shead" style="margin-bottom:48px;">
           <h2 class="h2">{atmosphereTitle}</h2>
-          {atmosphereSubtitle && <p class="lead" style="color:#fff; text-align:center; margin-top:8px;">{atmosphereSubtitle}</p>}
+          {atmosphereSubtitle && <p class="lead" style="color:#fff; text-align:center;">{atmosphereSubtitle}</p>}
         </div>
 
         <div class="atmosphere-icons atmosphere-icons--gold">
@@ -333,28 +294,28 @@ const navMenu = [
             <div class="atmosphere-icon">
               <div class="atmosphere-icon__svg">
                 {item.icon === 'heart' && (
-                  <svg viewBox="0 -960 960 960" width="100%" height="100%" fill="currentColor">
-                    <path d="m480-121-41-37q-106-97-175-167.5t-110-126Q113-507 96.5-552T80-643q0-90 60.5-150.5T290-854q57 0 105.5 27t84.5 78q42-54 89-79.5T670-854q89 0 149.5 60.5T880-643q0 46-16.5 91T806-451.5q-41 55.5-110 126T521-158l-41 37Z"/>
+                  <svg viewBox="0 0 256 256" width="100%" height="100%" fill="currentColor">
+                    <path d="M240,102c0,70-103.79,126.66-108.21,129a8,8,0,0,1-7.58,0C119.79,228.66,16,172,16,102A62.07,62.07,0,0,1,78,40c20.65,0,38.73,8.88,50,23.89C139.27,48.88,157.35,40,178,40A62.07,62.07,0,0,1,240,102Z"/>
                   </svg>
                 )}
                 {item.icon === 'cake' && (
-                  <svg viewBox="0 -960 960 960" width="100%" height="100%" fill="currentColor">
-                    <path d="M160-80q-17 0-28.5-11.5T120-120v-219q0-24.75 17.63-42.38Q155.25-399 180-399h600q24.75 0 42.38 17.62Q840-363.75 840-339v219q0 17-11.5 28.5T800-80H160Zm47-379v-122q0-24.75 17.63-42.38Q242.25-641 267-641h183v-64q-20-14-30.5-30.53-10.5-16.54-10.5-39.88 0-14.59 5.5-28.09T430-827l50-53 50 53q10 10 16 23.5t6 28.09q0 23.34-11 39.88Q530-719 510-705v64h183q24.75 0 42.38 17.62Q753-605.75 753-581v122H207Z"/>
+                  <svg viewBox="0 0 256 256" width="100%" height="100%" fill="currentColor">
+                    <path d="M208,88H136V79a32.06,32.06,0,0,0,24-31c0-28-26.44-45.91-27.56-46.66a8,8,0,0,0-8.88,0C122.44,2.09,96,20,96,48a32.06,32.06,0,0,0,24,31v9H48a24,24,0,0,0-24,24v23.33a40.84,40.84,0,0,0,8,24.24V200a24,24,0,0,0,24,24H200a24,24,0,0,0,24-24V159.57a40.84,40.84,0,0,0,8-24.24V112A24,24,0,0,0,208,88ZM112,48c0-13.57,10-24.46,16-29.79,6,5.33,16,16.22,16,29.79a16,16,0,0,1-32,0Zm104,87.33c0,13.25-10.46,24.31-23.32,24.66A24,24,0,0,1,168,136a8,8,0,0,0-16,0,24,24,0,0,1-48,0,8,8,0,0,0-16,0,24,24,0,0,1-24.68,24C50.46,159.64,40,148.58,40,135.33V112a8,8,0,0,1,8-8H208a8,8,0,0,1,8,8Z"/>
                   </svg>
                 )}
                 {item.icon === 'flower' && (
-                  <svg viewBox="0 -960 960 960" width="100%" height="100%" fill="currentColor">
-                    <path d="M480-570q34 0 57-24t23-56q0-34-23-57t-57-23q-32 0-56 23t-24 57q0 32 24 56t56 24Zm-65.5 168.5Q385-423 371-458q-6 0-12.5.5t-12.5.5q-48 0-82-34t-34-82q0-20 8-39.5t23-37.5q-14-18-22-37.5t-8-39.5q0-48 33.5-82t81.5-34q6 0 12.5.5t12.5.5q14-35 43.5-56.5T480-920q36 0 65.5 21.5T589-842q6 0 12.5-.5t12.5-.5q48 0 81.5 34t33.5 82q0 20-7.5 39.5T699-650q14 18 22 37.5t8 39.5q0 48-33.5 82T614-457q-6 0-12.5-.5T589-458q-14 35-43.5 56.5T480-380q-36 0-65.5-21.5ZM480-80q0-70 30-135t80-115q50-50 115-80t135-30q0 70-30 135t-80 115q-50 50-115 80T480-80Zm0 0q0-70-30-135t-80-115q-50-50-115-80t-135-30q0 70 30 135t80 115q50 50 115 80t135 30Z"/>
+                  <svg viewBox="0 0 256 256" width="100%" height="100%" fill="currentColor">
+                    <path d="M245.83,121.63a15.53,15.53,0,0,0-9.52-7.33,73.55,73.55,0,0,0-22.17-2.22c4-19.85,1-35.55-2-44.86a16.17,16.17,0,0,0-18.8-10.88,85.53,85.53,0,0,0-28.55,12.12,94.58,94.58,0,0,0-27.11-33.25,16.05,16.05,0,0,0-19.26,0A94.58,94.58,0,0,0,91.26,68.46,85.53,85.53,0,0,0,62.71,56.34,16.14,16.14,0,0,0,43.92,67.22c-3,9.31-6,25-2.06,44.86a73.55,73.55,0,0,0-22.17,2.22,15.53,15.53,0,0,0-9.52,7.33,16,16,0,0,0-1.6,12.26c3.39,12.58,13.8,36.49,45.33,55.33S113.13,208,128.05,208s42.67,0,74-18.78c31.53-18.84,41.94-42.75,45.33-55.33A16,16,0,0,0,245.83,121.63ZM62.1,175.49C35.47,159.57,26.82,140.05,24,129.7a59.61,59.61,0,0,1,22.5-1.17,129.08,129.08,0,0,0,9.15,19.41,142.28,142.28,0,0,0,34,39.56A114.92,114.92,0,0,1,62.1,175.49ZM128,190.4c-9.33-6.94-32-28.23-32-71.23C96,76.7,118.38,55.24,128,48c9.62,7.26,32,28.72,32,71.19C160,162.17,137.33,183.46,128,190.4Zm104-60.68c-2.77,10.24-11.4,29.81-38.09,45.77a114.92,114.92,0,0,1-27.55,12,142.28,142.28,0,0,0,34-39.56,129.08,129.08,0,0,0,9.15-19.41A59.69,59.69,0,0,1,232,129.71Z"/>
                   </svg>
                 )}
                 {item.icon === 'ring' && (
-                  <svg viewBox="0 -960 960 960" width="100%" height="100%" fill="currentColor">
-                    <path d="m358-625 105-215h34l105 215H358Zm97 475L101-575h354v425Zm50 0v-425h354L505-150Zm153-475L553-840h207l107 215H658Zm-565 0 107-215h207L302-625H93Z"/>
+                  <svg viewBox="0 0 256 256" width="100%" height="100%" fill="currentColor">
+                    <path d="M246,98.73l-56-64A8,8,0,0,0,184,32H72a8,8,0,0,0-6,2.73l-56,64a8,8,0,0,0,.17,10.73l112,120a8,8,0,0,0,11.7,0l112-120A8,8,0,0,0,246,98.73ZM222.37,96H180L144,48h36.37ZM74.58,112l30.13,75.33L34.41,112Zm106.84,0h40.17l-70.3,75.33ZM75.63,48H112L76,96H33.63Z"/>
                   </svg>
                 )}
                 {item.icon === 'gift' && (
-                  <svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor">
-                    <path d="M9.375 3a1.875 1.875 0 0 0 0 3.75h1.875v4.5H3.375A1.875 1.875 0 0 1 1.5 9.375v-.75c0-1.036.84-1.875 1.875-1.875h3.193A3.375 3.375 0 0 1 12 2.753a3.375 3.375 0 0 1 5.432 3.997h3.943c1.035 0 1.875.84 1.875 1.875v.75c0 1.036-.84 1.875-1.875 1.875H12.75v-4.5h1.875a1.875 1.875 0 1 0-1.875-1.875V6.75h-1.5V4.875C11.25 3.839 10.41 3 9.375 3ZM11.25 12.75H3v6.75a2.25 2.25 0 0 0 2.25 2.25h6v-9ZM12.75 12.75v9h6.75a2.25 2.25 0 0 0 2.25-2.25v-6.75h-9Z"/>
+                  <svg viewBox="0 0 256 256" width="100%" height="100%" fill="currentColor">
+                    <path d="M216,72H180.92c.39-.33.79-.65,1.17-1A29.53,29.53,0,0,0,192,49.57,32.62,32.62,0,0,0,158.44,16,29.53,29.53,0,0,0,137,25.91a54.94,54.94,0,0,0-9,14.48,54.94,54.94,0,0,0-9-14.48A29.53,29.53,0,0,0,97.56,16,32.62,32.62,0,0,0,64,49.57,29.53,29.53,0,0,0,73.91,71c.38.33.78.65,1.17,1H40A16,16,0,0,0,24,88v32a16,16,0,0,0,16,16v64a16,16,0,0,0,16,16h60a4,4,0,0,0,4-4V120H40V88h80v32h16V88h80v32H136v92a4,4,0,0,0,4,4h60a16,16,0,0,0,16-16V136a16,16,0,0,0,16-16V88A16,16,0,0,0,216,72ZM84.51,59a13.69,13.69,0,0,1-4.5-10A16.62,16.62,0,0,1,96.59,32h.49a13.69,13.69,0,0,1,10,4.5c8.39,9.48,11.35,25.2,12.39,34.92C109.71,70.39,94,67.43,84.51,59Zm87,0c-9.49,8.4-25.24,11.36-35,12.4C137.7,60.89,141,45.5,149,36.51a13.69,13.69,0,0,1,10-4.5h.49A16.62,16.62,0,0,1,176,49.08,13.69,13.69,0,0,1,171.49,59Z"/>
                   </svg>
                 )}
               </div>
@@ -369,7 +330,7 @@ const navMenu = [
           <div class="oasis-carousel__track">
             {atmosphereGallery.map((src: string) => (
               <figure class="oasis-card oasis-card--sm">
-                <img src={withBase(src)} alt="Атмосфера для двоих" loading="lazy" draggable="false" />
+                <Image src={img(src)!} alt="Атмосфера для двоих" widths={[400, 640, 960]} sizes="(max-width:760px) 80vw, 480px" format="webp" quality={82} loading="lazy" draggable={false} />
               </figure>
             ))}
           </div>
@@ -378,7 +339,7 @@ const navMenu = [
 
       <div class="wrap">
         <div style="text-align: center; margin-top: 48px;">
-          <a class="btn btn--outline-light" href="/special-offers">Узнать больше</a>
+          <a class="btn btn--outline-light" href={withBase('/atmosphere/')}>Узнать больше</a>
         </div>
       </div>
     </section>
@@ -396,7 +357,7 @@ const navMenu = [
           {worldItems.map((item: any, i: number) => (
             <a class={`world-tile ${i < 2 ? 'world-tile--wide' : 'world-tile--med'}`} href={item.href}>
               <div class="world-tile__pic">
-                <img src={withBase(item.image)} alt={item.title} loading="lazy" />
+                <Image src={img(item.image)!} alt={item.title} widths={[400, 640, 960, 1280]} sizes="(max-width:900px) 50vw, 33vw" format="webp" quality={82} loading="lazy" />
                 <div class="world-tile__cap">
                   <div class="world-tile__title">{item.title}</div>
                   {worldDesc[i] && <p class="world-tile__desc">{worldDesc[i]}</p>}
@@ -415,39 +376,55 @@ const navMenu = [
 
   <!-- Блок 7: Почему стоит выбрать нас -->
   {advantages && !advantages.disabled && (
-    <section class="sec sec--green" id="advantages">
+    <section class="sec sec--advantages" id="advantages">
       <div class="wrap wrap--flush">
         <div class="shead" style="margin-bottom:40px;">
           <h2 class="h2">{hd(advantages)}</h2>
           {blockOf(advantages, 'subtitle')?.text && (
-            <p class="lead" style="text-align:center; margin-top:8px;">{blockOf(advantages, 'subtitle').text}</p>
+            <p class="lead" style="text-align:center;">{blockOf(advantages, 'subtitle').text}</p>
           )}
         </div>
-        <div class="adv-grid">
-          {advantagesItems.map((item: any) => (
-            <div class="world-tile">
-              <div class="world-tile__pic">
-                <img src={withBase(item.image)} alt={item.text} loading="lazy" />
-                <div class="world-tile__cap">
-                  <p class="world-tile__desc">{item.text}</p>
+        <div class="adv-carousel" data-adv-carousel>
+          <div class="adv-stage">
+            {advantagesItems.map((item: any, i: number) => (
+              <div class={`adv-slide${i === 0 ? ' is-active' : ''}`} data-adv-slide={i}>
+                <div class="adv-slide__pic">
+                  <Image src={img(item.image)!} alt={item.text} widths={[600, 900, 1200]} sizes="(max-width:860px) 100vw, 62vw" format="webp" quality={82} loading="lazy" />
+                </div>
+                <div class="adv-slide__text">
+                  <p class="adv-slide__desc">{item.text}</p>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+          <div class="adv-thumbs" role="tablist" aria-label="Удобства">
+            {advantagesItems.map((item: any, i: number) => (
+              <button
+                type="button"
+                class={`adv-thumb${i === 0 ? ' is-active' : ''}`}
+                data-adv-thumb={i}
+                role="tab"
+                aria-selected={i === 0 ? 'true' : 'false'}
+                aria-label={item.text}
+              >
+                <Image src={img(item.image)!} alt={item.text} widths={[200, 320]} sizes="180px" format="webp" quality={80} loading="lazy" />
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </section>
   )}
 
-  <!-- Блок 8: Истории Парка (ВК + отзывы Яндекс) -->
+  <!-- Блок 8: Истории Парка (ВК + отзывы Яндекс). Полная лента — на вкладке «Истории» (/stories/) -->
   {storiesSec && !storiesSec.disabled && (
     <section class="sec section-calm" id="reviews">
-      <div class="wrap">
+      <div class="wrap wrap--flush">
         <div class="shead" style="margin-bottom:32px;">
           <h2 class="h2">{hd(storiesSec)}</h2>
         </div>
         <div class="stories-split">
-          <!-- Слева: новости из ВК (build-time снапшот, см. scripts/fetch-vk-posts.js) -->
+          <!-- Слева: новости из ВК (build-time снапшот, см. src/lib/vk-news.ts) -->
           <div class="stories-col">
             <h3 class="h3" style="margin-bottom:16px;">Наши истории</h3>
             {vkNews.length ? (
@@ -467,7 +444,7 @@ const navMenu = [
                 ))}
               </div>
             ) : (
-              <a class="empty-note" href={vk.groupHref} target="_blank" rel="noopener noreferrer" style="display:block;">
+              <a class="empty-note" href={vkGroupHref} target="_blank" rel="noopener noreferrer" style="display:block;">
                 Лента ВКонтакте появится здесь. Открыть нашу группу →
               </a>
             )}
@@ -494,10 +471,10 @@ const navMenu = [
       <div class="cmap">
         <div class="cbox">
           <h2 class="h2">Как добраться</h2>
-          <p class="body" style="margin-top:14px; font-size:20px; line-height:1.4; font-weight:500;">Мы всегда на связи и с радостью ответим на ваши вопросы.</p>
+          <p class="body" style="margin-top:14px; font-size:20px; line-height:1.4; font-weight:500;">Адрес: РФ, Московская область, Дмитровский м.о., дер. Василево.</p>
           <p style="margin-top:16px;"><a class="tel" href={c.phoneHref} style="font-size:20px; font-weight:700;">{c.phone}</a></p>
           <div class="hero__cta" style="margin-top:24px; justify-content:flex-start;">
-            <a class="btn btn--navy" href={booking}>Забронировать</a>
+            <a class="btn btn--navy" href="https://yandex.ru/navi?whatshere%5Bpoint%5D=37.8149250717716%2C56.45656463673545&whatshere%5Bzoom%5D=20.476816&ll=37.8149250717716%2C56.45656463635388&z=20.476816&si=j2frx76vg7073bcw444ez8w15w" target="_blank" rel="noopener noreferrer">Построить маршрут</a>
             <a class="btn btn--ghost btn--wa-outline" href={c.whatsapp} target="_blank" rel="noopener noreferrer">Написать в WhatsApp</a>
           </div>
         </div>
@@ -517,7 +494,7 @@ const navMenu = [
 
   <!-- FOOTER -->
   <footer class="foot">
-    <div class="wrap">
+    <div class="wrap wrap--flush">
       <div class="foot__cols">
         <div>
           <div class="foot__brand">Парк Север</div>
@@ -725,6 +702,30 @@ const navMenu = [
         i = (i + 1) % slides.length;
         track.scrollTo({ left: i * track.offsetWidth, behavior: 'smooth' });
       }, 5000);
+    })();
+  </script>
+
+  <script is:inline>
+    (function () {
+      const root = document.querySelector('[data-adv-carousel]');
+      if (!root) return;
+      const slides = root.querySelectorAll('[data-adv-slide]');
+      const thumbs = root.querySelectorAll('[data-adv-thumb]');
+      function show(idx) {
+        slides.forEach(function (s) {
+          s.classList.toggle('is-active', Number(s.dataset.advSlide) === idx);
+        });
+        thumbs.forEach(function (t) {
+          const on = Number(t.dataset.advThumb) === idx;
+          t.classList.toggle('is-active', on);
+          t.setAttribute('aria-selected', on ? 'true' : 'false');
+        });
+      }
+      thumbs.forEach(function (t) {
+        t.addEventListener('click', function () {
+          show(Number(t.dataset.advThumb));
+        });
+      });
     })();
   </script>
 

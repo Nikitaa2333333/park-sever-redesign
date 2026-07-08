@@ -1,0 +1,503 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import { site, withBase } from '../../lib/content';
+import { Image, getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+// Фото вкладки «Дом» лежат в src/assets/images/house и оптимизируются Astro (webp + srcset).
+// Исходники предварительно ужаты (scripts/optimize-house.mjs). Резолвер по имени файла.
+const houseAssets = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/images/house/*.{jpg,jpeg,png}',
+  { eager: true },
+);
+const img = (name: string): ImageMetadata | undefined =>
+  houseAssets['/src/assets/images/house/' + name + '.jpg']?.default;
+// крупный webp для лайтбокса (фильмстрип 5.x)
+const bigOf = async (name: string) => {
+  const m = img(name);
+  return m ? (await getImage({ src: m, width: 1800, format: 'webp' })).src : '';
+};
+
+const c = site.contacts;
+const booking = site.contacts.bookingHref;
+
+const socialLabels: Record<string, string> = {
+  vk: 'ВКонтакте', whatsapp: 'WhatsApp', tiktok: 'TikTok',
+  instagram: 'Instagram', telegram: 'Telegram', youtube: 'YouTube', rutube: 'RUTUBE',
+};
+
+// меню — как на главной; секции-якоря ведут на главную (/#…), «Дома» = текущая страница
+const navMenu = [
+  { t: 'Главная', href: withBase('/') },
+  { t: 'Дома', href: withBase('/accommodation/house-1') },
+  { t: 'Искусство отдыха', href: withBase('/art-of-rest') },
+  { t: 'Атмосфера для двоих', href: withBase('/atmosphere/') },
+  { t: 'Наш мир', href: withBase('/our-world/') },
+  { t: 'Истории', href: withBase('/stories/') },
+];
+
+// — контент вкладки (инлайн, заказчик правит здесь напрямую) —
+const heroPhotos = ['1.1', '1.2', '1.3'];
+
+const whomList = [
+  'хочется провести время только вдвоём',
+  'устали от шума и постоянной спешки',
+  'цените тишину, природу и комфорт',
+  'любите красивые детали и внимание к мелочам',
+  'ищете место, где можно действительно переключиться',
+];
+
+// Блок 3 — «карточки крупно, подписи внизу». frames>1 → слайд-шоу (жёсткая смена, без opacity).
+const details: Array<{ title: string; text: string; frames: string[]; interval?: number; soon?: boolean }> = [
+  {
+    title: 'Авторский стол',
+    text: 'Деталь, которая давно стала визитной карточкой Парк Север.',
+    frames: ['4.1.1', '4.1.2', '4.1.3', '4.1.4'],
+    interval: 3200,
+  },
+  {
+    title: 'Панорамный душ среди леса',
+    text: 'Ощущение, будто природа находится на расстоянии вытянутой руки.',
+    frames: [],
+    soon: true,
+  },
+  {
+    title: 'Вечерняя подсветка леса',
+    text: 'После заката пространство вокруг дома меняется и становится особенно атмосферным.',
+    frames: ['4.3.1', '4.3.2', '4.3.3', '4.3.4'],
+    interval: 850,
+  },
+  {
+    title: 'Комфорт без лишних действий',
+    text: 'Свет, чайник, климат и сценарии вечера — голосом. Технологии берут быт на себя.',
+    frames: ['4.4'],
+  },
+];
+
+const filmstrip = ['5.1', '5.2', '5.3', '5.4', '5.5'];
+const filmstripBig = await Promise.all(filmstrip.map(bigOf));
+
+const kitList = [
+  'продукты для завтрака',
+  'халаты и косметические принадлежности',
+  'пледы для уютных вечеров',
+  'свечи и сервировка стола',
+  'всё необходимое для мангала',
+  'сезонные мелочи — например, средства от комаров летом',
+];
+const kitPhotos = ['6.1', '6.2', '6.3', '6.4', '6.5', '6.6', '6.7'];
+
+// финальный экран — иконки-настроения
+const moods = [
+  { icon: 'heart', label: 'романтика' },
+  { icon: 'cake', label: 'праздник' },
+  { icon: 'group', label: 'вдвоём' },
+  { icon: 'flower', label: 'тишина' },
+  { icon: 'camera', label: 'фотосессия' },
+];
+---
+<SiteLayout title="Дом в лесу — Парк Север">
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="wrap">
+      <a class="nav__logo" href={withBase('/')}>Парк Север</a>
+      <button class="nav__toggle" aria-label="Открыть меню">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav__menu">
+        {navMenu.map((m) => <a href={m.href}>{m.t}</a>)}
+      </div>
+      <a class="nav__book" href={booking}>Забронировать</a>
+    </div>
+  </nav>
+
+  <!-- БЛОК 1: Первый экран — текст слева, карусель фото справа -->
+  <section class="sec sec--navy hpage-hero" id="house-intro">
+    <div class="wrap wrap--flush">
+      <div class="hh-grid">
+        <div class="hh-text">
+          <h1 class="h1">Дом, в котором хочется остаться</h1>
+          <p class="body-lead hh-lead">Стеклянный дом среди леса на территории 12,4 га.</p>
+          <p class="body-lead hh-lead">Панорамные окна, полное уединение, душ с видом на природу и десятки продуманных мелочей, которые делают отдых по-настоящему комфортным.</p>
+          <a class="btn btn--gold hh-btn" href={booking}>Забронировать даты</a>
+        </div>
+
+        <div class="oasis-carousel oasis-carousel--navy" data-carousel>
+          <div class="oasis-carousel__track">
+            {heroPhotos.map((name) => (
+              <figure class="oasis-card">
+                <Image src={img(name)!} alt="Стеклянный дом среди леса" widths={[400, 640, 960]} sizes="(max-width:900px) 80vw, 460px" format="webp" quality={82} loading="eager" draggable={false} />
+              </figure>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- БЛОК 2: Для кого этот дом — короткий блок на приглушённом фото 3.3 -->
+  <section class="forwhom" id="for-whom">
+    <div class="forwhom__bg">
+      <Image src={img('3.3')!} alt="Интерьер дома" widths={[960, 1440, 2000]} sizes="100vw" format="webp" quality={78} loading="lazy" />
+    </div>
+    <div class="forwhom__scrim"></div>
+    <div class="wrap wrap--flush">
+      <div class="forwhom__inner">
+        <h2 class="h2">Для кого этот дом</h2>
+        <p class="forwhom__intro">Вам понравится здесь, если:</p>
+        <ul class="forwhom__list">
+          {whomList.map((li) => <li>{li}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- БЛОК 3: Дом, который хочется рассматривать — крупные карточки, подписи внизу -->
+  <section class="sec details" id="details">
+    <div class="wrap wrap--flush">
+      <div class="shead shead--left" style="margin-bottom:12px;">
+        <h2 class="h2">Дом, который хочется рассматривать</h2>
+      </div>
+      <p class="lead details__intro">Каждая деталь здесь продумана. Авторский стол со мхом, панорамный душ среди леса, вечерняя подсветка деревьев за окнами, многоуровневое освещение и десятки мелочей, которые постепенно открываются гостям во время отдыха.</p>
+
+      <div class="detail-grid">
+        {details.map((d) => (
+          <article class="detail-card">
+            {d.soon ? (
+              <div class="detail-card__media detail-card__media--empty">
+                <span class="detail-card__soon">скоро</span>
+              </div>
+            ) : (
+              <div class={`detail-card__media${d.frames.length > 1 ? ' is-slideshow' : ''}`} data-interval={d.interval}>
+                {d.frames.map((name, i) => (
+                  <Image class={i === 0 ? 'is-active' : ''} src={img(name)!} alt={d.title} widths={[500, 800, 1100]} sizes="(max-width:760px) 100vw, 50vw" format="webp" quality={82} loading="lazy" draggable={false} />
+                ))}
+              </div>
+            )}
+            <div class="detail-card__cap">
+              <h3 class="detail-card__title">{d.title}</h3>
+              <p class="detail-card__text">{d.text}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- БЛОК 4: Узкая карусель на всю ширину — фото открываются крупно (лайтбокс) -->
+  <section class="sec filmstrip-sec" id="gallery">
+    <div class="wrap wrap--flush" style="margin-bottom:20px;">
+      <h2 class="h2">Загляните внутрь</h2>
+    </div>
+    <div class="filmstrip" data-carousel>
+      <div class="filmstrip__track oasis-carousel__track">
+        {filmstrip.map((name, i) => (
+          <button class="filmstrip__item" data-full={filmstripBig[i]} aria-label="Открыть фото крупно">
+            <Image src={img(name)!} alt="Интерьер и территория" widths={[360, 520, 680]} sizes="320px" format="webp" quality={82} loading="lazy" draggable={false} />
+          </button>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- БЛОК «Продумано до мелочей»: слева текст, справа карусель 6.x + кнопка «Полная комплектация» -->
+  <section class="sec kit" id="kit">
+    <div class="wrap wrap--flush">
+      <div class="kit-grid">
+        <div class="kit__text">
+          <h2 class="h2">Продумано до мелочей</h2>
+          <p class="body kit__p">Мы постарались предусмотреть всё, о чём обычно вспоминают уже после приезда. К вашему приезду дом уже будет подготовлен:</p>
+          <ul class="kit__list">
+            {kitList.map((li) => <li>{li}</li>)}
+          </ul>
+          <p class="body kit__p">Чтобы отдых начинался сразу после открытия двери.</p>
+          <button class="btn btn--navy" data-modal-open="kit-modal">Полная комплектация дома</button>
+        </div>
+
+        <div class="slider-container">
+          <div class="slider-snap">
+            {kitPhotos.map((name) => (
+              <div class="slider-snap__slide slider-snap__slide--clean">
+                <Image src={img(name)!} alt="Комплектация дома" widths={[640, 960, 1280]} sizes="(max-width:860px) 100vw, 560px" format="webp" quality={82} loading="lazy" draggable={false} />
+              </div>
+            ))}
+          </div>
+          <div class="slider-dots">
+            {kitPhotos.map((_, idx) => (
+              <button class={`slider-dot ${idx === 0 ? 'active' : ''}`} data-index={idx} aria-label={`Слайд ${idx + 1}`}></button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- БЛОК 5: Отдых начинается ещё до вашего приезда — фото слева, текст справа -->
+  <section class="sec arrival" id="arrival">
+    <div class="wrap wrap--flush">
+      <div class="arrival-grid">
+        <div class="arrival__pic">
+          <Image src={img('7')!} alt="Дом подготовлен к приезду гостей" widths={[640, 960, 1280]} sizes="(max-width:860px) 100vw, 560px" format="webp" quality={82} loading="lazy" />
+        </div>
+        <div class="arrival__text">
+          <h2 class="h2">Отдых начинается ещё до вашего приезда</h2>
+          <p class="lead arrival__p">Мы заранее подготавливаем пространство к вашему приезду: продукты для завтрака уже ждут на кухне, свечи и детали создают настроение, а дом наполнен уютом и спокойствием.</p>
+          <p class="lead arrival__p">При желании мы можем дополнить отдых красивой сервировкой, гриль-меню или взять организацию ужина на себя.</p>
+          <p class="lead arrival__p">Потому что иногда лучший отдых — это тот, о котором уже позаботились.</p>
+          <div class="arrival__cta">
+            <a class="btn btn--navy" href={withBase('/atmosphere/')}>Атмосфера для двоих</a>
+            <a class="btn btn--wa-outline" href={c.whatsapp} target="_blank" rel="noopener noreferrer">Обсудить ваш отдых</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ФИНАЛЬНЫЙ ЭКРАН: фото 8 приглушено градиентом, текст по центру, иконки-настроения -->
+  <section class="finale" id="finale">
+    <div class="finale__bg">
+      <Image src={img('8')!} alt="Вечер в парке" widths={[960, 1440, 2000]} sizes="100vw" format="webp" quality={80} loading="lazy" />
+    </div>
+    <div class="finale__scrim"></div>
+    <div class="wrap">
+      <h2 class="finale__title">Возможно, именно таких выходных вам сейчас не хватает</h2>
+      <div class="finale__icons">
+        {moods.map((m) => (
+          <div class="finale__icon">
+            <div class="finale__icon-svg">
+              {m.icon === 'heart' && (
+                <svg viewBox="0 0 256 256" width="100%" height="100%" fill="currentColor"><path d="M240,102c0,70-103.79,126.66-108.21,129a8,8,0,0,1-7.58,0C119.79,228.66,16,172,16,102A62.07,62.07,0,0,1,78,40c20.65,0,38.73,8.88,50,23.89C139.27,48.88,157.35,40,178,40A62.07,62.07,0,0,1,240,102Z"/></svg>
+              )}
+              {m.icon === 'cake' && (
+                <svg viewBox="0 0 256 256" width="100%" height="100%" fill="currentColor"><path d="M208,88H136V79a32.06,32.06,0,0,0,24-31c0-28-26.44-45.91-27.56-46.66a8,8,0,0,0-8.88,0C122.44,2.09,96,20,96,48a32.06,32.06,0,0,0,24,31v9H48a24,24,0,0,0-24,24v23.33a40.84,40.84,0,0,0,8,24.24V200a24,24,0,0,0,24,24H200a24,24,0,0,0,24-24V159.57a40.84,40.84,0,0,0,8-24.24V112A24,24,0,0,0,208,88ZM112,48c0-13.57,10-24.46,16-29.79,6,5.33,16,16.22,16,29.79a16,16,0,0,1-32,0Zm104,87.33c0,13.25-10.46,24.31-23.32,24.66A24,24,0,0,1,168,136a8,8,0,0,0-16,0,24,24,0,0,1-48,0,8,8,0,0,0-16,0,24,24,0,0,1-24.68,24C50.46,159.64,40,148.58,40,135.33V112a8,8,0,0,1,8-8H208a8,8,0,0,1,8,8Z"/></svg>
+              )}
+              {m.icon === 'group' && (
+                <svg viewBox="0 0 256 256" width="100%" height="100%" fill="currentColor"><path d="M64.12,147.8a4,4,0,0,1-4,4.2H16a8,8,0,0,1-7.8-6.17,8.35,8.35,0,0,1,1.62-6.93A67.79,67.79,0,0,1,37,117.51a40,40,0,1,1,66.46-35.8,3.94,3.94,0,0,1-2.27,4.18A64.08,64.08,0,0,0,64,144C64,145.28,64,146.54,64.12,147.8Zm182-8.91A67.76,67.76,0,0,0,219,117.51a40,40,0,1,0-66.46-35.8,3.94,3.94,0,0,0,2.27,4.18A64.08,64.08,0,0,1,192,144c0,1.28,0,2.54-.12,3.8a4,4,0,0,0,4,4.2H240a8,8,0,0,0,7.8-6.17A8.33,8.33,0,0,0,246.17,138.89Zm-89,43.18a48,48,0,1,0-58.37,0A72.13,72.13,0,0,0,65.07,212,8,8,0,0,0,72,224H184a8,8,0,0,0,6.93-12A72.15,72.15,0,0,0,157.19,182.07Z"/></svg>
+              )}
+              {m.icon === 'flower' && (
+                <svg viewBox="0 0 256 256" width="100%" height="100%" fill="currentColor"><path d="M245.83,121.63a15.53,15.53,0,0,0-9.52-7.33,73.55,73.55,0,0,0-22.17-2.22c4-19.85,1-35.55-2-44.86a16.17,16.17,0,0,0-18.8-10.88,85.53,85.53,0,0,0-28.55,12.12,94.58,94.58,0,0,0-27.11-33.25,16.05,16.05,0,0,0-19.26,0A94.58,94.58,0,0,0,91.26,68.46,85.53,85.53,0,0,0,62.71,56.34,16.14,16.14,0,0,0,43.92,67.22c-3,9.31-6,25-2.06,44.86a73.55,73.55,0,0,0-22.17,2.22,15.53,15.53,0,0,0-9.52,7.33,16,16,0,0,0-1.6,12.26c3.39,12.58,13.8,36.49,45.33,55.33S113.13,208,128.05,208s42.67,0,74-18.78c31.53-18.84,41.94-42.75,45.33-55.33A16,16,0,0,0,245.83,121.63ZM62.1,175.49C35.47,159.57,26.82,140.05,24,129.7a59.61,59.61,0,0,1,22.5-1.17,129.08,129.08,0,0,0,9.15,19.41,142.28,142.28,0,0,0,34,39.56A114.92,114.92,0,0,1,62.1,175.49ZM128,190.4c-9.33-6.94-32-28.23-32-71.23C96,76.7,118.38,55.24,128,48c9.62,7.26,32,28.72,32,71.19C160,162.17,137.33,183.46,128,190.4Zm104-60.68c-2.77,10.24-11.4,29.81-38.09,45.77a114.92,114.92,0,0,1-27.55,12,142.28,142.28,0,0,0,34-39.56,129.08,129.08,0,0,0,9.15-19.41A59.69,59.69,0,0,1,232,129.71Z"/></svg>
+              )}
+              {m.icon === 'camera' && (
+                <svg viewBox="0 0 256 256" width="100%" height="100%" fill="currentColor"><path d="M208,56H180.28L166.65,35.56A8,8,0,0,0,160,32H96a8,8,0,0,0-6.65,3.56L75.71,56H48A24,24,0,0,0,24,80V192a24,24,0,0,0,24,24H208a24,24,0,0,0,24-24V80A24,24,0,0,0,208,56Zm-44,76a36,36,0,1,1-36-36A36,36,0,0,1,164,132Z"/></svg>
+              )}
+            </div>
+            <span class="finale__icon-label">{m.label}</span>
+          </div>
+        ))}
+      </div>
+      <div class="finale__cta">
+        <a class="btn btn--gold" href={booking}>Забронировать даты</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="foot">
+    <div class="wrap wrap--flush">
+      <div class="foot__cols">
+        <div>
+          <div class="foot__brand">Парк Север</div>
+          <p class="foot__about">Пространство на краю леса для тех, кто выбирает тишину. Приватный дом без потока людей и лишнего, на территории 12,4 га. Без соседей. Только природа, животные и ощущение, что никуда не нужно спешить.</p>
+          <div class="socials">
+            {site.socials.map((s: any) => <a href={s.href} target="_blank" rel="noopener noreferrer">{socialLabels[s.type] ?? s.type}</a>)}
+          </div>
+        </div>
+        <div class="foot__col">
+          <h4>Разделы</h4>
+          {navMenu.map((m) => <a href={m.href}>{m.t}</a>)}
+        </div>
+        <div class="foot__col">
+          <h4>Контакты</h4>
+          <a href={c.phoneHref}>{c.phone}</a>
+          <a href={c.emailHref}>{c.email}</a>
+          <a href={c.whatsapp} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+          <span class="foot__addr">{c.address}</span>
+        </div>
+      </div>
+      <hr class="foot__rule" />
+      <div class="foot__cp">© {site.company} · {site.requisites.entity} · {site.requisites.note}</div>
+    </div>
+  </footer>
+
+  <!-- ЛАЙТБОКС (фильмстрип 5.x) -->
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button class="lightbox__close" aria-label="Закрыть">&times;</button>
+    <div class="lightbox__stage">
+      <button class="lightbox__nav lightbox__nav--prev" aria-label="Предыдущее">&#8249;</button>
+      <img class="lightbox__img" src="" alt="Фото крупно" />
+      <button class="lightbox__nav lightbox__nav--next" aria-label="Следующее">&#8250;</button>
+    </div>
+  </div>
+
+  <!-- МОДАЛ: полная комплектация дома -->
+  <div class="modal" id="kit-modal" aria-hidden="true">
+    <div class="modal__scrim" data-modal-close></div>
+    <div class="modal__panel" role="dialog" aria-modal="true" aria-label="Полная комплектация дома">
+      <button class="modal__close" data-modal-close aria-label="Закрыть">&times;</button>
+      <div class="modal__head">
+        <h3 class="modal__title">Дом в лесу. Gold</h3>
+        <p class="modal__meta">Вместимость: до 2 гостей · Площадь: 34 м²</p>
+      </div>
+
+      <h4 class="modal__h">Комплектация дома</h4>
+      <ul class="modal__list">
+        <li><b>Кухня-гостиная</b> — двухместный диван (спальное место 142 × 198 см, два варианта раскладывания в длину), телевизор, регулируемый по высоте (с подписками Okko, Ivi), стол из среза дерева, два стула, кухонный гарнитур, мойка, холодильник, чайник, индукционная плита, микроволновая печь, ПММ, вытяжка, а также полный комплект посуды и столовых приборов.</li>
+        <li><b>Спальная</b> — двуспальная кровать размера King-size, шторы Blackout из премиального текстиля с возможностью полного закрытия для приватного отдыха.</li>
+        <li><b>Санузел</b> — унитаз и душевая кабина с панорамным видом, раковина из цельной породы мрамора, зеркало, фен.</li>
+        <li><b>Индивидуальный набор</b> — халат, тапочки, косметический набор, полотенца.</li>
+        <li>Набор продуктов для приготовления завтрака.</li>
+        <li>Настольные игры для весёлой компании.</li>
+        <li>Аптечка с необходимым набором медикаментов.</li>
+        <li>По запросу — детская кроватка, детский стульчик для кормления.</li>
+        <li><b>Безопасность</b> — огнетушитель, видеонаблюдение снаружи здания, датчики дыма, закрытая территория.</li>
+      </ul>
+
+      <h4 class="modal__h">Особенности</h4>
+      <ul class="modal__list">
+        <li>Панорамный вид из окон на лес с молодыми берёзами и соснами.</li>
+        <li>Мангальная зона, открытая терраса с зоной отдыха и комплектом мебели.</li>
+        <li>Умный дом с голосовым управлением через Алису: включение/выключение света в доме и на улице, регулировка температуры (климат-контроль), изменение высоты телевизора, беспроводные зарядки и множество сценариев освещения.</li>
+        <li>Высокоскоростной интернет — Wi-Fi 6, скорость до 150 Мбит/сек, несколько точек доступа с бесшовным роумингом, соединение точек оптоволоконным кабелем (уверенный сигнал в любой точке парка).</li>
+        <li>Парковка для автомобилей рядом с домом.</li>
+      </ul>
+
+      <a class="btn btn--navy modal__cta" href={booking}>Забронировать даты</a>
+    </div>
+  </div>
+
+  <!-- КЛИЕНТСКИЕ СКРИПТЫ -->
+  <script is:inline>
+    // 1. Мобильное меню
+    const toggle = document.querySelector('.nav__toggle');
+    const menu = document.querySelector('.nav__menu');
+    if (toggle && menu) {
+      toggle.addEventListener('click', () => {
+        toggle.classList.toggle('active');
+        menu.classList.toggle('open');
+      });
+      menu.querySelectorAll('a').forEach(l => l.addEventListener('click', () => {
+        toggle.classList.remove('active');
+        menu.classList.remove('open');
+      }));
+    }
+
+    // 2. Карусели с перетаскиванием (блок 1, фильмстрип)
+    document.querySelectorAll('[data-carousel]').forEach(carousel => {
+      const track = carousel.querySelector('.oasis-carousel__track') || carousel.querySelector('.filmstrip__track');
+      if (!track) return;
+      let isDown = false, startX = 0, startScroll = 0, moved = false;
+      track.addEventListener('mousedown', (e) => {
+        isDown = true; moved = false; startX = e.pageX; startScroll = track.scrollLeft;
+        track.classList.add('dragging');
+      });
+      const endDrag = () => { if (!isDown) return; isDown = false; track.classList.remove('dragging'); };
+      track.addEventListener('mouseleave', endDrag);
+      window.addEventListener('mouseup', endDrag);
+      track.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        const walk = e.pageX - startX;
+        if (Math.abs(walk) > 4) moved = true;
+        track.scrollLeft = startScroll - walk;
+      });
+      track.addEventListener('click', (e) => { if (moved) e.preventDefault(); }, true);
+    });
+
+    // 3. Слайдер «как на главной»: фото сменяются сами, внизу точки; стрелок нет
+    document.querySelectorAll('.slider-container').forEach(container => {
+      const track = container.querySelector('.slider-snap');
+      const dots = container.querySelectorAll('.slider-dot');
+      if (!track) return;
+      track.addEventListener('scroll', () => {
+        const index = Math.round(track.scrollLeft / track.offsetWidth);
+        dots.forEach((dot, idx) => dot.classList.toggle('active', idx === index));
+      });
+      dots.forEach((dot, idx) => dot.addEventListener('click', () => track.scrollTo({ left: idx * track.offsetWidth, behavior: 'smooth' })));
+      const n = track.querySelectorAll('.slider-snap__slide').length;
+      if (n > 1) setInterval(() => {
+        const i = Math.round(track.scrollLeft / track.offsetWidth);
+        track.scrollTo({ left: ((i + 1) % n) * track.offsetWidth, behavior: 'smooth' });
+      }, 5000);
+    });
+
+    // 4. Слайд-шоу деталей (жёсткая смена кадров, без opacity)
+    document.querySelectorAll('.detail-card__media.is-slideshow').forEach(media => {
+      const frames = media.querySelectorAll('img');
+      if (frames.length < 2) return;
+      const interval = Number(media.dataset.interval) || 3000;
+      let i = 0;
+      setInterval(() => {
+        frames[i].classList.remove('is-active');
+        i = (i + 1) % frames.length;
+        frames[i].classList.add('is-active');
+      }, interval);
+    });
+
+    // 5. Лайтбокс фильмстрипа. Крупные кадры предзагружаем в простое после
+    //    загрузки страницы — чтобы после клика не было пустого экрана.
+    (function () {
+      const box = document.getElementById('lightbox');
+      if (!box) return;
+      const imgEl = box.querySelector('.lightbox__img');
+      const items = Array.from(document.querySelectorAll('.filmstrip__item'));
+      const urls = items.map(it => it.dataset.full);
+      const warmed = new Set();
+      const warm = (u) => { if (u && !warmed.has(u)) { warmed.add(u); new Image().src = u; } };
+      const warmAll = () => urls.forEach(warm);
+      if ('requestIdleCallback' in window) requestIdleCallback(warmAll, { timeout: 3000 });
+      else setTimeout(warmAll, 1200);
+      let cur = 0;
+      const open = (idx) => { cur = idx; imgEl.src = urls[cur]; box.classList.add('open'); box.setAttribute('aria-hidden', 'false'); };
+      const close = () => { box.classList.remove('open'); box.setAttribute('aria-hidden', 'true'); imgEl.src = ''; };
+      const step = (d) => { cur = (cur + d + urls.length) % urls.length; imgEl.src = urls[cur]; };
+      items.forEach((it, idx) => it.addEventListener('click', (e) => { if (it.dataset.dragged) return; open(idx); }));
+      box.querySelector('.lightbox__close').addEventListener('click', close);
+      box.querySelector('.lightbox__nav--prev').addEventListener('click', (e) => { e.stopPropagation(); step(-1); });
+      box.querySelector('.lightbox__nav--next').addEventListener('click', (e) => { e.stopPropagation(); step(1); });
+      box.addEventListener('click', (e) => { if (e.target === box) close(); });
+      document.addEventListener('keydown', (e) => {
+        if (!box.classList.contains('open')) return;
+        if (e.key === 'Escape') close();
+        else if (e.key === 'ArrowLeft') step(-1);
+        else if (e.key === 'ArrowRight') step(1);
+      });
+    })();
+
+    // 7. Русский типограф — приклеиваем короткие слова (предлоги/союзы 1–2 буквы)
+    //    к следующему слову неразрывным пробелом, чтобы они не висели в конце строки.
+    (function () {
+      const glue = (s) => {
+        let out = s, prev;
+        do { prev = out; out = out.replace(/(^|[\s(«"—])([А-ЯЁа-яёA-Za-z]{1,2})[ \t]+/g, '$1$2 '); }
+        while (out !== prev);
+        return out;
+      };
+      const SKIP = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'TEXTAREA', 'INPUT']);
+      const walk = (node) => {
+        for (const child of Array.from(node.childNodes)) {
+          if (child.nodeType === 3) {
+            if (/[А-Яа-яЁё]/.test(child.nodeValue)) {
+              const glued = glue(child.nodeValue);
+              if (glued !== child.nodeValue) child.nodeValue = glued;
+            }
+          } else if (child.nodeType === 1 && !SKIP.has(child.tagName)) {
+            walk(child);
+          }
+        }
+      };
+      walk(document.body);
+    })();
+
+    // 6. Модал комплектации
+    (function () {
+      const modal = document.getElementById('kit-modal');
+      if (!modal) return;
+      const openBtns = document.querySelectorAll('[data-modal-open="kit-modal"]');
+      const closeEls = modal.querySelectorAll('[data-modal-close]');
+      const open = () => { modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; };
+      const close = () => { modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; };
+      openBtns.forEach(b => b.addEventListener('click', open));
+      closeEls.forEach(b => b.addEventListener('click', close));
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('open')) close(); });
+    })();
+  </script>
+</SiteLayout>

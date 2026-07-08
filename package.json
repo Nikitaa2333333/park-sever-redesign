@@ -11,5 +11,8 @@
   },
   "dependencies": {
     "astro": "^5.6.0"
+  },
+  "devDependencies": {
+    "@phosphor-icons/core": "^2.1.1"
   }
 }

@@ -49,7 +49,7 @@
 
 ## Запуск
 
-`npm install` (один раз) → `npm run dev` → http://127.0.0.1:4321/ · сборка: `npm run build`.
+`npm install` (один раз) → `npm run dev` → http://127.0.0.1:4390/ (порт фиксирован в astro.config.mjs, `strictPort`) · сборка: `npm run build`.
 
 ## Окружение
 

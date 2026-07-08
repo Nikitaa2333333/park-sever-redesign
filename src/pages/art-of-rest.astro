@@ -1,0 +1,688 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { site, withBase } from '../lib/content';
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+// Контент страницы — дословный текст заказчицы из «Для Разработки сайта.docx»,
+// переведён в JSON (src/data/art-of-rest.json). Правки текста — только там.
+import data from '../data/art-of-rest.json';
+import { aorIcons } from '../data/aor-icons';
+const ico = (n: string) => aorIcons[n] ?? '';
+
+const imgAssets = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/images/**/*.{jpg,jpeg,png}',
+  { eager: true },
+);
+const img = (p: string): ImageMetadata | undefined =>
+  imgAssets['/src/assets' + p]?.default;
+
+// подбор кадров: art-step-1..6 сняты ровно под этапы отдыха
+const photos = {
+  hero: '/images/home/oasis/1.1.jpg',
+  s2: '/images/home/art/art-step-2.jpg',
+  s2shower: '/images/house/4.3.1.jpg',
+  s3: '/images/home/art/art-step-5.jpg',
+  s4: '/images/home/art/art-step-3.jpg',
+  s5: '/images/home/art/art-step-4.jpg',
+  s6: '/images/home/art/art-step-6.jpg',
+  listen: [
+    '/images/home/world/2.5.jpg',
+    '/images/home/world/2.2.jpg',
+    '/images/home/world/2.3.jpg',
+    '/images/home/world/2.4.jpg',
+  ],
+  duration: '/images/house/1.1.jpg',
+};
+
+const c = site.contacts;
+const booking = site.contacts.bookingHref;
+const socialLabels: Record<string, string> = {
+  vk: 'ВКонтакте', whatsapp: 'WhatsApp', tiktok: 'TikTok',
+  instagram: 'Instagram', telegram: 'Telegram', youtube: 'YouTube', rutube: 'RUTUBE',
+};
+const navMenu = [
+  { t: 'Главная', href: withBase('/') },
+  { t: 'Дома', href: withBase('/accommodation/house-1') },
+  { t: 'Искусство отдыха', href: withBase('/art-of-rest') },
+  { t: 'Атмосфера для двоих', href: withBase('/atmosphere/') },
+  { t: 'Наш мир', href: withBase('/our-world/') },
+  { t: 'Истории', href: withBase('/stories/') },
+];
+
+const [s1, s2, s3, s4, s5, s6] = data.stages as any[];
+const intro = data.intro;
+const dur = data.duration;
+
+// абзац с термином-справкой: {термин} в JSON → пунктирное подчёркивание + всплывающая карточка
+const parts = (p: string) => p.split(/\{([^}]+)\}/);
+---
+<SiteLayout title="Искусство отдыха — Парк Север">
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="wrap">
+      <a class="nav__logo" href={withBase('/')}>Парк Север</a>
+      <button class="nav__toggle" aria-label="Открыть меню">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav__menu">
+        {navMenu.map((m) => <a href={m.href}>{m.t}</a>)}
+      </div>
+      <a class="nav__book" href={booking}>Забронировать</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="aor-hero">
+    <div class="aor-hero__media">
+      <Image src={img(photos.hero)!} alt="Утро в стеклянном доме среди леса" widths={[960, 1440, 2000]} sizes="100vw" format="webp" quality={80} loading="eager" />
+    </div>
+    <div class="aor-hero__scrim"></div>
+    <div class="wrap wrap--flush">
+      <h1 class="aor-hero__title">{data.page.title}</h1>
+      <p class="aor-hero__lead">{data.page.intro}</p>
+    </div>
+  </header>
+
+  <!-- Горизонтальное меню разделов — как в «Наш мир»: панели-«странички», hash в URL -->
+  <div class="ow-menubar" id="aor-menubar">
+    <div class="wrap wrap--flush">
+      <nav class="ow-menu" aria-label="Разделы «Искусство отдыха»">
+        <a href="#intro" data-aor-tab="intro" class="is-active">Введение</a>
+        {data.stages.map((s: any, i: number) => (
+          <a href={'#stage-' + (i + 1)} data-aor-tab={'stage-' + (i + 1)}>{s.num}. {s.title}</a>
+        ))}
+      </nav>
+    </div>
+  </div>
+
+  <!-- ВВЕДЕНИЕ: Почему мы так устаём? -->
+  <div data-aor-panel="intro">
+  <section class="aor-sec" id="why">
+    <div class="wrap wrap--flush">
+      <div class="aor-head">
+        <h2 class="h2">Введение: {intro.title}</h2>
+      </div>
+      <div style="margin-top:24px;">
+        <p class="aor-p">{intro.lead}</p>
+        {intro.note.map((p: string) => <p class="aor-p">{p}</p>)}
+      </div>
+
+      <div class="aor-plates">
+        {intro.factors.map((f: any) => (
+          <div class="aor-plate">
+            <span class="aor-ico" set:html={ico(f.icon)} />
+            <h3 class="aor-plate__t">{f.title}</h3>
+            <p class="aor-plate__x">{f.text}</p>
+          </div>
+        ))}
+      </div>
+
+      <div class="aor-qa">
+        {intro.qa.map((q: any) => (
+          <div>
+            <h3>{q.title}</h3>
+            {q.paragraphs.map((p: string) => (
+              <p>{parts(p).map((seg, i) => i % 2
+                ? <span class="aor-term" tabindex="0">{seg}<span class="aor-tip">{q.tooltip.text}</span></span>
+                : seg)}</p>
+            ))}
+          </div>
+        ))}
+      </div>
+
+      <div style="margin-top:24px;">
+        <p class="aor-h3" style="margin-bottom:10px;">{intro.conclusion.strong}</p>
+        <p class="aor-p">{intro.conclusion.text}</p>
+      </div>
+    </div>
+  </section>
+  <section class="aor-band">
+    <div class="wrap wrap--flush">
+      <p class="aor-band__line">{intro.finale}</p>
+    </div>
+  </section>
+  </div>
+
+  <!-- ЭТАП 1: До поездки -->
+  <div data-aor-panel="stage-1" hidden>
+  <section class="aor-sec" id="stage-1">
+    <div class="wrap wrap--flush">
+      <div class="aor-head">
+        <h2 class="h2">{s1.num}: {s1.title}</h2>
+        <p class="aor-sub">{s1.subtitle}</p>
+      </div>
+      {s1.lead.map((p: string) => <p class="aor-p">{p}</p>)}
+
+      <div class="aor-plates">
+        {s1.barriers.map((b: string) => <div class="aor-plate"><h3 class="aor-plate__t">{b}</h3></div>)}
+      </div>
+
+      <div class="aor-duo aor-genders">
+        {s1.portraits.map((p: string, i: number) => (
+          <div class="aor-gender">
+            <span class="aor-ico" set:html={ico(i === 0 ? 'woman' : 'man')} />
+            <p class="aor-p">{p}</p>
+          </div>
+        ))}
+      </div>
+
+      <p class="aor-p" style="margin-top:36px;">{s1.social}</p>
+      <div class="aor-callout aor-callout--navy">
+        <p class="aor-callout__strong">{s1.science}</p>
+      </div>
+
+      <div class="aor-duo">
+        <div>
+          <h3 class="aor-h3">{s1.what.title}</h3>
+          {s1.what.paragraphs.map((p: string) => <p class="aor-p">{p}</p>)}
+          <p class="aor-p aor-p--sm" style="margin-top:22px;">{s1.what.houseNote}</p>
+          <a class="btn btn--navy" style="margin-top:8px;" href={withBase('/accommodation/house-1')}>{s1.what.cta}</a>
+        </div>
+        <div class="aor-card">
+          <div class="aor-card__head"><span class="aor-ico" set:html={ico('experiment')} /><h3 class="aor-h3">{s1.experiment.title}</h3></div>
+          {s1.experiment.paragraphs.map((p: string) => <p>{p}</p>)}
+          <p class="aor-card__strong" style="margin-top:16px;">{s1.experiment.conclusion}</p>
+        </div>
+      </div>
+
+      <div class="aor-duo">
+        <div>
+          <h3 class="aor-h3">{s1.switch.title}</h3>
+          <p class="aor-p"><b>{s1.switch.factLabel}.</b> {s1.switch.fact}</p>
+          <p class="aor-p aor-p--sm">{s1.switch.note}</p>
+        </div>
+        <div class="aor-callout aor-callout--navy" style="margin-top:0;">
+          <p class="aor-callout__strong">{s1.road.title}</p>
+          <p class="aor-callout__text">{s1.road.text}</p>
+        </div>
+      </div>
+
+      <p class="aor-line">{s1.finale}</p>
+    </div>
+  </section>
+
+  </div>
+
+  <!-- ЭТАП 2: Вы приехали -->
+  <div data-aor-panel="stage-2" hidden>
+  <section class="aor-sec sec--art" id="stage-2">
+    <div class="wrap wrap--flush">
+      <div class="aor-head">
+        <h2 class="h2">{s2.num}: {s2.title}</h2>
+      </div>
+      <p class="aor-line" style="margin-top:20px;">«{s2.quote}»</p>
+      <p class="aor-p" style="margin-top:24px;">{s2.seoLead}</p>
+
+      <div class="aor-split">
+        <div>
+          <h3 class="aor-h3">{s2.silence.title}</h3>
+          {s2.silence.paragraphs.map((p: string) => (
+            <p class="aor-p">{parts(p).map((seg, i) => i % 2
+              ? <span class="aor-term" tabindex="0">{seg}<span class="aor-tip">{s2.silence.tooltip.text}</span></span>
+              : seg)}</p>
+          ))}
+        </div>
+        <div class="aor-split__pic">
+          <Image src={img(photos.s2)!} alt="Первый вечер. Выдохнуть" widths={[520, 800, 1100]} sizes="(max-width:860px) 100vw, 44vw" format="webp" quality={82} loading="lazy" />
+        </div>
+      </div>
+
+      <div class="aor-split">
+        <div>
+          <h3 class="aor-h3" style="margin-bottom:6px;">{s2.dogs.question}</h3>
+          <p class="aor-question__yes" style="margin:6px 0 10px;">{s2.dogs.answer}</p>
+          <p class="aor-p" style="font-weight:600;">{s2.dogs.note}</p>
+          {s2.dogs.paragraphs.map((p: string) => <p class="aor-p">{p}</p>)}
+        </div>
+        <div class="aor-split__pic">
+          <Image src={img('/images/dogs/14.jpeg')!} alt="Золотистые ретриверы Парк Север" widths={[520, 800, 1100]} sizes="(max-width:860px) 100vw, 44vw" format="webp" quality={82} loading="lazy" />
+        </div>
+      </div>
+
+      <h3 class="aor-h3" style="margin-top:56px;">{s2.different.title}</h3>
+      <div class="aor-plates aor-plates--3" style="margin-top:20px;">
+        {s2.different.items.map((t: string) => <div class="aor-plate"><p class="aor-plate__x" style="margin-top:0;">{t}</p></div>)}
+      </div>
+
+      <div class="aor-ritual">
+        <div class="aor-card__head"><span class="aor-ico" set:html={ico('heart')} /><h3 class="aor-h3">{s2.ritual.title}</h3></div>
+        <ol>
+          {s2.ritual.steps.map((st: string, i: number) => <li><b>{i + 1}</b><span>{st}</span></li>)}
+        </ol>
+        <p class="aor-ritual__note">{s2.ritual.note}</p>
+      </div>
+
+      <div class="aor-duo">
+        <div>
+          <h3 class="aor-h3">{s2.switch.title}</h3>
+          {s2.switch.paragraphs.map((p: string) => <p class="aor-p">{p}</p>)}
+          <ul class="aor-list">
+            {s2.switch.list.map((li: string) => <li>{li}</li>)}
+          </ul>
+          <p class="aor-p aor-p--sm" style="margin-top:20px;">{s2.switch.note}</p>
+        </div>
+        <div>
+          <h3 class="aor-h3">{s2.secret.title}</h3>
+          <p class="aor-p">{s2.secret.text}</p>
+          <div class="aor-split__pic" style="margin:18px 0;">
+            <Image src={img(photos.s2shower)!} alt="Панорамный душ среди леса" widths={[520, 800]} sizes="(max-width:860px) 100vw, 44vw" format="webp" quality={82} loading="lazy" />
+          </div>
+          <p class="aor-p" style="font-weight:600;">{s2.secret.tip}</p>
+          <p class="aor-p aor-p--sm">{s2.secret.note}</p>
+        </div>
+      </div>
+
+      <h3 class="aor-h3" style="margin-top:56px;">{s2.not.title}</h3>
+      <div class="aor-plates" style="margin-top:20px;">
+        {s2.not.items.map((t: string) => <div class="aor-plate"><h3 class="aor-plate__t">{t}</h3></div>)}
+      </div>
+    </div>
+  </section>
+  <section class="aor-band">
+    <div class="wrap wrap--flush">
+      <p class="aor-band__line">{s2.finale}</p>
+      <p class="aor-band__note">{s2.finaleNote}</p>
+    </div>
+  </section>
+  </div>
+
+  <!-- ЭТАП 3: Ночь вдвоём — тёмная navy-сцена («отдых = синий») -->
+  <div data-aor-panel="stage-3" hidden>
+  <section class="aor-sec sec--navy" id="stage-3">
+    <div class="wrap wrap--flush">
+      <div class="aor-head">
+        <h2 class="h2">{s3.num}: {s3.title}</h2>
+        <p class="aor-sub">{s3.subtitle}</p>
+      </div>
+      <div class="aor-split">
+        <div>
+          {s3.lead.map((p: string) => <p class="aor-p">{p}</p>)}
+        </div>
+        <div class="aor-split__pic aor-split__pic--tall">
+          <Image src={img(photos.s3)!} alt="Вечер вдвоём" widths={[520, 800, 1100]} sizes="(max-width:860px) 100vw, 44vw" format="webp" quality={82} loading="lazy" />
+        </div>
+      </div>
+      <p class="aor-line">{s3.accent}</p>
+
+      <div style="margin-top:64px;">
+        <h3 class="aor-h3">{s3.together.title}</h3>
+        {s3.together.paragraphs.map((p: string) => <p class="aor-p">{p}</p>)}
+      </div>
+
+      <h3 class="aor-h3" style="margin-top:48px;">{s3.helpers.title}</h3>
+      <div class="aor-helpers">
+        {s3.helpers.items.map((h: any, i: number) => (
+          <div class="aor-helper">
+            <span class="aor-ico" set:html={ico(['oxytocin', 'dopamine', 'serotonin'][i])} />
+            <p class="aor-helper__name">{h.name}</p>
+            <p class="aor-helper__tag">{h.tag}</p>
+            <p class="aor-helper__text">{h.text}</p>
+            {h.fact && <p class="aor-helper__fact">{h.fact}</p>}
+          </div>
+        ))}
+      </div>
+
+      <div style="margin-top:64px;">
+        {s3.alone.map((p: string) => <p class="aor-p">{p}</p>)}
+      </div>
+
+      <h3 class="aor-h3" style="margin-top:56px;">{s3.atmosphere.title}</h3>
+      <div class="aor-atm">
+        {s3.atmosphere.items.map((it: any) => <div><span class="aor-ico" set:html={ico(it.icon)} />{it.text}</div>)}
+      </div>
+      <p class="aor-atm__tail">{s3.atmosphere.tail}</p>
+
+      <div style="margin-top:48px;">
+        {s3.space.map((p: string) => <p class="aor-p">{p}</p>)}
+      </div>
+
+      <div class="aor-thought">
+        <p class="aor-thought__title">{s3.thought.title}</p>
+        {s3.thought.paragraphs.map((p: string) => <p>{p}</p>)}
+        <p class="aor-thought__accent">{s3.thought.accent}</p>
+      </div>
+    </div>
+  </section>
+
+  </div>
+
+  <!-- ЭТАП 4: Первое утро — тёплая рассветная сцена -->
+  <div data-aor-panel="stage-4" hidden>
+  <section class="aor-sec" id="stage-4">
+    <div class="wrap wrap--flush">
+      <div class="aor-head">
+        <h2 class="h2">{s4.num}: {s4.title}</h2>
+        <p class="aor-sub">{s4.subtitle}</p>
+      </div>
+      <div class="aor-split">
+        <div>
+          {s4.lead.map((p: string) => <p class="aor-p">{p}</p>)}
+        </div>
+        <div class="aor-split__pic aor-split__pic--tall">
+          <Image src={img(photos.s4)!} alt="Первое утро в доме среди леса" widths={[520, 800, 1100]} sizes="(max-width:860px) 100vw, 44vw" format="webp" quality={82} loading="lazy" />
+        </div>
+      </div>
+
+      <div class="aor-duo">
+        <div class="aor-card">
+          <div class="aor-card__head"><span class="aor-ico" set:html={ico('fact')} /><h3 class="aor-h3">{s4.fact.title}</h3></div>
+          {s4.fact.paragraphs.map((p: string) => <p>{p}</p>)}
+        </div>
+        <div class="aor-ritual" style="margin-top:0;">
+          <div class="aor-card__head"><span class="aor-ico" set:html={ico('heart')} /><h3 class="aor-h3">{s4.ritual.title}</h3></div>
+          <ol>
+            {s4.ritual.steps.map((st: string, i: number) => <li><b>{i + 1}</b><span>{st}</span></li>)}
+          </ol>
+          <p class="aor-ritual__note">{s4.ritual.note}</p>
+          <p class="aor-line aor-line--sm" style="margin-top:20px;">{s4.ritual.tail}</p>
+        </div>
+      </div>
+
+      <h3 class="aor-h3" style="margin-top:64px;">{s4.recovery.title}</h3>
+      <div class="aor-plates" style="margin-top:20px;">
+        {s4.recovery.cards.map((cd: any) => (
+          <div class="aor-plate">
+            <span class="aor-ico" set:html={ico(cd.icon)} />
+            <h3 class="aor-plate__t">{cd.title}</h3>
+            <p class="aor-plate__x">{cd.text}</p>
+          </div>
+        ))}
+      </div>
+
+      <h3 class="aor-h3" style="margin-top:64px;">{s4.which.title}</h3>
+      <div class="aor-duo" style="margin-top:20px;">
+        <div class="aor-card">
+          <p class="aor-card__strong">{s4.which.physical.lead}</p>
+          <ul class="aor-list">
+            {s4.which.physical.items.map((li: string) => <li>{li}</li>)}
+          </ul>
+        </div>
+        <div class="aor-card">
+          <p class="aor-card__strong">{s4.which.mental.lead}</p>
+          <ul class="aor-list">
+            {s4.which.mental.items.map((li: string) => <li>{li}</li>)}
+          </ul>
+          <p style="margin-top:16px;">{s4.which.mental.note}</p>
+        </div>
+      </div>
+
+      <div class="aor-thought">
+        <p class="aor-thought__title">{s4.thought.title}</p>
+        {s4.thought.paragraphs.map((p: string) => <p>{p}</p>)}
+        <p class="aor-thought__accent">{s4.thought.accent}</p>
+      </div>
+    </div>
+  </section>
+
+  </div>
+
+  <!-- ЭТАП 5: Второй день -->
+  <div data-aor-panel="stage-5" hidden>
+  <section class="aor-sec sec--art" id="stage-5">
+    <div class="wrap wrap--flush">
+      <div class="aor-head">
+        <h2 class="h2">{s5.num}: {s5.title}</h2>
+        <p class="aor-sub">{s5.subtitle}</p>
+      </div>
+      <div class="aor-split">
+        <div>
+          {s5.lead.map((p: string) => <p class="aor-p">{p}</p>)}
+        </div>
+        <div class="aor-split__pic aor-split__pic--tall">
+          <Image src={img(photos.s5)!} alt="Второй день. Замечать природу" widths={[520, 800, 1100]} sizes="(max-width:860px) 100vw, 44vw" format="webp" quality={82} loading="lazy" />
+        </div>
+      </div>
+
+      <div class="aor-duo">
+        <div>
+          <h3 class="aor-h3">{s5.inside.title}</h3>
+          {s5.inside.paragraphs.map((p: string) => (
+            <p class="aor-p">{parts(p).map((seg, i) => i % 2
+              ? <span class="aor-term" tabindex="0">{seg}<span class="aor-tip">{s5.inside.tooltip.text}</span></span>
+              : seg)}</p>
+          ))}
+        </div>
+        <div class="aor-card">
+          <div class="aor-card__head"><span class="aor-ico" set:html={ico('fact')} /><h3 class="aor-h3">{s5.fact.title}</h3></div>
+          {s5.fact.paragraphs.map((p: string) => <p>{p}</p>)}
+        </div>
+      </div>
+
+      <h3 class="aor-h3" style="margin-top:64px;">{s5.changes.title}</h3>
+      <div class="aor-plates" style="margin-top:20px;">
+        {s5.changes.items.map((t: string) => <div class="aor-plate"><p class="aor-plate__x" style="margin-top:0;">{t}</p></div>)}
+      </div>
+
+      <div class="aor-question">
+        <h3 class="aor-h3">{s5.question.title}</h3>
+        <p class="aor-question__not">Не «{s5.question.not}»</p>
+        <p class="aor-question__yes">А «{s5.question.yes}»</p>
+        {s5.question.paragraphs.map((p: string) => <p>{p}</p>)}
+      </div>
+
+      <h3 class="aor-h3" style="margin-top:72px;">{s5.listen.title}</h3>
+      <div class="aor-tiles">
+        {photos.listen.map((ph, i) => (
+          <figure class="aor-tile">
+            <Image src={img(ph)!} alt={s5.listen.items[i]} widths={[400, 640, 800]} sizes="(max-width:900px) 50vw, 25vw" format="webp" quality={82} loading="lazy" />
+            <figcaption>{s5.listen.items[i]}</figcaption>
+          </figure>
+        ))}
+      </div>
+      <div class="aor-plates aor-plates--3" style="margin-top:20px;">
+        {s5.listen.items.slice(4).map((t: string) => <div class="aor-plate"><h3 class="aor-plate__t">{t}</h3></div>)}
+      </div>
+      <p class="aor-line" style="margin-top:40px;">{s5.listen.note}</p>
+
+      <div class="aor-thought">
+        <p class="aor-thought__title">{s5.thought.title}</p>
+        {s5.thought.paragraphs.map((p: string) => <p>{p}</p>)}
+        <p class="aor-thought__accent">{s5.thought.accent}</p>
+      </div>
+    </div>
+  </section>
+
+  </div>
+
+  <!-- ЭТАП 6: Возвращение домой -->
+  <div data-aor-panel="stage-6" hidden>
+  <section class="aor-sec" id="stage-6">
+    <div class="wrap wrap--flush">
+      <div class="aor-head">
+        <h2 class="h2">{s6.num}: {s6.title}</h2>
+        <p class="aor-sub">{s6.subtitle}</p>
+      </div>
+      <div class="aor-split">
+        <div>
+          {s6.lead.map((p: string) => <p class="aor-p">{p}</p>)}
+          <div class="aor-card" style="margin-top:28px;">
+            <h3 class="aor-h3">{s6.remember.title}</h3>
+            <ul class="aor-list">
+              {s6.remember.items.map((li: string) => <li>{li}</li>)}
+            </ul>
+            <p style="margin-top:16px;">{s6.remember.note}</p>
+          </div>
+        </div>
+        <div class="aor-split__pic aor-split__pic--tall">
+          <Image src={img(photos.s6)!} alt="Возвращение домой" widths={[520, 800, 1100]} sizes="(max-width:860px) 100vw, 44vw" format="webp" quality={82} loading="lazy" />
+        </div>
+      </div>
+
+      <div class="aor-duo">
+        <div>
+          <h3 class="aor-h3">{s6.work.title}</h3>
+          {s6.work.paragraphs.map((p: string) => <p class="aor-p">{p}</p>)}
+          <p class="aor-callout__strong" style="margin-top:18px;">{s6.work.accent}</p>
+        </div>
+        <div class="aor-callout aor-callout--navy" style="margin-top:0;">
+          <p class="aor-callout__strong">{s6.care.title}</p>
+          {s6.care.paragraphs.map((p: string) => <p class="aor-callout__text">{p}</p>)}
+        </div>
+      </div>
+
+      <h3 class="aor-h3" style="margin-top:64px;">{s6.takeaway.title}</h3>
+      {s6.takeaway.lead.map((p: string) => <p class="aor-p">{p}</p>)}
+      <div class="aor-plates aor-plates--5" style="margin-top:24px;">
+        {s6.takeaway.items.map((it: any) => <div class="aor-plate"><span class="aor-ico" set:html={ico(it.icon)} /><p class="aor-plate__x" style="margin-top:0;">{it.text}</p></div>)}
+      </div>
+      {s6.takeaway.note.map((p: string) => <p class="aor-p aor-p--sm" style="margin-top:16px;">{p}</p>)}
+
+      <div class="aor-thought">
+        <p class="aor-thought__title">{s6.thought.title}</p>
+        {s6.thought.paragraphs.map((p: string) => <p>{p}</p>)}
+        <p class="aor-thought__accent">{s6.thought.accent}</p>
+      </div>
+    </div>
+  </section>
+
+  </div>
+
+  <!-- СКОЛЬКО ВРЕМЕНИ НУЖНО, ЧТОБЫ ОТДОХНУТЬ — всегда внизу, вне вкладок -->
+  <section class="aor-sec sec--art" id="duration">
+    <div class="wrap wrap--flush">
+      <div class="aor-head">
+        <h2 class="h2">{dur.title}</h2>
+        <p class="aor-p" style="margin-top:20px;">{dur.lead}</p>
+        <p class="aor-p" style="margin-top:16px;">{dur.photoCaption}</p>
+      </div>
+
+      <div class="aor-tiers">
+        {dur.tiers.map((t: any, i: number) => (
+          <div class={'aor-tier' + (i === 2 ? ' aor-tier--navy' : '')}>
+            <div class="aor-tier__head">
+              <span class="aor-ico" set:html={ico(['night1', 'night2', 'night3'][i])} />
+              <p class="aor-tier__n">{t.nights}</p>
+            </div>
+            <p class="aor-tier__tag">{t.tag}</p>
+            <p class="aor-tier__lead">{t.lead}</p>
+            <p class="aor-tier__lt">{t.listTitle}</p>
+            <ul class="aor-list">
+              {t.items.map((li: string) => <li>{li}</li>)}
+            </ul>
+            {t.note && <p class="aor-tier__note">{t.note}</p>}
+            {t.quotesLead && (
+              <div class="aor-tier__quotes">
+                <p class="aor-tier__note" style="margin:0 0 8px;">{t.quotesLead}</p>
+                {t.quotes.map((q: string) => <p>{q}</p>)}
+              </div>
+            )}
+            <div class="aor-tier__spacer"></div>
+            <div class="aor-tier__plate"><p>{t.plate}</p></div>
+          </div>
+        ))}
+      </div>
+
+      <div style="margin-top:56px;">
+        <p class="aor-h3" style="margin-bottom:10px;">{dur.fact.title}</p>
+        <p class="aor-p" style="max-width:none;">{dur.fact.text}</p>
+        <div class="aor-rhythm">
+          {dur.rhythm.map((p: string) => <p>{p}</p>)}
+          <p style="margin-top:16px;">{dur.rhythmNote}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ФИНАЛ: CTA -->
+  <section class="aor-final">
+    <div class="wrap wrap--flush">
+      <p class="aor-final__strong">{data.finale.strong.split(/(?<=\.)\s+/).map((s: string) => <span style="display:block;">{s}</span>)}</p>
+      <p class="aor-final__text">{data.finale.text}</p>
+      <a class="btn btn--gold" href={booking}>{data.finale.cta}</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="foot">
+    <div class="wrap wrap--flush">
+      <div class="foot__cols">
+        <div>
+          <div class="foot__brand">Парк Север</div>
+          <p class="foot__about">Пространство на краю леса для тех, кто выбирает тишину. Приватный дом без потока людей и лишнего, на территории 12,4 га. Без соседей. Только природа, животные и ощущение, что никуда не нужно спешить.</p>
+          <div class="socials">
+            {site.socials.map((s: any) => <a href={s.href} target="_blank" rel="noopener noreferrer">{socialLabels[s.type] ?? s.type}</a>)}
+          </div>
+        </div>
+        <div class="foot__col">
+          <h4>Разделы</h4>
+          {navMenu.map((m) => <a href={m.href}>{m.t}</a>)}
+        </div>
+        <div class="foot__col">
+          <h4>Контакты</h4>
+          <a href={c.phoneHref}>{c.phone}</a>
+          <a href={c.emailHref}>{c.email}</a>
+          <a href={c.whatsapp} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+          <span class="foot__addr">{c.address}</span>
+        </div>
+      </div>
+      <hr class="foot__rule" />
+      <div class="foot__cp">© {site.company} · {site.requisites.entity} · {site.requisites.note}</div>
+    </div>
+  </footer>
+
+  <!-- КЛИЕНТСКИЕ СКРИПТЫ -->
+  <script is:inline>
+    // мобильное меню
+    const toggle = document.querySelector('.nav__toggle');
+    const menu = document.querySelector('.nav__menu');
+    if (toggle && menu) {
+      toggle.addEventListener('click', () => {
+        toggle.classList.toggle('active');
+        menu.classList.toggle('open');
+      });
+      menu.querySelectorAll('a').forEach(l => l.addEventListener('click', () => {
+        toggle.classList.remove('active');
+        menu.classList.remove('open');
+      }));
+    }
+
+    // разделы-«странички»: меню переключает панели (как в «Наш мир»), hash в URL
+    (function () {
+      // браузер не восстанавливает прошлую прокрутку («кидает в подвал») — управляем сами
+      if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+      const tabs = Array.from(document.querySelectorAll('[data-aor-tab]'));
+      const panels = Array.from(document.querySelectorAll('[data-aor-panel]'));
+      if (!tabs.length) return;
+      const show = (id, scroll) => {
+        if (!panels.some(p => p.dataset.aorPanel === id)) return;
+        panels.forEach(p => { p.hidden = p.dataset.aorPanel !== id; });
+        tabs.forEach(t => t.classList.toggle('is-active', t.dataset.aorTab === id));
+        if (scroll) {
+          const bar = document.getElementById('aor-menubar');
+          if (bar) window.scrollTo({ top: bar.offsetTop - 70, behavior: 'smooth' });
+        }
+      };
+      tabs.forEach(t => t.addEventListener('click', (e) => {
+        e.preventDefault();
+        history.replaceState(null, '', '#' + t.dataset.aorTab);
+        show(t.dataset.aorTab, true);
+      }));
+      const initial = location.hash.replace('#', '');
+      if (initial) { show(initial, false); window.scrollTo(0, 0); }
+    })();
+
+    // русский типограф — короткие слова не висят в конце строки
+    (function () {
+      const glue = (s) => {
+        let out = s, prev;
+        do { prev = out; out = out.replace(/(^|[\s(«"—])([А-ЯЁа-яёA-Za-z]{1,2})[ \t]+/g, '$1$2 '); }
+        while (out !== prev);
+        return out;
+      };
+      const SKIP = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'TEXTAREA', 'INPUT']);
+      const walk = (node) => {
+        for (const child of Array.from(node.childNodes)) {
+          if (child.nodeType === 3) {
+            if (/[А-Яа-яЁё]/.test(child.nodeValue)) {
+              const glued = glue(child.nodeValue);
+              if (glued !== child.nodeValue) child.nodeValue = glued;
+            }
+          } else if (child.nodeType === 1 && !SKIP.has(child.tagName)) {
+            walk(child);
+          }
+        }
+      };
+      walk(document.body);
+    })();
+  </script>
+</SiteLayout>

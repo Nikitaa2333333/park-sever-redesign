@@ -10,5 +10,8 @@ import { defineConfig } from 'astro/config';
 export default defineConfig({
   site: 'https://nikitaa2333333.github.io',
   base: process.env.NODE_ENV === 'production' ? '/park-sever-redesign' : '/',
-  server: { port: 4321 },
+  // Отдельный фиксированный порт именно для этого проекта (Парк Север),
+  // чтобы dev-сервер не пересекался с другими Astro-сайтами.
+  // strictPort: не «перепрыгивать» на чужой порт — честно падать, если 4390 занят.
+  server: { host: '127.0.0.1', port: 4390, strictPort: true },
 });

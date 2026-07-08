@@ -9,7 +9,7 @@ import https from 'https';
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
 const SCREEN_NAME = 'park_sever';                         // VK screen-name группы
 const OUTPUT_PATH = path.join('public', 'vk-news.json');  // статика Astro
-const MAX_POSTS = 6;                                       // сколько карточек отдаём
+const MAX_POSTS = 9;                                       // сколько карточек отдаём (вкладка «Новости»: лид + 3 + сетка)
 const FETCH_WINDOW = 25;                                   // сколько последних постов сканируем
 // ─────────────────────────────────────────────────────────────────────────────
 
