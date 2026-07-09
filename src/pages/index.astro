@@ -706,9 +706,12 @@ const navMenu = [
       if (!track) return;
       const slides = track.querySelectorAll('.slider-snap__slide');
       if (slides.length < 2) return;
-      let i = 0;
+      // пинг-понг: дошли до последнего кадра — листаем обратно по одному
+      // (резкий «отлёт» через все кадры на первый заказчик забраковал)
+      let i = 0, dir = 1;
       setInterval(function () {
-        i = (i + 1) % slides.length;
+        if (i + dir >= slides.length || i + dir < 0) dir = -dir;
+        i += dir;
         track.scrollTo({ left: i * track.offsetWidth, behavior: 'smooth' });
       }, 5000);
     })();

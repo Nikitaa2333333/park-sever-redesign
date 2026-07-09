@@ -59,6 +59,9 @@
 
 *{ box-sizing:border-box; }
 html{ scroll-behavior:smooth; }
+/* страница НИКОГДА не скроллится горизонтально («поля не гуляют»):
+   clip не создаёт scroll-контейнер, внутренние карусели скроллятся как раньше */
+html, body{ overflow-x:hidden; overflow-x:clip; }
 body{
   margin:0; background:var(--canvas); color:var(--ink);
   font-family:var(--font-body); font-weight:500; font-size:16px; line-height:1.6;
@@ -288,19 +291,24 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
     linear-gradient(90deg,rgba(15,42,71,.88) 0%,rgba(15,42,71,.5) 26%,rgba(15,42,71,0) 56%),
     linear-gradient(180deg,rgba(15,42,71,.26),rgba(15,42,71,.1) 40%,rgba(15,42,71,.58)); }
 @media(max-width:640px){
-  /* верх кадра чистый (дом виден), от ~трети — плавный спад в navy: текст лежит на подложке,
-     сквозь которую фото ещё прослеживается */
-  .hero__scrim{ background:
-    linear-gradient(180deg,rgba(15,42,71,0) 0,rgba(15,42,71,0) 30vh,rgba(15,42,71,.5) 44vh,rgba(15,42,71,.9) 54vh,var(--navy) 66vh); }
+  /* на мобиле фото идёт чистым, без затемнения — скрим не нужен (фейд низа кадра
+     в navy даёт .hero__media::after, см. мобильный блок hero ниже) */
+  .hero__scrim{ display:none; }
 }
 .hero .wrap{ position:relative; z-index:2; padding-top:96px; padding-bottom:56px; text-align:center; }
-/* контент hero главной: текст слева, прижат к левой линии (бывший инлайн-стиль) */
-.hero__wrap{ text-align:left; max-width:800px; margin-left:0; padding-top:140px; padding-bottom:80px; }
-/* МОБИЛЬНЫЙ ПРИНЦИП ГЛАВНОЙ: сначала ФОТО (чистое, дом виден), ниже — текст.
-   Фото заканчивается мягким градиентом в navy-подложку, кадр «прослеживается» под текстом. */
+/* контент hero главной: текст слева, прижат к левой линии (бывший инлайн-стиль).
+   ВАЖНО: селектор .hero .hero__wrap — иначе базовый .hero .wrap перебивает по специфичности */
+.hero .hero__wrap{ text-align:left; max-width:800px; margin-left:0; padding-top:140px; padding-bottom:80px; }
+/* МОБИЛЬНЫЙ ПРИНЦИП ГЛАВНОЙ: первый экран — ЧИСТОЕ фото во весь вьюпорт (без затемнения),
+   низ кадра мягко уходит в navy; текст появляется ниже при скролле, с левого края */
 @media(max-width:640px){
-  .hero{ background:var(--navy); }
-  .hero__wrap{ padding-top:min(56vh, 480px); padding-bottom:56px; }
+  .hero{ display:block; min-height:0; background:var(--navy); }
+  .hero__media{ position:relative; inset:auto; height:calc(100vh - 56px); height:calc(100svh - 56px); }
+  .hero__media::after{
+    content:""; position:absolute; left:0; right:0; bottom:0; height:140px;
+    background:linear-gradient(to top, var(--navy), rgba(15,42,71,0));
+  }
+  .hero .hero__wrap{ padding-top:12px; padding-bottom:56px; }
 }
 .hero__eyebrow{ font-family:var(--font-head); font-size:14px; font-weight:600; color:#fff; margin:0 auto 18px; max-width:48ch; }
 .hero h1{ color:#fff; max-width:20ch; margin:0; }
@@ -383,7 +391,8 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 }
 
 /* ── секция-шапка: центрированная редакционная ─────── */
-.shead{ display:flex; flex-direction:column; gap:8px; max-width:60ch; margin:0 auto; text-align:center; align-items:center; }   /* подпись-«гирка» вплотную к заголовку (заказчик 2026-07-07) */
+.shead{ display:flex; flex-direction:column; gap:6px; max-width:60ch; margin:0 auto; text-align:center; align-items:center; }   /* подпись-«гирка» вплотную к заголовку (заказчик 2026-07-07/09) */
+.shead > *{ margin:0; }   /* дефолтные отступы <p> раздвигали подпись от заголовка — гасим, зазор даёт только gap */
 .shead .sub{ font-family:var(--font-body); font-weight:500; font-size:18px; line-height:1.55; color:var(--ink); }
 .shead--left{ margin:0; text-align:left; align-items:flex-start; }
 
@@ -878,10 +887,12 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 @media (max-width: 860px) {
   .art-steps { grid-template-columns: 1fr 1fr; }
 }
-/* мобила: карточки full-bleed во всю ширину экрана (белых полей по бокам нет),
+/* мобила: карточки full-bleed во всю ширину экрана БЕЗ зазоров (единый фото-поток),
+   секция заканчивается вплотную — «Дом среди леса» прижат следом;
    кегли внутри карточки контрастнее (заголовок ≠ наборный) */
 @media (max-width: 520px) {
-  .art-steps { grid-template-columns: 1fr; margin-left:-32px; margin-right:-32px; gap:14px; }
+  .sec--art { padding-bottom: 0; }
+  .art-steps { grid-template-columns: 1fr; margin-left:-32px; margin-right:-32px; gap:0; }
   .art-step__title { font-size: 24px; }
   .art-step__text { font-size: 16px; }
 }
@@ -1019,10 +1030,13 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 @media (max-width:900px){
   .oasis-layout{ grid-template-columns:1fr; gap:28px; }
 }
-/* мобила: лист бумаги растянут почти до краёв экрана (поля не зажимаем), внутренние отступы умереннее */
+/* мобила: лист бумаги растянут почти до краёв экрана (поля не зажимаем), внутренние отступы умереннее;
+   карусель фото прижата к плашке (заказчик 2026-07-09) */
 @media (max-width:640px){
+  .oasis-layout{ gap:6px; }
   .oasis-paper{ margin:0 -28px; padding:36px 26px 42px; }
   .oasis-chips{ font-size:24px; }
+  .oasis-carousel--wide .oasis-carousel__track{ padding:10px 4px; }
 }
 
 /* зерно бумаги поверх тёмной сцены.

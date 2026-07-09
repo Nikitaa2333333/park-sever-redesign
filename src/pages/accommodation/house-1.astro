@@ -413,9 +413,12 @@ const moods = [
       });
       dots.forEach((dot, idx) => dot.addEventListener('click', () => track.scrollTo({ left: idx * track.offsetWidth, behavior: 'smooth' })));
       const n = track.querySelectorAll('.slider-snap__slide').length;
+      // пинг-понг: с последнего кадра листаем обратно по одному (без резкого отлёта на первый)
+      let dir = 1;
       if (n > 1) setInterval(() => {
         const i = Math.round(track.scrollLeft / track.offsetWidth);
-        track.scrollTo({ left: ((i + 1) % n) * track.offsetWidth, behavior: 'smooth' });
+        if (i + dir >= n || i + dir < 0) dir = -dir;
+        track.scrollTo({ left: (i + dir) * track.offsetWidth, behavior: 'smooth' });
       }, 5000);
     });
 
