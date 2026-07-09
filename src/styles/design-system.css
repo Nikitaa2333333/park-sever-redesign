@@ -102,7 +102,7 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 /* заголовки берут заказной каллиграфический шрифт: вес обычный, трекинг 0 (скрипт-глифы связные) */
 .hero-title,.h1,.h2,.h3{ font-family:var(--font-display); font-weight:500; letter-spacing:0; }
 .hero-title{ font-size:clamp(44px,7vw,84px); line-height:1.05; color:var(--ink); margin:0; }
-.hero .hero-title{ font-size:clamp(64px,11vw,143px); line-height:0.98; }
+.hero .hero-title{ font-size:clamp(64px,11vw,143px); line-height:0.9; }   /* плотный межстрочный крупной Corsiva (канон .9) — «Парк/Север» в две строки у знака */
 /* надпись-оверлайн над титулом героя (Figma: Lora SemiBold 16, белая, без рамки) */
 .hero__overline{ font-family:var(--font-head); font-weight:600; font-size:16px;
   color:#fff; margin:0 0 8px; }
@@ -456,6 +456,14 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 /* Компактная лента ВК на главной (build-time снапшот). Карточки в каноне: сплошной
    текст, прямые углы, без теней — глубина строится тонкой линией и контрастом фото. */
 .news-feed{ display:flex; flex-direction:column; gap:18px; max-height:560px; overflow-y:auto; padding-right:6px; }
+/* низ прокручиваемой ленты уходит в цвет сцены (canvas) — канонный edge-fade, как на каруселях:
+   видно, что лента продолжается. Оверлей лежит на колонке (::after внутри скролла уехал бы с контентом) */
+.stories-col:has(.news-feed){ position:relative; }
+.stories-col:has(.news-feed)::after{
+  content:""; position:absolute; left:0; right:0; bottom:0; height:72px;
+  pointer-events:none;
+  background:linear-gradient(to bottom, rgba(255,255,255,0), var(--canvas));
+}
 .news-card{ display:grid; grid-template-columns:140px 1fr; gap:18px; align-items:start;
   text-decoration:none; border-bottom:1px solid var(--fog); padding-bottom:18px; }
 .news-card:last-child{ border-bottom:0; padding-bottom:0; }
@@ -476,6 +484,7 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   .news-card__pic{ width:100%; aspect-ratio:16/10; }
   .news-feed{ max-height:none; overflow:visible; padding-right:0; }
   .news-feed .news-card:nth-child(n+4){ display:none; }   /* компактно: три свежих, без внутренней прокрутки */
+  .stories-col:has(.news-feed)::after{ display:none; }    /* на мобиле лента не скроллится — фейд не нужен */
 }
 
 /* ── вкладка «Истории» (/stories/): лента ВК крупно ────── */
@@ -1708,9 +1717,11 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   font-size:clamp(38px,4.6vw,60px); line-height:.9; color:var(--ink); margin:0 auto; max-width:30ch; text-wrap:balance; }
 .aor-band__note{ font-family:var(--font-body); font-weight:500; font-size:18px; line-height:1.5; color:var(--ink); margin:18px auto 0; max-width:58ch; }
 
-/* курсивная строка-финал внутри светлой сцены */
+/* курсивная строка-финал внутри светлой сцены — как эталон .aor-band__line:
+   по центру, крупно, межстрочный .9 */
 .aor-line{ font-family:var(--font-display); font-weight:500; letter-spacing:0;
-  font-size:clamp(28px,3.2vw,40px); line-height:.9; color:var(--ink); margin:44px 0 0; max-width:30ch; }
+  font-size:clamp(38px,4.6vw,60px); line-height:.9; color:var(--ink);
+  margin:44px auto 0; max-width:30ch; text-align:center; text-wrap:balance; }
 .aor-line--sm{ font-size:clamp(22px,2.2vw,28px); }
 .sec--navy .aor-line{ color:var(--gold-l); }
 
