@@ -1,5 +1,6 @@
 ---
 import SiteLayout from '../../layouts/SiteLayout.astro';
+import LogoMark from '../../components/LogoMark.astro';
 import { site, withBase } from '../../lib/content';
 import { vkNews, vkGroupHref, newsImg } from '../../lib/vk-news';
 
@@ -32,7 +33,7 @@ const navMenu = [
   <!-- NAV -->
   <nav class="nav">
     <div class="wrap">
-      <a class="nav__logo" href={withBase('/')}>Парк Север</a>
+      <a class="nav__logo" href={withBase('/')}><LogoMark class="nav__logo-mark" />Парк Север</a>
       <button class="nav__toggle" aria-label="Открыть меню">
         <span></span><span></span><span></span>
       </button>

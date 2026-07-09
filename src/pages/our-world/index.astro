@@ -1,5 +1,6 @@
 ---
 import SiteLayout from '../../layouts/SiteLayout.astro';
+import LogoMark from '../../components/LogoMark.astro';
 import { site, pages, withBase } from '../../lib/content';
 import { Image, getImage } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
@@ -81,7 +82,7 @@ const navMenu = [
   <!-- NAV -->
   <nav class="nav">
     <div class="wrap">
-      <a class="nav__logo" href={withBase('/')}>Парк Север</a>
+      <a class="nav__logo" href={withBase('/')}><LogoMark class="nav__logo-mark" />Парк Север</a>
       <button class="nav__toggle" aria-label="Открыть меню">
         <span></span><span></span><span></span>
       </button>
@@ -385,12 +386,15 @@ const navMenu = [
       const panels = Array.from(document.querySelectorAll('[data-ow-panel]'));
       if (!tabs.length) return;
       const show = (id, scroll) => {
-        if (!panels.some(p => p.dataset.owPanel === id)) return;
-        panels.forEach(p => { p.hidden = p.dataset.owPanel !== id; });
+        const panel = panels.find(p => p.dataset.owPanel === id);
+        if (!panel) return;
+        panels.forEach(p => { p.hidden = p !== panel; });
         tabs.forEach(t => t.classList.toggle('is-active', t.dataset.owTab === id));
         if (scroll) {
+          // не в обложку, а к линии контента: меню-бар прилипает под шапкой (top:56px),
+          // контент — сразу под ним; offsetTop панели стабилен (sticky не выпадает из потока)
           const bar = document.getElementById('ow-menubar');
-          if (bar) window.scrollTo({ top: bar.offsetTop - 70, behavior: 'smooth' });
+          window.scrollTo(0, Math.max(0, panel.offsetTop - (bar ? bar.offsetHeight : 0) - 56));
         }
       };
       tabs.forEach(t => t.addEventListener('click', (e) => {

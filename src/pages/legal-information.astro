@@ -1,5 +1,6 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
+import LogoMark from '../components/LogoMark.astro';
 import { site, withBase } from '../lib/content';
 
 // «Правовая информация» — формальные документы старого сайта (URL сохранён 1:1).
@@ -33,7 +34,7 @@ const iconDoc = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" f
   <!-- NAV -->
   <nav class="nav">
     <div class="wrap">
-      <a class="nav__logo" href={withBase('/')}>Парк Север</a>
+      <a class="nav__logo" href={withBase('/')}><LogoMark class="nav__logo-mark" />Парк Север</a>
       <button class="nav__toggle" aria-label="Открыть меню">
         <span></span><span></span><span></span>
       </button>

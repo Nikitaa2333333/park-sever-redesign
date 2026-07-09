@@ -1668,7 +1668,7 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 /* строка-шапка карточки: иконка + заголовок в одну линию («Интересный факт», «Маленький ритуал») */
 .aor-card__head{ display:flex; align-items:center; gap:12px; margin-bottom:14px; }
 .aor-card__head .aor-ico{ width:26px; height:26px; flex:0 0 26px; }
-.aor-card__head .aor-h3, .aor-card__head .aor-callout__strong{ margin:0; }
+.aor-card__head .aor-h3{ margin:0; }
 
 /* текст + фото: кадр РОВНО по высоте текстового модуля (без разрывов),
    правый край фото уходит до края экрана (журнальный разворот) */
@@ -1702,13 +1702,12 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .aor-qa p{ font-family:var(--font-body); font-weight:500; font-size:18px; line-height:1.5; color:var(--ink); margin:0 0 16px; }
 @media(max-width:900px){ .aor-qa{ grid-template-columns:1fr; gap:28px; } }
 
-/* выносная плашка-акцент (вывод, callout) */
-.aor-callout{ background:var(--frost); padding:32px; margin-top:28px; max-width:980px; }
-.sec--cream .aor-callout, .sec--art .aor-callout{ background:var(--canvas); }
-.aor-callout__strong{ font-family:var(--font-head); font-weight:600; font-size:18px; line-height:1.35; color:var(--ink); margin:0; }
-.aor-callout__text{ font-family:var(--font-body); font-weight:500; font-size:18px; line-height:1.5; color:var(--ink); margin:10px 0 0; }
-.aor-callout--navy{ background:var(--navy); }
-.aor-callout--navy .aor-callout__strong, .aor-callout--navy .aor-callout__text{ color:#fff; }
+/* акцентная жирная строка в наборном потоке — вывод БЕЗ плашки
+   (плашки-callout сняты: спокойный наборный текст, канон 2026-07-09) */
+.aor-strong{ font-family:var(--font-head); font-weight:600; font-size:18px; line-height:1.35; color:var(--ink); margin:18px 0 0; max-width:62ch; }
+.sec--navy .aor-strong{ color:#fff; }
+/* примечание при кнопке — мельче наборного, стоит ПОСЛЕ кнопки и прижато к ней */
+.aor-note{ font-family:var(--font-body); font-weight:500; font-size:14px; line-height:1.5; color:var(--ink); margin:10px 0 0; max-width:62ch; }
 
 /* финал сцены — крупная курсивная строка по центру, без фона;
    отрицательный отступ сверху прижимает финал к своему разделу (принцип близости) */
@@ -1750,19 +1749,8 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 /* сетка/плашки сразу после заголовка — прижаты к нему (20px), после текста — обычные 36px */
 .aor-h3 + .aor-plates, .aor-h3 + .aor-duo, .aor-h3 + .aor-tiles{ margin-top:20px; }
 
-/* карточка-«бумага» (эксперимент, факты) */
-.aor-card{ background:var(--frost); padding:32px; }
-.sec--cream .aor-card, .sec--sand .aor-card, .sec--art .aor-card{ background:var(--canvas); }
-.aor-card .aor-h3{ margin:0 0 14px; }
-.aor-card .aor-card__head .aor-h3{ margin:0; }
-.aor-card p{ font-family:var(--font-body); font-weight:500; font-size:16px; line-height:1.5; color:var(--ink); margin:0 0 10px; max-width:62ch; }
-.aor-card p:last-child{ margin-bottom:0; }
-.aor-card__strong{ font-family:var(--font-head); font-weight:600; font-size:18px; line-height:1.35; }
-
-/* ритуал — шаги с курсивными номерами */
-.aor-ritual{ background:var(--frost); padding:40px; margin-top:56px; }
-.sec--cream .aor-ritual{ background:var(--canvas); }
-.sec--navy .aor-ritual{ background:var(--frost); }
+/* ритуал — шаги с курсивными номерами (без плашки, чистый наборный блок) */
+.aor-ritual{ margin-top:56px; }
 .aor-ritual ol{ list-style:none; margin:20px 0 0; padding:0; display:grid; gap:18px; }
 .aor-ritual li{ display:grid; grid-template-columns:44px 1fr; gap:16px; align-items:start;
   font-family:var(--font-body); font-weight:500; font-size:18px; line-height:1.5; color:var(--ink); }

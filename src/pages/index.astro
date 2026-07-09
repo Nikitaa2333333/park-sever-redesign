@@ -1,5 +1,6 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
+import LogoMark from '../components/LogoMark.astro';
 import { getPage, site, withBase } from '../lib/content';
 import { vkNews, vkGroupHref, newsImg } from '../lib/vk-news';
 import { Image, getImage } from 'astro:assets';
@@ -134,7 +135,7 @@ const navMenu = [
   <!-- NAV (Sticky Navigation with Mobile Hamburger) -->
   <nav class="nav">
     <div class="wrap">
-      <a class="nav__logo" href="/">Парк Север</a>
+      <a class="nav__logo" href="/"><LogoMark class="nav__logo-mark" />Парк Север</a>
       
       <button class="nav__toggle" aria-label="Открыть меню">
         <span></span>
@@ -160,7 +161,10 @@ const navMenu = [
     <div class="hero__scrim"></div>
     <div class="wrap hero__wrap">
       {heroEyebrow && <div class="hero__overline">{heroEyebrow.replace(/\s*\.\s*$/, '')}</div>}
-      <h1 class="hero-title" style="color:#fff; margin:0;">{heroTitleMain}{heroTitleAccent && <> <span class="hl">{heroTitleAccent}</span></>}</h1>
+      <div class="hero__brand">
+        <LogoMark class="hero__mark" />
+        <h1 class="hero-title" style="color:#fff; margin:0;">{heroTitleMain}{heroTitleAccent && <> <span class="hl">{heroTitleAccent}</span></>}</h1>
+      </div>
 
       {heroAccent && <p class="hero-accent" style="margin:16px 0 28px;">{heroAccent}</p>}
 

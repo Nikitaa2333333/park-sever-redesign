@@ -8,8 +8,8 @@ import { defineConfig } from 'astro/config';
 // Все корневые пути к ассетам (/images, /videos, /fonts) прогоняем через
 // withBase() из src/lib/content.ts, чтобы они резолвились под этим base.
 export default defineConfig({
-  site: 'https://nikitaa2333333.github.io',
-  base: process.env.NODE_ENV === 'production' ? '/park-sever-redesign' : '/',
+  site: 'https://park-sever.ru',
+  base: '/',
   // Отдельный фиксированный порт именно для этого проекта (Парк Север),
   // чтобы dev-сервер не пересекался с другими Astro-сайтами.
   // strictPort: не «перепрыгивать» на чужой порт — честно падать, если 4390 занят.

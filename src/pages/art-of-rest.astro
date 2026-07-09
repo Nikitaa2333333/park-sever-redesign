@@ -1,5 +1,6 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
+import LogoMark from '../components/LogoMark.astro';
 import { site, withBase } from '../lib/content';
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
@@ -60,7 +61,7 @@ const parts = (p: string) => p.split(/\{([^}]+)\}/);
   <!-- NAV -->
   <nav class="nav">
     <div class="wrap">
-      <a class="nav__logo" href={withBase('/')}>Парк Север</a>
+      <a class="nav__logo" href={withBase('/')}><LogoMark class="nav__logo-mark" />Парк Север</a>
       <button class="nav__toggle" aria-label="Открыть меню">
         <span></span><span></span><span></span>
       </button>
@@ -167,21 +168,19 @@ const parts = (p: string) => p.split(/\{([^}]+)\}/);
       </div>
 
       <p class="aor-p" style="margin-top:36px;">{s1.social}</p>
-      <div class="aor-callout aor-callout--navy">
-        <p class="aor-callout__strong">{s1.science}</p>
-      </div>
+      <p class="aor-p">{s1.science}</p>
 
       <div class="aor-duo">
         <div>
           <h3 class="aor-h3">{s1.what.title}</h3>
           {s1.what.paragraphs.map((p: string) => <p class="aor-p">{p}</p>)}
-          <p class="aor-p aor-p--sm" style="margin-top:22px;">{s1.what.houseNote}</p>
-          <a class="btn btn--navy" style="margin-top:8px;" href={withBase('/accommodation/house-1')}>{s1.what.cta}</a>
+          <a class="btn btn--navy" style="margin-top:28px;" href={withBase('/accommodation/house-1')}>{s1.what.cta}</a>
+          <p class="aor-note">{s1.what.houseNote}</p>
         </div>
-        <div class="aor-card">
-          <div class="aor-card__head"><span class="aor-ico" set:html={ico('experiment')} /><h3 class="aor-h3">{s1.experiment.title}</h3></div>
-          {s1.experiment.paragraphs.map((p: string) => <p>{p}</p>)}
-          <p class="aor-card__strong" style="margin-top:16px;">{s1.experiment.conclusion}</p>
+        <div>
+          <div class="aor-card__head"><span class="aor-ico" set:html={ico('flower')} /><h3 class="aor-h3">{s1.experiment.title}</h3></div>
+          {s1.experiment.paragraphs.map((p: string) => <p class="aor-p">{p}</p>)}
+          <p class="aor-strong">{s1.experiment.conclusion}</p>
         </div>
       </div>
 
@@ -191,9 +190,9 @@ const parts = (p: string) => p.split(/\{([^}]+)\}/);
           <p class="aor-p"><b>{s1.switch.factLabel}.</b> {s1.switch.fact}</p>
           <p class="aor-p aor-p--sm">{s1.switch.note}</p>
         </div>
-        <div class="aor-callout aor-callout--navy" style="margin-top:0;">
-          <p class="aor-callout__strong">{s1.road.title}</p>
-          <p class="aor-callout__text">{s1.road.text}</p>
+        <div>
+          <h3 class="aor-h3">{s1.road.title}</h3>
+          <p class="aor-p">{s1.road.text}</p>
         </div>
       </div>
 
@@ -364,9 +363,9 @@ const parts = (p: string) => p.split(/\{([^}]+)\}/);
       </div>
 
       <div class="aor-duo">
-        <div class="aor-card">
+        <div>
           <div class="aor-card__head"><span class="aor-ico" set:html={ico('fact')} /><h3 class="aor-h3">{s4.fact.title}</h3></div>
-          {s4.fact.paragraphs.map((p: string) => <p>{p}</p>)}
+          {s4.fact.paragraphs.map((p: string) => <p class="aor-p">{p}</p>)}
         </div>
         <div class="aor-ritual" style="margin-top:0;">
           <div class="aor-card__head"><span class="aor-ico" set:html={ico('heart')} /><h3 class="aor-h3">{s4.ritual.title}</h3></div>
@@ -391,18 +390,18 @@ const parts = (p: string) => p.split(/\{([^}]+)\}/);
 
       <h3 class="aor-h3">{s4.which.title}</h3>
       <div class="aor-duo">
-        <div class="aor-card">
-          <p class="aor-card__strong">{s4.which.physical.lead}</p>
+        <div>
+          <p class="aor-strong" style="margin-top:0;">{s4.which.physical.lead}</p>
           <ul class="aor-list">
             {s4.which.physical.items.map((li: string) => <li>{li}</li>)}
           </ul>
         </div>
-        <div class="aor-card">
-          <p class="aor-card__strong">{s4.which.mental.lead}</p>
+        <div>
+          <p class="aor-strong" style="margin-top:0;">{s4.which.mental.lead}</p>
           <ul class="aor-list">
             {s4.which.mental.items.map((li: string) => <li>{li}</li>)}
           </ul>
-          <p style="margin-top:16px;">{s4.which.mental.note}</p>
+          <p class="aor-p" style="margin-top:16px;">{s4.which.mental.note}</p>
         </div>
       </div>
 
@@ -442,9 +441,9 @@ const parts = (p: string) => p.split(/\{([^}]+)\}/);
               : seg)}</p>
           ))}
         </div>
-        <div class="aor-card">
+        <div>
           <div class="aor-card__head"><span class="aor-ico" set:html={ico('fact')} /><h3 class="aor-h3">{s5.fact.title}</h3></div>
-          {s5.fact.paragraphs.map((p: string) => <p>{p}</p>)}
+          {s5.fact.paragraphs.map((p: string) => <p class="aor-p">{p}</p>)}
         </div>
       </div>
 
@@ -495,12 +494,12 @@ const parts = (p: string) => p.split(/\{([^}]+)\}/);
       <div class="aor-split">
         <div>
           {s6.lead.map((p: string) => <p class="aor-p">{p}</p>)}
-          <div class="aor-card" style="margin-top:28px;">
-            <h3 class="aor-h3">{s6.remember.title}</h3>
+          <div style="margin-top:28px;">
+            <h3 class="aor-h3" style="margin-top:0;">{s6.remember.title}</h3>
             <ul class="aor-list">
               {s6.remember.items.map((li: string) => <li>{li}</li>)}
             </ul>
-            <p style="margin-top:16px;">{s6.remember.note}</p>
+            <p class="aor-p" style="margin-top:16px;">{s6.remember.note}</p>
           </div>
         </div>
         <div class="aor-split__pic aor-split__pic--tall">
@@ -512,11 +511,11 @@ const parts = (p: string) => p.split(/\{([^}]+)\}/);
         <div>
           <h3 class="aor-h3">{s6.work.title}</h3>
           {s6.work.paragraphs.map((p: string) => <p class="aor-p">{p}</p>)}
-          <p class="aor-callout__strong" style="margin-top:18px;">{s6.work.accent}</p>
+          <p class="aor-strong">{s6.work.accent}</p>
         </div>
-        <div class="aor-callout aor-callout--navy" style="margin-top:0;">
-          <p class="aor-callout__strong">{s6.care.title}</p>
-          {s6.care.paragraphs.map((p: string) => <p class="aor-callout__text">{p}</p>)}
+        <div>
+          <h3 class="aor-h3">{s6.care.title}</h3>
+          {s6.care.paragraphs.map((p: string) => <p class="aor-p">{p}</p>)}
         </div>
       </div>
 
@@ -650,12 +649,15 @@ const parts = (p: string) => p.split(/\{([^}]+)\}/);
       const panels = Array.from(document.querySelectorAll('[data-aor-panel]'));
       if (!tabs.length) return;
       const show = (id, scroll) => {
-        if (!panels.some(p => p.dataset.aorPanel === id)) return;
-        panels.forEach(p => { p.hidden = p.dataset.aorPanel !== id; });
+        const panel = panels.find(p => p.dataset.aorPanel === id);
+        if (!panel) return;
+        panels.forEach(p => { p.hidden = p !== panel; });
         tabs.forEach(t => t.classList.toggle('is-active', t.dataset.aorTab === id));
         if (scroll) {
+          // не в обложку, а к линии контента: меню-бар прилипает под шапкой (top:56px),
+          // контент — сразу под ним; offsetTop панели стабилен (sticky не выпадает из потока)
           const bar = document.getElementById('aor-menubar');
-          if (bar) window.scrollTo({ top: bar.offsetTop - 70, behavior: 'smooth' });
+          window.scrollTo(0, Math.max(0, panel.offsetTop - (bar ? bar.offsetHeight : 0) - 56));
         }
       };
       tabs.forEach(t => t.addEventListener('click', (e) => {

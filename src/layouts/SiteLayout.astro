@@ -31,6 +31,7 @@ const fontFace = `@font-face{font-family:"Monotype Corsiva";src:url(${JSON.strin
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
+    <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
     <!-- Заголовки: Monotype Corsiva (локально, @font-face). Наборный/UI: Lora (Google). -->
     <style is:inline set:html={fontFace}></style>
     <link rel="preload" href={withBase('/fonts/monotype-corsiva.woff2')} as="font" type="font/woff2" crossorigin />
