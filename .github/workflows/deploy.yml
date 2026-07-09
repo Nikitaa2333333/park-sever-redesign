@@ -37,15 +37,19 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Deploy to hosting via SCP
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: server66.hosting.reg.ru
-          username: ${{ secrets.HOSTING_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: 22
-          source: "dist/*"
-          target: "/var/www/${{ secrets.HOSTING_USER }}/data/www/park-sever.ru"
-          strip_components: 1
-          overwrite: true
-          rm: true
+      # rsync вместо scp: передаёт ТОЛЬКО изменённые файлы (деплой — секунды, не минуты),
+      # ничего не удаляет заранее — сайт не стоит полупустым во время заливки;
+      # --delete подчищает на хостинге файлы, которых больше нет в dist
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p 22 server66.hosting.reg.ru >> ~/.ssh/known_hosts
+
+      - name: Deploy to hosting via rsync (only changed files)
+        run: |
+          rsync -az --delete \
+            -e "ssh -p 22 -i ~/.ssh/deploy_key" \
+            dist/ \
+            "${{ secrets.HOSTING_USER }}@server66.hosting.reg.ru:/var/www/${{ secrets.HOSTING_USER }}/data/www/park-sever.ru/"
