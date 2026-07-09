@@ -819,6 +819,9 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 /* лента иконок-поводов на главной (переиспользуем .atm-marquee со вкладки «Атмосфера»):
    иконки золотом, подписи белые — лента живёт на navy-сцене */
 .atm-marquee--icons .atmosphere-icon__svg{ color: var(--gold-l); }
+/* скорость = как у ленты на вкладке «Атмосфера» (~34px/с): трек здесь длиннее (6 копий),
+   поэтому цикл дольше — иначе лента бежит заметно быстрее эталона */
+.atm-marquee--icons .atm-marquee__track{ animation-duration:88s; }
 .atm-marquee--icons .atm-marquee__group{ align-items:flex-start; gap:64px; padding-right:64px; }
 @media (max-width:640px){ .atm-marquee--icons .atm-marquee__group{ gap:44px; padding-right:44px; } }
 
