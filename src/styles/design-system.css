@@ -274,8 +274,9 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 /* ── навбар (прозрачный над hero, без тени/линии) ──── */
 .nav{ position:absolute; top:0; left:0; right:0; z-index:10; }
 .nav .wrap{ display:flex; align-items:center; gap:24px; height:80px; }
-.nav__logo{ font-family:var(--font-display); font-weight:500; font-size:30px; line-height:1; color:#fff; letter-spacing:0; white-space:nowrap; }   /* лого всегда одной строкой — на мобиле в две строки верстается неаккуратно */
-@media(max-width:640px){ .nav__logo{ font-size:24px; } }
+.nav__logo{ display:inline-flex; align-items:center; gap:12px; font-family:var(--font-display); font-weight:500; font-size:30px; line-height:1; color:#fff; letter-spacing:0; white-space:nowrap; }   /* лого всегда одной строкой — на мобиле в две строки верстается неаккуратно */
+.nav__logo-mark{ height:40px; width:auto; color:var(--gold-l); flex:0 0 auto; }   /* фирменный знак (ель в геометке) слева от названия */
+@media(max-width:640px){ .nav__logo{ font-size:24px; gap:9px; } .nav__logo-mark{ height:32px; } }
 .nav__menu{ display:flex; gap:30px; margin:0 auto; font-family:var(--font-head); font-size:15px; font-weight:600; }
 .nav__menu a{ color:#fff; transition:color .2s; }
 .nav__menu a:hover{ color:var(--gold-l); }   /* наведение — золото сайта */
@@ -315,6 +316,10 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   }
   .hero .hero__wrap{ padding-top:0; padding-bottom:56px; }
 }
+/* связка «крупный знак + название» в hero главной (как в референсе): логотип слева,
+   заголовок рядом переносится на две строки («Парк» / «Север») сам — за счёт ширины */
+.hero__brand{ display:flex; align-items:center; gap:clamp(20px,3vw,44px); }
+.hero__mark{ height:clamp(120px,17vw,230px); width:auto; color:var(--gold-l); flex:0 0 auto; }
 .hero__eyebrow{ font-family:var(--font-head); font-size:14px; font-weight:600; color:#fff; margin:0 auto 18px; max-width:48ch; }
 .hero h1{ color:#fff; max-width:20ch; margin:0; }
 .hero__sub{ font-family:var(--font-body); font-weight:500; font-size:19px; line-height:1.35; color:#fff; margin:20px 0 0; max-width:54ch; }
@@ -604,6 +609,8 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   .nav__toggle {
     display: block;
   }
+  /* мобильное меню: панель мягко ВЫЕЗЖАЕТ СЛЕВА (заказчик 2026-07-09);
+     пункты крупные, по левой линии 32px, появляются ступенчато следом за панелью */
   .nav__menu {
     display: flex;               /* КРИТИЧНО: базовое правило (≤980) гасит меню display:none —
                                     без возврата flex оверлей не открывался вовсе */
@@ -614,21 +621,36 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
     bottom: 0;
     background: var(--navy);
     flex-direction: column;
-    padding: 40px;
-    gap: 24px;
-    align-items: center;
-    transform: translateY(-100%);
-    opacity: 0;
+    justify-content: flex-start;
+    padding: 52px 32px 40px;
+    gap: 26px;
+    align-items: flex-start;
+    transform: translateX(-100%);
     visibility: hidden;
-    transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s;
+    transition: transform .5s cubic-bezier(.22,.61,.36,1), visibility .5s;
     z-index: 105;
     margin-left: 0;
-    font-size: 18px;
+    font-size: clamp(24px, 6.5vw, 28px);
+    font-weight: 600;
+    letter-spacing: -0.01em;
   }
   .nav__menu.open {
-    transform: translateY(0);
-    opacity: 1;
+    transform: translateX(0);
     visibility: visible;
+  }
+  /* пункты подъезжают следом, каждый со своей задержкой — меню читается как живое */
+  .nav__menu a {
+    transform: translateX(-28px);
+    transition: transform .45s cubic-bezier(.22,.61,.36,1), color .2s;
+  }
+  .nav__menu.open a { transform: none; }
+  .nav__menu a:nth-child(2) { transition-delay: .04s; }
+  .nav__menu a:nth-child(3) { transition-delay: .08s; }
+  .nav__menu a:nth-child(4) { transition-delay: .12s; }
+  .nav__menu a:nth-child(5) { transition-delay: .16s; }
+  .nav__menu a:nth-child(6) { transition-delay: .2s; }
+  @media (prefers-reduced-motion: reduce) {
+    .nav__menu, .nav__menu a { transition: none; }
   }
   /* порядок на мобиле: лого → «Забронировать» → гамбургер; поля шапки компактнее */
   .nav .wrap { padding: 0 18px; gap: 12px; }
