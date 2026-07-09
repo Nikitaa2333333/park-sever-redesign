@@ -94,7 +94,7 @@ a{ color:inherit; text-decoration:none; }
 /* ── типографика — плотный отрицательный трекинг ────── */
 h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .h1{ font-weight:700; font-size:clamp(38px,6vw,64px); line-height:1.0; letter-spacing:-0.035em; }
-.h2{ font-weight:700; font-size:clamp(30px,3.6vw,46px); line-height:1.06; letter-spacing:-0.03em; }
+.h2{ font-weight:700; font-size:clamp(36px,3.6vw,46px); line-height:1.06; letter-spacing:-0.03em; }   /* нижняя граница 36px: скрипт-Corsiva на мобиле не должен читаться одним кеглем с наборным */
 .h3{ font-weight:700; font-size:clamp(19px,2vw,24px); line-height:1.2; letter-spacing:-0.02em; }
 /* заголовки берут заказной каллиграфический шрифт: вес обычный, трекинг 0 (скрипт-глифы связные) */
 .hero-title,.h1,.h2,.h3{ font-family:var(--font-display); font-weight:500; letter-spacing:0; }
@@ -192,30 +192,49 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 @media (max-width:900px){ .adv-grid{ grid-template-columns:repeat(2,1fr); } }
 @media (max-width:520px){ .adv-grid{ grid-template-columns:1fr; } }
 
-/* ── «Почему стоит выбрать нас» — карусель «фото + текст» с миниатюрами ── */
+/* ── «Почему стоит выбрать нас» — коллаж: миниатюры-«открывашки» КОЛОНКОЙ СЛЕВА,
+   сцена (фото + текст) справа. Высота сцены ФИКСИРОВАНА — при переключении ничего
+   не прыгает (заказчик 2026-07-09), и на ПК и на мобиле. ── */
 .sec--advantages{ background:var(--frost); color:var(--ink); }
-.adv-carousel{ max-width:900px; margin:8px auto 0; }
-/* сцена: активный слайд — крупное фото слева + текст справа, в белой карточке с тонкой линией */
-.adv-stage{ position:relative; }
+.adv-carousel{
+  max-width:1060px; margin:8px auto 0;
+  display:grid; grid-template-columns:180px minmax(0,1fr); gap:16px;
+  align-items:stretch;
+}
+/* колонка миниатюр слева: четыре равных, суммарно = высоте сцены */
+.adv-thumbs{
+  grid-column:1; grid-row:1;
+  display:flex; flex-direction:column; gap:16px; margin:0;
+}
+.adv-thumb{
+  display:block; flex:1 1 0; min-height:0;
+  padding:0; border:2px solid transparent; background:none;
+  cursor:pointer; overflow:hidden;
+}
+.adv-thumb img{ display:block; width:100%; height:100%; object-fit:cover; }
+.adv-thumb.is-active{ border-color:var(--navy); }
+/* сцена: фиксированная высота, активный слайд — фото слева + текст справа */
+.adv-stage{ grid-column:2; grid-row:1; position:relative; height:520px; }
 .adv-slide{ display:none; }
 .adv-slide.is-active{
   display:grid;
   grid-template-columns:62% 1fr;
+  height:100%;
   background:var(--canvas);
   border:1px solid var(--fog);
 }
-.adv-slide__pic{ overflow:hidden; }
+.adv-slide__pic{ overflow:hidden; height:100%; }
 .adv-slide__pic img{
   display:block;
   width:100%;
   height:100%;
-  min-height:300px;
   object-fit:cover;
 }
 .adv-slide__text{
   display:flex;
   align-items:flex-start;
   padding:32px;
+  overflow:auto;
 }
 .adv-slide__desc{
   font-family:var(--font-body);
@@ -225,29 +244,18 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   color:var(--ink);
   margin:0;
 }
-/* ряд миниатюр под сценой */
-.adv-thumbs{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:14px;
-  margin-top:14px;
-}
-.adv-thumb{
-  display:block;
-  padding:0;
-  border:2px solid transparent;
-  background:none;
-  cursor:pointer;
-  overflow:hidden;
-  aspect-ratio:16/10;
-}
-.adv-thumb img{ display:block; width:100%; height:100%; object-fit:cover; }
-.adv-thumb.is-active{ border-color:var(--navy); }
+/* мобила: сцена сверху (фото → текст под ним), миниатюры рядом снизу.
+   Высоты фото и текста ФИКСИРОВАНЫ — плашка не прыгает при выборе элемента */
 @media (max-width:860px){
-  .adv-slide.is-active{ grid-template-columns:1fr; }
-  .adv-slide__pic img{ min-height:280px; }
-  .adv-slide__text{ padding:28px; }
-  .adv-slide__desc{ font-size:20px; }
+  .adv-carousel{ display:block; }
+  .adv-stage{ height:auto; }
+  .adv-slide.is-active{ grid-template-columns:1fr; height:auto; }
+  .adv-slide__pic{ height:auto; }
+  .adv-slide__pic img{ height:280px; }
+  .adv-slide__text{ padding:24px; min-height:188px; overflow:visible; }
+  .adv-slide__desc{ font-size:18px; }
+  .adv-thumbs{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:12px; }
+  .adv-thumb{ aspect-ratio:16/10; }
 }
 @media (max-width:520px){
   .adv-thumbs{ grid-template-columns:repeat(2,1fr); }
@@ -263,7 +271,8 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 /* ── навбар (прозрачный над hero, без тени/линии) ──── */
 .nav{ position:absolute; top:0; left:0; right:0; z-index:10; }
 .nav .wrap{ display:flex; align-items:center; gap:24px; height:80px; }
-.nav__logo{ font-family:var(--font-display); font-weight:500; font-size:30px; line-height:1; color:#fff; letter-spacing:0; }
+.nav__logo{ font-family:var(--font-display); font-weight:500; font-size:30px; line-height:1; color:#fff; letter-spacing:0; white-space:nowrap; }   /* лого всегда одной строкой — на мобиле в две строки верстается неаккуратно */
+@media(max-width:640px){ .nav__logo{ font-size:24px; } }
 .nav__menu{ display:flex; gap:30px; margin:0 auto; font-family:var(--font-head); font-size:15px; font-weight:600; }
 .nav__menu a{ color:#fff; transition:color .2s; }
 .nav__menu a:hover{ color:var(--gold-l); }   /* наведение — золото сайта */
@@ -279,10 +288,20 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
     linear-gradient(90deg,rgba(15,42,71,.88) 0%,rgba(15,42,71,.5) 26%,rgba(15,42,71,0) 56%),
     linear-gradient(180deg,rgba(15,42,71,.26),rgba(15,42,71,.1) 40%,rgba(15,42,71,.58)); }
 @media(max-width:640px){
+  /* верх кадра чистый (дом виден), от ~трети — плавный спад в navy: текст лежит на подложке,
+     сквозь которую фото ещё прослеживается */
   .hero__scrim{ background:
-    linear-gradient(180deg,rgba(15,42,71,.42),rgba(15,42,71,.24) 40%,rgba(15,42,71,.64)); }
+    linear-gradient(180deg,rgba(15,42,71,0) 0,rgba(15,42,71,0) 30vh,rgba(15,42,71,.5) 44vh,rgba(15,42,71,.9) 54vh,var(--navy) 66vh); }
 }
 .hero .wrap{ position:relative; z-index:2; padding-top:96px; padding-bottom:56px; text-align:center; }
+/* контент hero главной: текст слева, прижат к левой линии (бывший инлайн-стиль) */
+.hero__wrap{ text-align:left; max-width:800px; margin-left:0; padding-top:140px; padding-bottom:80px; }
+/* МОБИЛЬНЫЙ ПРИНЦИП ГЛАВНОЙ: сначала ФОТО (чистое, дом виден), ниже — текст.
+   Фото заканчивается мягким градиентом в navy-подложку, кадр «прослеживается» под текстом. */
+@media(max-width:640px){
+  .hero{ background:var(--navy); }
+  .hero__wrap{ padding-top:min(56vh, 480px); padding-bottom:56px; }
+}
 .hero__eyebrow{ font-family:var(--font-head); font-size:14px; font-weight:600; color:#fff; margin:0 auto 18px; max-width:48ch; }
 .hero h1{ color:#fff; max-width:20ch; margin:0; }
 .hero__sub{ font-family:var(--font-body); font-weight:500; font-size:19px; line-height:1.35; color:#fff; margin:20px 0 0; max-width:54ch; }
@@ -428,7 +447,13 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   color:var(--ink); margin:6px 0 0;
   display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
 .news-card__more{ font-family:var(--font-head); font-weight:600; font-size:13px; color:var(--ink); text-decoration:underline; text-underline-offset:3px; margin-top:auto; padding-top:10px; }
-@media(max-width:520px){ .news-card{ grid-template-columns:110px 1fr; gap:14px; } .news-card__pic{ width:110px; } }
+/* мобила: принцип «сначала фото во всю ширину, текст под ним» (заказчик 2026-07-09) */
+@media(max-width:640px){
+  .news-card{ grid-template-columns:1fr; gap:12px; }
+  .news-card__pic{ width:100%; aspect-ratio:16/10; }
+  .news-feed{ max-height:none; overflow:visible; padding-right:0; }
+  .news-feed .news-card:nth-child(n+4){ display:none; }   /* компактно: три свежих, без внутренней прокрутки */
+}
 
 /* ── вкладка «Истории» (/stories/): лента ВК крупно ────── */
 /* Журнальный разворот: свежий пост крупно слева, три компактных — колонкой справа,
@@ -707,9 +732,14 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .house__lead:last-of-type{ margin-bottom:28px; }
 .house__arrows{ display:none; }   /* стрелки убраны — фото сменяются сами */
 .house__dots{ position:absolute; right:34px; bottom:34px; z-index:3; margin:0; }
+/* МОБИЛЬНЫЙ ПРИНЦИП: сначала фото (чистый кадр), низ кадра мягко уходит в navy,
+   текст идёт ПОД фото на сплошной navy-подложке — не лежит поверх кадра */
 @media(max-width:640px){
-  .house .slider-snap__slide{ height:70vh; min-height:440px; }
-  .house__content{ padding-bottom:40px; }
+  .house{ background:var(--navy); }
+  .house .slider-snap__slide{ height:52vh; min-height:360px; }
+  .house__scrim{ inset:0 0 auto 0; height:max(52vh, 360px);
+    background:linear-gradient(to top, var(--navy) 2%, rgba(15,42,71,.45) 16%, rgba(15,42,71,0) 44%); }
+  .house__content{ position:static; padding-top:4px; padding-bottom:44px; }
   .house__dots{ display:none; }
 }
 
@@ -743,18 +773,9 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   pointer-events: none; /* предотвращает перетаскивание картинок браузером */
 }
 
-/* Иконки для Атмосферы */
-.atmosphere-icons {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 56px;
-  margin-bottom: 40px;
-  text-align: center;
-}
-/* фиксированная ширина колонки → одинаковое расстояние между иконками,
-   а длинные подписи переносятся на две строки, не «раздвигая» соседей */
-.atmosphere-icon { flex: 0 0 132px; width: 132px; }
+/* Иконки для Атмосферы — теперь живут в бегущей ленте .atm-marquee (статичная
+   раскладка .atmosphere-icons снята вместе с анимацией на месте, заказчик 2026-07-09) */
+.atmosphere-icon { flex: 0 0 132px; width: 132px; text-align: center; }
 .atmosphere-icon {
   display: flex;
   flex-direction: column;
@@ -766,23 +787,15 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   width: 52px;
   height: 52px;
   color: #fff;
-  transform-origin: center bottom;
-  animation: icon-breathe 4s ease-in-out infinite;
 }
-/* «дыхание» — лёгкая пульсация; разный сдвиг, чтобы значки не качались в унисон */
-@keyframes icon-breathe {
-  0%, 100% { transform: scale(1) translateY(0); }
-  50%      { transform: scale(1.06) translateY(-4px); }
-}
-.atmosphere-icon:nth-child(2) .atmosphere-icon__svg{ animation-delay: -.8s; animation-duration: 4.4s; }
-.atmosphere-icon:nth-child(3) .atmosphere-icon__svg{ animation-delay: -1.6s; animation-duration: 4.2s; }
-.atmosphere-icon:nth-child(4) .atmosphere-icon__svg{ animation-delay: -2.4s; animation-duration: 4.6s; }
-.atmosphere-icon:nth-child(5) .atmosphere-icon__svg{ animation-delay: -3.2s; animation-duration: 4.3s; }
-@media (prefers-reduced-motion: reduce) {
-  .atmosphere-icon__svg{ animation: none; }
-}
+/* анимация «дыхания» на месте снята (заказчик 2026-07-09): движение даёт сама лента-marquee */
 /* значки — основным золотом сайта (как заголовок блока) */
 .atmosphere-icons--gold .atmosphere-icon__svg{ color: var(--gold-l); }
+/* лента иконок-поводов на главной (переиспользуем .atm-marquee со вкладки «Атмосфера»):
+   иконки золотом, подписи белые — лента живёт на navy-сцене */
+.atm-marquee--icons .atmosphere-icon__svg{ color: var(--gold-l); }
+.atm-marquee--icons .atm-marquee__group{ align-items:flex-start; gap:64px; padding-right:64px; }
+@media (max-width:640px){ .atm-marquee--icons .atm-marquee__group{ gap:44px; padding-right:44px; } }
 
 /* Заголовок «Атмосфера для двоих» — золотистым (заказчик 2026-07-01) */
 #atmosphere .h2{ color: var(--gold-l); }
@@ -798,23 +811,13 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   padding-bottom: 40px;
 }
 #atmosphere .shead{ margin-bottom: 24px !important; }
-#atmosphere .atmosphere-icons{ margin-bottom: 28px; }
+#atmosphere .atm-marquee{ margin-bottom: 28px; }
 #atmosphere > .wrap:last-child > div{ margin-top: 28px !important; }
 .atmosphere-icon__title {
   font-family: var(--font-head);
   font-size: 14px;
   font-weight: 600;
   line-height: 1.25;
-}
-@media (max-width: 768px) {
-  .atmosphere-icons {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-@media (max-width: 480px) {
-  .atmosphere-icons {
-    grid-template-columns: 1fr;
-  }
 }
 
 /* ── Блок 3 «Искусство отдыха» — карточки-этапы в два ряда (3×2).
@@ -875,8 +878,12 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 @media (max-width: 860px) {
   .art-steps { grid-template-columns: 1fr 1fr; }
 }
+/* мобила: карточки full-bleed во всю ширину экрана (белых полей по бокам нет),
+   кегли внутри карточки контрастнее (заголовок ≠ наборный) */
 @media (max-width: 520px) {
-  .art-steps { grid-template-columns: 1fr; }
+  .art-steps { grid-template-columns: 1fr; margin-left:-32px; margin-right:-32px; gap:14px; }
+  .art-step__title { font-size: 24px; }
+  .art-step__text { font-size: 16px; }
 }
 
 /* "Наш мир" — сбалансированная редакционная мозаика: размеры разные (динамика),
@@ -1011,6 +1018,11 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .oasis-paper .h2, .oasis-paper .body, .oasis-paper .oasis-chips{ color:var(--ink); }
 @media (max-width:900px){
   .oasis-layout{ grid-template-columns:1fr; gap:28px; }
+}
+/* мобила: лист бумаги растянут почти до краёв экрана (поля не зажимаем), внутренние отступы умереннее */
+@media (max-width:640px){
+  .oasis-paper{ margin:0 -28px; padding:36px 26px 42px; }
+  .oasis-chips{ font-size:24px; }
 }
 
 /* зерно бумаги поверх тёмной сцены.
@@ -1612,8 +1624,9 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .aor-plates--5{ grid-template-columns:repeat(5,1fr); }
 .aor-plate{ background:var(--frost); padding:26px 24px; }
 .sec--art .aor-plate{ background:var(--canvas); }
-.aor-plate__t{ font-family:var(--font-head); font-weight:600; font-size:18px; line-height:1.3; color:var(--ink); margin:0; }
+.aor-plate__t{ font-family:var(--font-head); font-weight:600; font-size:18px; line-height:1.35; color:var(--ink); margin:0; }
 .aor-plate__x{ font-family:var(--font-body); font-weight:500; font-size:16px; line-height:1.5; color:var(--ink); margin:10px 0 0; }
+.aor-plate__x:first-child, .aor-ico + .aor-plate__x{ margin-top:0; }   /* плашка без заголовка — текст от верха/сразу под иконкой */
 @media(max-width:900px){ .aor-plates, .aor-plates--5{ grid-template-columns:repeat(2,1fr); } }
 @media(max-width:520px){ .aor-plates, .aor-plates--5, .aor-plates--3{ grid-template-columns:1fr; } }
 @media(max-width:900px){ .aor-plates--3{ grid-template-columns:1fr; } }
@@ -1667,17 +1680,18 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   letter-spacing:-0.02em; line-height:1.25; color:var(--ink); margin:56px 0 12px; }
 .sec--navy .aor-h3{ color:#fff; }
 /* заголовок после шапки/внутри колонок и карточек — без верхнего отступа (воздух даёт контейнер) */
-.aor-duo > div .aor-h3:first-child, .aor-question .aor-h3{ margin-top:0; }
+.aor-duo > div .aor-h3:first-child, .aor-split > div .aor-h3:first-child, .aor-question .aor-h3{ margin-top:0; }
 /* сетка/плашки сразу после заголовка — прижаты к нему (20px), после текста — обычные 36px */
 .aor-h3 + .aor-plates, .aor-h3 + .aor-duo, .aor-h3 + .aor-tiles{ margin-top:20px; }
 
 /* карточка-«бумага» (эксперимент, факты) */
 .aor-card{ background:var(--frost); padding:32px; }
 .sec--cream .aor-card, .sec--sand .aor-card, .sec--art .aor-card{ background:var(--canvas); }
-.aor-card .aor-h3{ margin-bottom:14px; }
-.aor-card p{ font-family:var(--font-body); font-weight:500; font-size:16px; line-height:1.55; color:var(--ink); margin:0 0 10px; max-width:62ch; }
+.aor-card .aor-h3{ margin:0 0 14px; }
+.aor-card .aor-card__head .aor-h3{ margin:0; }
+.aor-card p{ font-family:var(--font-body); font-weight:500; font-size:16px; line-height:1.5; color:var(--ink); margin:0 0 10px; max-width:62ch; }
 .aor-card p:last-child{ margin-bottom:0; }
-.aor-card__strong{ font-family:var(--font-head); font-weight:600; font-size:17px; }
+.aor-card__strong{ font-family:var(--font-head); font-weight:600; font-size:18px; line-height:1.35; }
 
 /* ритуал — шаги с курсивными номерами */
 .aor-ritual{ background:var(--frost); padding:40px; margin-top:56px; }
@@ -1685,31 +1699,31 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .sec--navy .aor-ritual{ background:var(--frost); }
 .aor-ritual ol{ list-style:none; margin:20px 0 0; padding:0; display:grid; gap:18px; }
 .aor-ritual li{ display:grid; grid-template-columns:44px 1fr; gap:16px; align-items:start;
-  font-family:var(--font-body); font-weight:500; font-size:18px; line-height:1.45; color:var(--ink); }
+  font-family:var(--font-body); font-weight:500; font-size:18px; line-height:1.5; color:var(--ink); }
 .aor-ritual li b{ font-family:var(--font-display); font-weight:500; font-size:34px; line-height:1; color:var(--gold-l); }
 .aor-ritual__note{ font-family:var(--font-body); font-weight:500; font-size:16px; line-height:1.5; color:var(--ink); margin:22px 0 0; }
 
 /* маркированный список с золотыми штрихами */
 .aor-list{ list-style:none; margin:10px 0 0; padding:0; }
 .aor-list li{ position:relative; padding-left:18px; margin-bottom:7px;
-  font-family:var(--font-body); font-weight:500; font-size:17px; line-height:1.3; color:var(--ink); }
+  font-family:var(--font-body); font-weight:500; font-size:18px; line-height:1.3; color:var(--ink); }
 .aor-list li::before{ content:""; position:absolute; left:0; top:.42em; width:5px; height:5px; border-radius:50%; background:var(--gold-l); }
 .sec--navy .aor-list li{ color:#fff; }
 .sec--navy .aor-list li::before{ background:var(--gold-l); }
 
 /* гормоны — три бумажные карточки на тёмном */
-.aor-helpers{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:32px; }
+.aor-helpers{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:20px; }
 .aor-helper{ background:var(--frost); padding:30px 28px; }
 .aor-helper__name{ font-family:var(--font-display); font-weight:500; font-size:32px; line-height:1.05; color:var(--navy); margin:0; }
-.aor-helper__tag{ font-family:var(--font-head); font-weight:600; font-size:15px; line-height:1.35; color:var(--ink); margin:8px 0 0; }
-.aor-helper__text{ font-family:var(--font-body); font-weight:500; font-size:15px; line-height:1.5; color:var(--ink); margin:14px 0 0; }
-.aor-helper__fact{ font-family:var(--font-body); font-weight:500; font-size:14px; line-height:1.5; color:var(--ink); margin:16px 0 0; }
+.aor-helper__tag{ font-family:var(--font-head); font-weight:600; font-size:18px; line-height:1.35; color:var(--ink); margin:8px 0 0; }
+.aor-helper__text{ font-family:var(--font-body); font-weight:500; font-size:16px; line-height:1.5; color:var(--ink); margin:14px 0 0; }
+.aor-helper__fact{ font-family:var(--font-body); font-weight:500; font-size:16px; line-height:1.5; color:var(--ink); margin:16px 0 0; }
 @media(max-width:900px){ .aor-helpers{ grid-template-columns:1fr; } }
 
 /* атмосфера — пункты с золотыми иконками */
-.aor-atm{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px 40px; margin-top:28px; }
+.aor-atm{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px 40px; margin-top:20px; }
 .aor-atm div{ position:relative; padding-left:38px;
-  font-family:var(--font-body); font-weight:500; font-size:17px; line-height:1.45; color:#fff; }
+  font-family:var(--font-body); font-weight:500; font-size:18px; line-height:1.5; color:#fff; }
 .aor-atm .aor-ico{ position:absolute; left:0; top:-1px; width:24px; height:24px; color:var(--gold-l); }
 .aor-atm__tail{ font-family:var(--font-display); font-weight:500; font-size:clamp(22px,2.4vw,30px);
   line-height:1.2; color:var(--gold-l); margin:26px 0 0; text-align:right; }
@@ -1759,16 +1773,16 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .aor-tier:hover{ transform:translateY(-10px); }
 .aor-tier__n{ font-family:var(--font-display); font-weight:500; font-size:clamp(38px,3.6vw,52px); line-height:1; color:var(--navy); margin:0; }
 .aor-tier__tag{ display:inline-block; align-self:flex-start; background:var(--navy); color:#fff;
-  font-family:var(--font-head); font-weight:600; font-size:15px; line-height:1.3;
+  font-family:var(--font-head); font-weight:600; font-size:16px; line-height:1.35;
   padding:8px 16px; margin:6px 0 0; }
 .aor-tier__lead{ font-family:var(--font-body); font-weight:500; font-size:16px; line-height:1.5; color:var(--ink); margin:18px 0 0; }
-.aor-tier__lt{ font-family:var(--font-head); font-weight:600; font-size:16px; color:var(--ink); margin:18px 0 0; }
+.aor-tier__lt{ font-family:var(--font-head); font-weight:600; font-size:18px; line-height:1.35; color:var(--ink); margin:18px 0 0; }
 .aor-tier .aor-list li{ font-size:16px; margin-bottom:8px; }
 .aor-tier__note{ font-family:var(--font-body); font-weight:500; font-size:16px; line-height:1.5; color:var(--ink); margin:16px 0 0; }
 .aor-tier__plate{ background:var(--frost); padding:16px 18px; margin-top:20px;
   display:flex; align-items:center; min-height:78px; }   /* плашки-итоги одной высоты во всех трёх карточках */
 .aor-tier--navy .aor-tier__plate{ background:var(--canvas); }
-.aor-tier__plate p{ font-family:var(--font-head); font-weight:600; font-size:16px; line-height:1.4; color:var(--ink); margin:0; }
+.aor-tier__plate p{ font-family:var(--font-head); font-weight:600; font-size:18px; line-height:1.35; color:var(--ink); margin:0; }
 .aor-tier__quotes{ margin:16px 0 0; }
 /* третья карточка (3+ ночи) — сплошной navy, текст белый, акценты единым золотом */
 .aor-tier--navy{ background-color:var(--navy); background-image:none; }
@@ -1789,21 +1803,27 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .aor-final{ background:var(--navy); padding:96px 0; text-align:center; }
 .aor-final__strong{ font-family:var(--font-display); font-weight:500; letter-spacing:0;
   font-size:clamp(34px,4.4vw,56px); line-height:.9; color:#fff; margin:0 auto; }
-.aor-final__text{ font-family:var(--font-body); font-weight:500; font-size:19px; line-height:1.5; color:#fff; margin:18px auto 0; }
+.aor-final__text{ font-family:var(--font-body); font-weight:500; font-size:18px; line-height:1.5; color:#fff; margin:18px auto 0; }
 .aor-final .btn{ margin-top:32px; }
 
 
 /* ══════════════ Вкладка «Атмосфера для двоих» (/atmosphere/) ══════════════ */
 
-/* — hero: тёмный кадр, текст слева на линии 32px — */
-.atm-hero{ position:relative; min-height:82vh; display:flex; align-items:center; overflow:hidden; }
-.atm-hero__bg{ position:absolute; inset:0; }
-.atm-hero__bg img{ width:100%; height:100%; object-fit:cover; display:block; }
-.atm-hero__scrim{ position:absolute; inset:0;
-  background:
-    linear-gradient(90deg, rgba(13,22,33,.78) 0%, rgba(13,22,33,.42) 36%, rgba(13,22,33,0) 64%),
-    linear-gradient(to top, rgba(13,22,33,.45) 0%, rgba(13,22,33,0) 26%); }
-.atm-hero .wrap{ position:relative; z-index:1; }
+/* — hero: сцена — насыщенный синий --navy, текст слева на линии 32px, справа видео
+     «по кругу» (зациклено, без звука; правый край — full-bleed до края экрана).
+     Левый край видео вплавлен в сцену градиентом в --navy (как правый край карусели
+     «Оазиса») — граница плавная, видео не выглядит отдельным «островом» — */
+.atm-hero{ background:var(--navy); overflow:hidden; }
+.atm-hero__grid{
+  display:grid; grid-template-columns:minmax(340px,42%) 1fr; gap:56px;
+  align-items:center; min-height:82vh;
+}
+.atm-hero__video{ position:relative; align-self:stretch; margin-right:-32px; }
+.atm-hero__video video{ width:100%; height:100%; object-fit:cover; display:block; }
+.atm-hero__video::before{
+  content:""; position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:linear-gradient(90deg, var(--navy) 0%, rgba(15,42,71,.5) 14%, rgba(15,42,71,0) 44%);
+}
 .atm-hero__inner{ max-width:560px; padding:120px 0 80px; }
 .atm-hero__inner .h1{ color:#fff; }
 .atm-hero__lead{ font-family:var(--font-display); font-weight:500; letter-spacing:0;
@@ -1816,6 +1836,71 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
    своё здесь — только белая иконка на кадре, левый верхний угол (заказчик 2026-07-08) */
 .atm-occasions{ margin-top:0; }
 .atm-card__icon{ position:absolute; top:14px; left:14px; z-index:1; width:30px; height:30px; color:#fff; }
+/* повод кликабелен — раскрывается в карточку с фото и текстом */
+.atm-occasion{ cursor:pointer; }
+.atm-occasion .detail-card__media img{ transition:transform .5s ease; }
+.atm-occasion:hover .detail-card__media img{ transform:scale(1.04); }
+.detail-card__more{
+  display:inline-block; margin-top:10px;
+  font-family:var(--font-head); font-weight:600; font-size:14px; color:#fff;
+  text-decoration:underline; text-underline-offset:3px;
+}
+
+/* — карточка-раскрытие праздника/повода (клик по плашке): фото + короткий текст —
+   тёмная подложка (rgba запечён в цвет, не CSS opacity), карточка canvas,
+   прямые углы, без теней; навигация лежит НА фото (тонкие шевроны + точки) */
+.atm-win{
+  position:fixed; inset:0; z-index:200; display:none;
+  align-items:center; justify-content:center; padding:28px;
+  background:rgba(20,15,14,.9);
+}
+.atm-win.open{ display:flex; }
+.atm-win__close{
+  position:absolute; top:20px; right:26px; z-index:2;
+  background:none; border:0; color:#fff; font-size:40px; line-height:1; cursor:pointer;
+}
+.atm-win__card{
+  display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);
+  width:min(1020px, 94vw); max-height:88vh; background:var(--canvas);
+}
+/* кадры показываются ЦЕЛИКОМ (Екатерина 2026-07-08: «или двигать фото, или целиком.
+   Лучше второе») — contain на тёмной сцене, как в лайтбоксе; ничего не режем */
+.atm-win__media{ position:relative; overflow:hidden; background:var(--ink); }
+.atm-win__media::before{ content:""; display:block; padding-top:78%; }   /* держит пропорцию окна */
+.atm-win__img{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; display:block; }
+.atm-win__nav{
+  position:absolute; top:0; bottom:0; z-index:2; width:26%; min-width:56px;
+  display:flex; align-items:center; padding:0 10px;
+  background:none; border:0; color:#fff; font-size:42px; line-height:1; cursor:pointer;
+  transition:color .2s;
+}
+.atm-win__nav:hover{ color:var(--gold-l); }
+.atm-win__nav--prev{ left:0; justify-content:flex-start; }
+.atm-win__nav--next{ right:0; justify-content:flex-end; }
+.atm-win__dots{
+  position:absolute; left:0; right:0; bottom:12px; z-index:2;
+  display:flex; justify-content:center; gap:8px;
+}
+.atm-win__dot{ width:8px; height:8px; border-radius:50%; border:0; padding:0; background:#fff; cursor:pointer; }
+.atm-win__dot.active{ background:var(--gold-l); }
+.atm-win__body{ padding:32px 30px; overflow-y:auto; display:flex; flex-direction:column; }
+.atm-win__title{
+  font-family:var(--font-head); font-weight:700; font-size:21px; line-height:1.3;
+  letter-spacing:-0.01em; color:var(--ink); margin:0 0 12px;
+}
+.atm-win__text{ font-family:var(--font-body); font-weight:500; font-size:16px; line-height:1.5; color:var(--ink); margin:0 0 10px; }
+/* фразы-перечисление из ТЗ («Новый год за городом • …») — внизу карточки */
+.atm-win__tags{
+  font-family:var(--font-head); font-weight:600; font-size:14px; line-height:1.5;
+  color:var(--ink); margin:auto 0 0; padding-top:14px;
+}
+@media (max-width:860px){
+  .atm-win{ padding:14px; }
+  .atm-win__card{ grid-template-columns:1fr; overflow-y:auto; }
+  .atm-win__media::before{ padding-top:72%; }
+  .atm-win__body{ padding:22px 20px; overflow:visible; }
+  .atm-win__close{ top:10px; right:16px; }
+}
 
 /* — «что можем подготовить»: бегущая лента-полоса (иконки плывут по горизонтали,
      бесшовный цикл из двух копий ряда; пауза при наведении) — */
@@ -1836,7 +1921,8 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .season-row--offset{ padding-left:56px; }
 .season-card{ background:var(--canvas); border:0; padding:0; margin:0; text-align:left; cursor:pointer;
   display:flex; flex-direction:column; font:inherit; color:inherit; }
-.season-card__pic{ position:relative; aspect-ratio:4/3; overflow:hidden; }
+/* кадр — портретный 3/4: ВСЕ клиентские обложки праздников 3:4, совпадает без обрезки */
+.season-card__pic{ position:relative; aspect-ratio:3/4; overflow:hidden; }
 .season-card__pic img{ display:block; width:100%; height:100%; object-fit:cover; transition:transform .5s ease; }
 .season-card:hover .season-card__pic img{ transform:scale(1.04); }
 .season-card__body{ padding:18px 20px 22px; display:flex; flex-direction:column; gap:8px; flex:1; }
@@ -1844,6 +1930,8 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .season-card__text{ font-weight:500; font-size:15px; line-height:1.5; color:var(--ink); margin:0; }
 .season-card__more{ font-family:var(--font-head); font-weight:600; font-size:14px; color:var(--ink); margin-top:auto; padding-top:8px;
   text-decoration:underline; text-underline-offset:3px; }
+/* фразы-перечисление для поиска — самый низ плашки, мелко, navy */
+.season-card__tags{ font-family:var(--font-head); font-weight:600; font-size:11px; line-height:1.5; color:var(--ink); margin:0; }
 
 /* — «Отдых начинается ещё до вашего приезда» (зелёная сцена) — */
 .atm-prep__grid{ display:grid; grid-template-columns:minmax(320px,46%) 1fr; gap:56px; align-items:center; }
@@ -1904,7 +1992,13 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   .atm-ex-grid{ grid-template-columns:1fr; max-width:620px; }
   .atm-story{ grid-template-columns:1fr; gap:32px; }
   .atm-story__pic{ max-width:380px; }
-  .atm-hero__inner{ padding:110px 0 70px; }
+  .atm-hero__grid{ grid-template-columns:1fr; gap:0; min-height:0; }
+  .atm-hero__inner{ padding:110px 0 40px; }
+  .atm-hero__video{ align-self:auto; margin:0 -32px; aspect-ratio:16/9; }
+  /* видео под текстом — граница сверху, градиент разворачивается вниз */
+  .atm-hero__video::before{
+    background:linear-gradient(180deg, var(--navy) 0%, rgba(15,42,71,.5) 14%, rgba(15,42,71,0) 44%);
+  }
 }
 @media (max-width:560px){
   .season-row{ grid-template-columns:1fr; }

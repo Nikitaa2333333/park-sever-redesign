@@ -40,8 +40,23 @@ const navMenu = [
 
 const { hero, forYourStory, seasons, prepared, story, examples } = data;
 
-// фото карточек «Для вашей истории» (подобраны из клиентских кадров)
-const storyCardPhotos = ['2.2', '11.3', '12.1', '11.1'];
+// фото карточек-поводов «Для вашей истории» — клиентские кадры ч.1 (папка «снова
+// что-то» → atmosphere/story/; имена 1.x–4.x пересекаются с сезонными, поэтому подпапка)
+const storyAssets = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/images/atmosphere/story/*.{jpg,jpeg,png}',
+  { eager: true },
+);
+const imgStory = (name: string): ImageMetadata | undefined =>
+  storyAssets['/src/assets/images/atmosphere/story/' + name + '.jpg']?.default;
+const bigStory = async (name: string) => {
+  const m = imgStory(name);
+  return m ? (await getImage({ src: m, width: 1600, format: 'webp' })).src : '';
+};
+const storyBig: Record<string, string[]> = {};
+for (const card of forYourStory.cards as any[]) storyBig[card.icon] = await Promise.all(card.photos.map(bigStory));
+// обложка «Годовщины»: 3.1 из докса — горизонтальный (надпись шарами режется в портретном
+// кадре), на плашку берём портретный 3.3 из той же галереи; 3.1 виден в раскрытии
+const coverOverride: Record<string, string> = { hearts: '3.3' };
 
 // иконки бегущей ленты «что можем подготовить» (порядок = forYourStory.icons) — Phosphor Fill
 const marqueeSvgs = [
@@ -57,6 +72,8 @@ const marqueeItems = forYourStory.icons.map((label: string, i: number) => ({ lab
 
 // сезонные карточки: два ряда по 4, второй — со смещением (как просили в ТЗ)
 const seasonRows = [seasons.items.slice(0, 4), seasons.items.slice(4)];
+// на плашке — короткое превью (первое предложение), полное описание — в раскрытии
+const firstSentence = (t: string) => (t.match(/^.*?[.!?…](?=\s|$)/s)?.[0] ?? t).trim();
 // галереи «внутри» карточек — крупные webp для лайтбокса
 const seasonGalleries: Record<string, string[]> = {};
 for (const s of seasons.items) seasonGalleries[s.id] = await Promise.all(s.photos.map(bigOf));
@@ -82,18 +99,19 @@ const messengers = [
     </div>
   </nav>
 
-  <!-- HERO: тёмный кадр, текст слева на линии 32px -->
+  <!-- HERO: тёмная сцена, текст слева на линии 32px, справа видео «по кругу» (докс ч.1) -->
   <section class="atm-hero" id="atm-hero">
-    <div class="atm-hero__bg">
-      <Image src={img('13.4')!} alt="Накрытый стол в стеклянном доме среди леса" widths={[960, 1440, 2000]} sizes="100vw" format="webp" quality={80} loading="eager" />
-    </div>
-    <div class="atm-hero__scrim"></div>
     <div class="wrap wrap--flush">
-      <div class="atm-hero__inner">
-        <h1 class="h1">{hero.title}</h1>
-        <p class="atm-hero__lead">{hero.lead}</p>
-        <p class="atm-hero__text">{hero.text}</p>
-        <a class="btn btn--gold" href="#story">{hero.button}</a>
+      <div class="atm-hero__grid">
+        <div class="atm-hero__inner">
+          <h1 class="h1">{hero.title}</h1>
+          <p class="atm-hero__lead">{hero.lead}</p>
+          <p class="atm-hero__text">{hero.text}</p>
+          <a class="btn btn--gold" href="https://vk.me/park_sever" target="_blank" rel="noopener noreferrer">{hero.button}</a>
+        </div>
+        <div class="atm-hero__video">
+          <video src={withBase('/videos/atmosphere-hero.mp4')} poster={withBase('/videos/atmosphere-hero.jpg')} autoplay muted loop playsinline preload="metadata" aria-label="Видео: атмосфера для двоих в Парк Север"></video>
+        </div>
       </div>
     </div>
   </section>
@@ -106,8 +124,8 @@ const messengers = [
         <p class="sub">{forYourStory.intro}</p>
       </div>
       <div class="detail-grid atm-occasions">
-        {forYourStory.cards.map((card: any, i: number) => (
-          <article class="detail-card">
+        {forYourStory.cards.map((card: any) => (
+          <article class="detail-card atm-occasion" data-gallery={JSON.stringify(storyBig[card.icon])} data-win={`win-${card.icon}`} role="button" tabindex="0" aria-label={`Подробнее: ${card.title}`}>
             <div class="detail-card__media">
               <span class="atm-card__icon">
                 {card.icon === 'ring' && (
@@ -123,11 +141,17 @@ const messengers = [
                   <svg viewBox="0 0 256 256" width="100%" height="100%" fill="currentColor"><path d="M216,72H180.92c.39-.33.79-.65,1.17-1A29.53,29.53,0,0,0,192,49.57,32.62,32.62,0,0,0,158.44,16,29.53,29.53,0,0,0,137,25.91a54.94,54.94,0,0,0-9,14.48,54.94,54.94,0,0,0-9-14.48A29.53,29.53,0,0,0,97.56,16,32.62,32.62,0,0,0,64,49.57,29.53,29.53,0,0,0,73.91,71c.38.33.78.65,1.17,1H40A16,16,0,0,0,24,88v32a16,16,0,0,0,16,16v64a16,16,0,0,0,16,16h60a4,4,0,0,0,4-4V120H40V88h80v32h16V88h80v32H136v92a4,4,0,0,0,4,4h60a16,16,0,0,0,16-16V136a16,16,0,0,0,16-16V88A16,16,0,0,0,216,72ZM84.51,59a13.69,13.69,0,0,1-4.5-10A16.62,16.62,0,0,1,96.59,32h.49a13.69,13.69,0,0,1,10,4.5c8.39,9.48,11.35,25.2,12.39,34.92C109.71,70.39,94,67.43,84.51,59Zm87,0c-9.49,8.4-25.24,11.36-35,12.4C137.7,60.89,141,45.5,149,36.51a13.69,13.69,0,0,1,10-4.5h.49A16.62,16.62,0,0,1,176,49.08,13.69,13.69,0,0,1,171.49,59Z"/></svg>
                 )}
               </span>
-              <Image src={img(storyCardPhotos[i])!} alt={card.title} widths={[420, 640, 900]} sizes="(max-width:1000px) 46vw, 290px" format="webp" quality={82} loading="lazy" draggable={false} />
+              <Image src={imgStory(coverOverride[card.icon] ?? card.cover)!} alt={card.title} widths={[420, 640, 900]} sizes="(max-width:1000px) 46vw, 290px" format="webp" quality={82} loading="lazy" draggable={false} />
             </div>
             <div class="detail-card__cap">
               <h3 class="detail-card__title">{card.title}</h3>
               <p class="detail-card__text">{card.text}</p>
+              <span class="detail-card__more">Смотреть фото</span>
+            </div>
+            <!-- контент карточки-раскрытия — тексты из докса ч.1 (лежит в HTML, индексируется) -->
+            <div id={`win-${card.icon}`} hidden>
+              <h3 class="atm-win__title">{card.inner.title}</h3>
+              <p class="atm-win__text">{card.inner.text}</p>
             </div>
           </article>
         ))}
@@ -161,14 +185,22 @@ const messengers = [
       {seasonRows.map((row, ri) => (
         <div class={`season-row${ri === 1 ? ' season-row--offset' : ''}`}>
           {row.map((s: any) => (
-            <article class="season-card" data-gallery={JSON.stringify(seasonGalleries[s.id])} role="button" tabindex="0" aria-label={`Фото: ${s.label}`}>
+            <article class="season-card" data-gallery={JSON.stringify(seasonGalleries[s.id])} data-win={`win-${s.id}`} role="button" tabindex="0" aria-label={`Подробнее: ${s.label}`}>
               <div class="season-card__pic">
                 <Image src={img(s.cover)!} alt={s.label} widths={[420, 640, 900]} sizes="(max-width:1000px) 46vw, 290px" format="webp" quality={82} loading="lazy" draggable={false} />
               </div>
               <div class="season-card__body">
+                <!-- фразы-перечисление из ТЗ — верх плашки, нужны для поиска (заказчица, 2026-07-08) -->
+                <p class="season-card__tags">{s.tags.join(' • ')}</p>
                 <h3 class="season-card__label">{s.label}: {s.title.toLowerCase()}</h3>
-                {s.paragraphs.map((p: string) => <p class="season-card__text">{p}</p>)}
+                <p class="season-card__text">{firstSentence(s.paragraphs[0])}</p>
                 <span class="season-card__more">Смотреть фото</span>
+              </div>
+              <!-- контент карточки-раскрытия; внизу — фразы-перечисление из ТЗ (нужны для поиска) -->
+              <div id={`win-${s.id}`} hidden>
+                <h3 class="atm-win__title">{s.label}: {s.title.toLowerCase()}</h3>
+                {s.paragraphs.map((p: string) => <p class="atm-win__text">{p}</p>)}
+                <p class="atm-win__tags">{s.tags.join(' • ')}</p>
               </div>
             </article>
           ))}
@@ -304,13 +336,17 @@ const messengers = [
     </div>
   </footer>
 
-  <!-- ЛАЙТБОКС галерей праздников -->
-  <div class="lightbox" id="lightbox" aria-hidden="true">
-    <button class="lightbox__close" aria-label="Закрыть">&times;</button>
-    <div class="lightbox__stage">
-      <button class="lightbox__nav lightbox__nav--prev" aria-label="Предыдущее">&#8249;</button>
-      <img class="lightbox__img" src="" alt="Фото крупно" />
-      <button class="lightbox__nav lightbox__nav--next" aria-label="Следующее">&#8250;</button>
+  <!-- КАРТОЧКА-РАСКРЫТИЕ праздника/повода: фото + короткий текст -->
+  <div class="atm-win" id="atm-win" aria-hidden="true">
+    <button class="atm-win__close" aria-label="Закрыть">&times;</button>
+    <div class="atm-win__card" role="dialog" aria-modal="true">
+      <div class="atm-win__media">
+        <button class="atm-win__nav atm-win__nav--prev" aria-label="Предыдущее">&#8249;</button>
+        <img class="atm-win__img" src="" alt="Фото крупно" />
+        <button class="atm-win__nav atm-win__nav--next" aria-label="Следующее">&#8250;</button>
+        <div class="atm-win__dots"></div>
+      </div>
+      <div class="atm-win__body"></div>
     </div>
   </div>
 
@@ -354,49 +390,69 @@ const messengers = [
       }, 3500 + si * 1400);
     });
 
-    // 3. Лайтбокс: клик по карточке праздника открывает её галерею.
+    // 3. Карточка-раскрытие: клик по плашке праздника/повода открывает карточку
+    //    с фото и коротким текстом (как раздел «Досуг» на старом сайте).
     //    Крупные кадры ПРЕДЗАГРУЖАЕМ, чтобы не было пустого экрана после клика:
     //    первый кадр каждой галереи — сразу после загрузки страницы (в простое),
     //    всю галерею карточки — при наведении, соседние кадры — при листании.
     (function () {
-      const box = document.getElementById('lightbox');
-      if (!box) return;
+      const win = document.getElementById('atm-win');
+      if (!win) return;
       const warmed = new Set();
       const warm = (u) => { if (u && !warmed.has(u)) { warmed.add(u); new Image().src = u; } };
-      const imgEl = box.querySelector('.lightbox__img');
+      const imgEl = win.querySelector('.atm-win__img');
+      const bodyEl = win.querySelector('.atm-win__body');
+      const dotsEl = win.querySelector('.atm-win__dots');
+      const navs = win.querySelectorAll('.atm-win__nav');
       let urls = [], cur = 0;
       const show = () => {
         imgEl.src = urls[cur];
+        dotsEl.querySelectorAll('.atm-win__dot').forEach((d, i) => d.classList.toggle('active', i === cur));
         warm(urls[(cur + 1) % urls.length]);
         warm(urls[(cur - 1 + urls.length) % urls.length]);
       };
-      const open = (list) => { urls = list; cur = 0; show(); box.classList.add('open'); box.setAttribute('aria-hidden', 'false'); };
-      const close = () => { box.classList.remove('open'); box.setAttribute('aria-hidden', 'true'); imgEl.src = ''; };
       const step = (d) => { cur = (cur + d + urls.length) % urls.length; show(); };
-      const galleries = [];
-      document.querySelectorAll('.season-card').forEach(card => {
+      const close = () => {
+        win.classList.remove('open'); win.setAttribute('aria-hidden', 'true');
+        imgEl.src = ''; document.body.style.overflow = '';
+      };
+      const covers = [];
+      document.querySelectorAll('[data-win]').forEach(card => {
         let list = [];
         try { list = JSON.parse(card.dataset.gallery) || []; } catch (e) { /* нет галереи */ }
-        galleries.push(list);
+        covers.push(list[0]);
         const warmAll = () => list.forEach(warm);
         card.addEventListener('pointerenter', warmAll, { once: true });
         card.addEventListener('focus', warmAll, { once: true });
-        const openCard = () => { if (list.length) open(list); };
-        card.addEventListener('click', openCard);
+        const src = document.getElementById(card.dataset.win);
+        const open = () => {
+          if (!list.length) return;
+          urls = list; cur = 0;
+          bodyEl.innerHTML = src ? src.innerHTML : '';
+          dotsEl.innerHTML = urls.map((_, i) => `<button class="atm-win__dot" aria-label="Кадр ${i + 1}"></button>`).join('');
+          dotsEl.querySelectorAll('.atm-win__dot').forEach((d, i) => d.addEventListener('click', () => { cur = i; show(); }));
+          const many = urls.length > 1;
+          navs.forEach(n => { n.style.display = many ? '' : 'none'; });
+          dotsEl.style.display = many ? '' : 'none';
+          show();
+          win.classList.add('open'); win.setAttribute('aria-hidden', 'false');
+          document.body.style.overflow = 'hidden';
+        };
+        card.addEventListener('click', open);
         card.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openCard(); }
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
         });
       });
       // первый кадр каждой галереи греем заранее (когда браузер свободен)
-      const warmCovers = () => galleries.forEach(list => warm(list[0]));
+      const warmCovers = () => covers.forEach(warm);
       if ('requestIdleCallback' in window) requestIdleCallback(warmCovers, { timeout: 3000 });
       else setTimeout(warmCovers, 1200);
-      box.querySelector('.lightbox__close').addEventListener('click', close);
-      box.querySelector('.lightbox__nav--prev').addEventListener('click', (e) => { e.stopPropagation(); step(-1); });
-      box.querySelector('.lightbox__nav--next').addEventListener('click', (e) => { e.stopPropagation(); step(1); });
-      box.addEventListener('click', (e) => { if (e.target === box) close(); });
+      win.querySelector('.atm-win__close').addEventListener('click', close);
+      win.querySelector('.atm-win__nav--prev').addEventListener('click', (e) => { e.stopPropagation(); step(-1); });
+      win.querySelector('.atm-win__nav--next').addEventListener('click', (e) => { e.stopPropagation(); step(1); });
+      win.addEventListener('click', (e) => { if (e.target === win) close(); });
       document.addEventListener('keydown', (e) => {
-        if (!box.classList.contains('open')) return;
+        if (!win.classList.contains('open')) return;
         if (e.key === 'Escape') close();
         else if (e.key === 'ArrowLeft') step(-1);
         else if (e.key === 'ArrowRight') step(1);

@@ -45,5 +45,34 @@ const fontFace = `@font-face{font-family:"Monotype Corsiva";src:url(${JSON.strin
     <slot />
     <script src={booking.scriptSrc} async is:inline></script>
     <script is:inline set:html={initJs}></script>
+    <!-- Русский типограф (глобально): короткие слова 1–2 буквы клеятся к следующему
+         неразрывным пробелом — предлоги/союзы не висят в конце строки. Идемпотентен. -->
+    <script is:inline>
+      (function () {
+        var glue = function (s) {
+          var out = s, prev;
+          do { prev = out; out = out.replace(/(^|[\s(«"—])([А-ЯЁа-яёA-Za-z]{1,2})[ \t]+/g, '$1$2 '); }
+          while (out !== prev);
+          return out;
+        };
+        var SKIP = { SCRIPT: 1, STYLE: 1, NOSCRIPT: 1, TEXTAREA: 1, INPUT: 1 };
+        var walk = function (node) {
+          for (var i = 0; i < node.childNodes.length; i++) {
+            var child = node.childNodes[i];
+            if (child.nodeType === 3) {
+              if (/[А-Яа-яЁё]/.test(child.nodeValue)) {
+                var glued = glue(child.nodeValue);
+                if (glued !== child.nodeValue) child.nodeValue = glued;
+              }
+            } else if (child.nodeType === 1 && !SKIP[child.tagName]) {
+              walk(child);
+            }
+          }
+        };
+        var run = function () { walk(document.body); };
+        if (document.readyState !== 'loading') run();
+        else document.addEventListener('DOMContentLoaded', run);
+      })();
+    </script>
   </body>
 </html>

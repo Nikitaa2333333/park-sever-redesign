@@ -158,7 +158,7 @@ const navMenu = [
       )}
     </div>
     <div class="hero__scrim"></div>
-    <div class="wrap" style="text-align: left; max-width: 800px; margin-left: 0; padding-top: 140px; padding-bottom: 80px;">
+    <div class="wrap hero__wrap">
       {heroEyebrow && <div class="hero__overline">{heroEyebrow.replace(/\s*\.\s*$/, '')}</div>}
       <h1 class="hero-title" style="color:#fff; margin:0;">{heroTitleMain}{heroTitleAccent && <> <span class="hl">{heroTitleAccent}</span></>}</h1>
 
@@ -288,9 +288,15 @@ const navMenu = [
           <h2 class="h2">{atmosphereTitle}</h2>
           {atmosphereSubtitle && <p class="lead" style="color:#fff; text-align:center;">{atmosphereSubtitle}</p>}
         </div>
+      </div>
 
-        <div class="atmosphere-icons atmosphere-icons--gold">
-          {atmosphereItems.map((item: any) => (
+      <!-- иконки-поводы — бегущая лента-полоса (как на вкладке «Атмосфера»), без анимации на месте -->
+      <div class="wrap wrap--flush">
+        <div class="atm-marquee atm-marquee--icons" aria-label="Поводы для атмосферы">
+          <div class="atm-marquee__track">
+            {[0, 1, 2, 3, 4, 5].map((copy: number) => (
+              <div class="atm-marquee__group" aria-hidden={copy > 0 ? 'true' : undefined}>
+                {atmosphereItems.map((item: any) => (
             <div class="atmosphere-icon">
               <div class="atmosphere-icon__svg">
                 {item.icon === 'heart' && (
@@ -321,7 +327,10 @@ const navMenu = [
               </div>
               <div class="atmosphere-icon__title">{item.title}</div>
             </div>
-          ))}
+                ))}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -438,14 +447,14 @@ const navMenu = [
                       <span class="news-card__date">{post.date}</span>
                       <h4 class="news-card__title">{post.title}</h4>
                       <p class="news-card__text">{post.text}</p>
-                      <span class="news-card__more">Читать в ВКонтакте →</span>
+                      <span class="news-card__more">Читать в ВКонтакте</span>
                     </div>
                   </a>
                 ))}
               </div>
             ) : (
               <a class="empty-note" href={vkGroupHref} target="_blank" rel="noopener noreferrer" style="display:block;">
-                Лента ВКонтакте появится здесь. Открыть нашу группу →
+                Лента ВКонтакте появится здесь. Открыть нашу группу
               </a>
             )}
           </div>

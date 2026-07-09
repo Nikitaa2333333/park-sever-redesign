@@ -8,3 +8,7 @@ source-repo/
 .superpowers/
 new/
 extracted_content/
+
+# Сырьё от заказчицы (docx-дампы, исходные папки) — не часть сайта
+_docx-dump/
+снова что-то/

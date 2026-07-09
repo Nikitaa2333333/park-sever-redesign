@@ -2,11 +2,13 @@
 // Источники:
 //   1) атмофсфера для двиох/Атмосфера для двоих ч.2 04.07.docx — тексты ч.2 (сезоны,
 //      «отдых до приезда», форма истории, примеры работ) тянутся программно из docx;
-//   2) встроенный в docx макет (image1.png) — тексты ч.1 (hero, «Для вашей истории»,
-//      иконки, баннер сезона) перенесены с макета дословно, см. блок MOCKUP ниже.
+//   2) снова что-то/Атмосфера для двоих.docx — докс ч.1 (20.06): hero с видео,
+//      тексты-раскрытия 4 поводов «Для вашей истории» + их фото 1.x–4.x;
+//   3) встроенный в docx ч.2 макет (image1.png) — плашечные тексты ч.1 (короткие
+//      подписи карточек, иконки, баннер сезона) перенесены с макета дословно (MOCKUP).
 // Тексты не перепечатываются руками — только программный перенос + транскрипция макета.
 // Запуск: node scripts/extract-atmosphere.mjs
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { inflateRawSync } from 'node:zlib';
 import path from 'node:path';
@@ -139,6 +141,53 @@ const examples = exIdx.map((xi, n) => {
   return { title, photos, prepared, total };
 });
 
+// ── докс ч.1 («снова что-то»): hero с видео + раскрытия карточек-поводов ──
+const docx1Buf = readFileSync(path.join(root, 'снова что-то', 'Атмосфера для двоих.docx'));
+const xml1 = readZipEntry(docx1Buf, 'word/document.xml').toString('utf8');
+const paras1 = xml1
+  .split(/<w:p\b/).slice(1)
+  .map((p) => decodeXml([...p.matchAll(/<w:t[^>]*>([^<]*)<\/w:t>/g)].map((m) => m[1]).join('')).trim())
+  .filter((t) => t.length > 0);
+const find1 = (re, from = 0) => {
+  const i = paras1.findIndex((t, n) => n >= from && re.test(t));
+  if (i < 0) throw new Error('в docx ч.1 не найден параграф: ' + re);
+  return i;
+};
+
+// hero ч.1: «Вверху слева Заголовок…, правее мое видео по кругу»; кнопка — написать в ВК
+const heroLeadIdx = find1(/^Ниже текст:/);
+const hero1 = {
+  lead: paras1[heroLeadIdx].replace(/^Ниже текст:\s*«?/, '').trim(),
+  text: paras1[heroLeadIdx + 1].replace(/»\s*$/, '').trim(),
+  button: 'Написать в ВК',
+  buttonNote: paras1[find1(/^Кнопка:/)],
+  video: 'Во вкладку атмосфера.mp4',
+  videoNote: paras1[find1(/видео по кругу/)],
+};
+
+// раскрытия поводов: «<Повод>. Фото N.1 на карточку» → «Текст внутри» (заголовок + абзац)
+// + «Внутри фото …». Фильтруем по реально переданным файлам (в доксе обещаны 1.5–1.6,
+// в папке их нет); лишний кадр 20260620 (кольцо в шкатулке) — к «Предложению».
+const storySrcDir = path.join(root, 'снова что-то');
+const cardIdx1 = paras1
+  .map((t, i) => ({ t, i }))
+  .filter(({ t }) => /Фото\s+\d\.1\s+на карточку/.test(t))
+  .map(({ i }) => i);
+if (cardIdx1.length !== 4) throw new Error('ожидалось 4 повода в ч.1, найдено ' + cardIdx1.length);
+
+const storyCards1 = cardIdx1.map((ci, n) => {
+  const num = paras1[ci].match(/Фото\s+(\d)\.1/)[1];
+  const tIdx = find1(/^Текст внутри[:.]?$/, ci);
+  const inner = { title: paras1[tIdx + 1].replace(/\.\s*$/, ''), text: paras1[tIdx + 2] };
+  const end = n + 1 < cardIdx1.length ? cardIdx1[n + 1] : find1(/^Ниже вот такую строку/);
+  const photosLine = paras1.slice(tIdx, end).find((t) => /^Внутри\s+[Фф]ото/.test(t));
+  let photos = photosLine ? photosLine.match(/\d\.\d/g) : ['1', '2', '3', '4'].map((k) => `${num}.${k}`);
+  if (!photos.includes(`${num}.1`)) photos.unshift(`${num}.1`);
+  if (num === '1') photos.push('20260620_111341');
+  photos = photos.filter((p) => existsSync(path.join(storySrcDir, p + '.jpg')));
+  return { cover: `${num}.1`, photos, inner };
+});
+
 // ── MOCKUP: тексты ч.1, дословно с макета image1.png из docx ─────────
 const MOCKUP = {
   hero: {
@@ -178,11 +227,16 @@ const data = {
   title: 'Атмосфера для двоих',
   sources: {
     part2: 'атмофсфера для двиох/Атмосфера для двоих ч.2 04.07.docx (программное извлечение)',
-    part1: 'встроенный в docx макет word/media/image1.png (дословная транскрипция)',
+    part1: 'снова что-то/Атмосфера для двоих.docx (программное извлечение: hero, раскрытия поводов)',
+    mockup: 'встроенный в docx ч.2 макет word/media/image1.png (дословная транскрипция)',
   },
   important: paras[find(/^ВАЖНО/)],
-  hero: MOCKUP.hero,
-  forYourStory: MOCKUP.forYourStory,
+  hero: { ...MOCKUP.hero, ...hero1 },
+  forYourStory: {
+    ...MOCKUP.forYourStory,
+    layoutNote: paras1[find1(/^Эти карточки сделать/)],
+    cards: MOCKUP.forYourStory.cards.map((c, i) => ({ ...c, ...storyCards1[i] })),
+  },
   seasons: {
     heading: (paras[0].match(/«([^»]+)»/) ?? [])[1],
     subtitle: (paras[1].match(/«([^»]+)»/) ?? [])[1],
@@ -203,6 +257,8 @@ mkdirSync(path.join(root, 'src', 'data'), { recursive: true });
 const out = path.join(root, 'src', 'data', 'atmosphere.json');
 writeFileSync(out, JSON.stringify(data, null, 2) + '\n', 'utf8');
 console.log('✓', path.relative(root, out));
+console.log('  hero ч.1:', hero1.lead, '|', hero1.text, '| кнопка:', hero1.button);
+console.log('  поводы:', storyCards1.map((c) => `${c.inner.title} (${c.photos.length} фото)`).join(' · '));
 console.log('  сезоны:', seasonsItems.map((s) => `${s.label} (${s.photos.length} фото)`).join(' · '));
 console.log('  подготовка:', prepared.paragraphs.length, 'абз. +', prepared.extras.length, 'доп.; карусель:', prepared.carousel.join(', '));
 console.log('  история:', story.heading, '| email:', story.email);

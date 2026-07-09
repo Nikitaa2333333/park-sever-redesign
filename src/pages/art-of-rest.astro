@@ -131,7 +131,7 @@ const parts = (p: string) => p.split(/\{([^}]+)\}/);
       </div>
 
       <div style="margin-top:24px;">
-        <p class="aor-h3" style="margin-bottom:10px;">{intro.conclusion.strong}</p>
+        <p class="aor-h3">{intro.conclusion.strong}</p>
         <p class="aor-p">{intro.conclusion.text}</p>
       </div>
     </div>
@@ -239,9 +239,9 @@ const parts = (p: string) => p.split(/\{([^}]+)\}/);
         </div>
       </div>
 
-      <h3 class="aor-h3" style="margin-top:56px;">{s2.different.title}</h3>
-      <div class="aor-plates aor-plates--3" style="margin-top:20px;">
-        {s2.different.items.map((t: string) => <div class="aor-plate"><p class="aor-plate__x" style="margin-top:0;">{t}</p></div>)}
+      <h3 class="aor-h3">{s2.different.title}</h3>
+      <div class="aor-plates aor-plates--3">
+        {s2.different.items.map((t: string) => <div class="aor-plate"><p class="aor-plate__x">{t}</p></div>)}
       </div>
 
       <div class="aor-ritual">
@@ -272,8 +272,8 @@ const parts = (p: string) => p.split(/\{([^}]+)\}/);
         </div>
       </div>
 
-      <h3 class="aor-h3" style="margin-top:56px;">{s2.not.title}</h3>
-      <div class="aor-plates" style="margin-top:20px;">
+      <h3 class="aor-h3">{s2.not.title}</h3>
+      <div class="aor-plates">
         {s2.not.items.map((t: string) => <div class="aor-plate"><h3 class="aor-plate__t">{t}</h3></div>)}
       </div>
     </div>
@@ -304,12 +304,12 @@ const parts = (p: string) => p.split(/\{([^}]+)\}/);
       </div>
       <p class="aor-line">{s3.accent}</p>
 
-      <div style="margin-top:64px;">
+      <div>
         <h3 class="aor-h3">{s3.together.title}</h3>
         {s3.together.paragraphs.map((p: string) => <p class="aor-p">{p}</p>)}
       </div>
 
-      <h3 class="aor-h3" style="margin-top:48px;">{s3.helpers.title}</h3>
+      <h3 class="aor-h3">{s3.helpers.title}</h3>
       <div class="aor-helpers">
         {s3.helpers.items.map((h: any, i: number) => (
           <div class="aor-helper">
@@ -322,17 +322,17 @@ const parts = (p: string) => p.split(/\{([^}]+)\}/);
         ))}
       </div>
 
-      <div style="margin-top:64px;">
+      <div style="margin-top:56px;">
         {s3.alone.map((p: string) => <p class="aor-p">{p}</p>)}
       </div>
 
-      <h3 class="aor-h3" style="margin-top:56px;">{s3.atmosphere.title}</h3>
+      <h3 class="aor-h3">{s3.atmosphere.title}</h3>
       <div class="aor-atm">
         {s3.atmosphere.items.map((it: any) => <div><span class="aor-ico" set:html={ico(it.icon)} />{it.text}</div>)}
       </div>
       <p class="aor-atm__tail">{s3.atmosphere.tail}</p>
 
-      <div style="margin-top:48px;">
+      <div style="margin-top:56px;">
         {s3.space.map((p: string) => <p class="aor-p">{p}</p>)}
       </div>
 
@@ -378,8 +378,8 @@ const parts = (p: string) => p.split(/\{([^}]+)\}/);
         </div>
       </div>
 
-      <h3 class="aor-h3" style="margin-top:64px;">{s4.recovery.title}</h3>
-      <div class="aor-plates" style="margin-top:20px;">
+      <h3 class="aor-h3">{s4.recovery.title}</h3>
+      <div class="aor-plates">
         {s4.recovery.cards.map((cd: any) => (
           <div class="aor-plate">
             <span class="aor-ico" set:html={ico(cd.icon)} />
@@ -389,8 +389,8 @@ const parts = (p: string) => p.split(/\{([^}]+)\}/);
         ))}
       </div>
 
-      <h3 class="aor-h3" style="margin-top:64px;">{s4.which.title}</h3>
-      <div class="aor-duo" style="margin-top:20px;">
+      <h3 class="aor-h3">{s4.which.title}</h3>
+      <div class="aor-duo">
         <div class="aor-card">
           <p class="aor-card__strong">{s4.which.physical.lead}</p>
           <ul class="aor-list">
@@ -448,9 +448,9 @@ const parts = (p: string) => p.split(/\{([^}]+)\}/);
         </div>
       </div>
 
-      <h3 class="aor-h3" style="margin-top:64px;">{s5.changes.title}</h3>
-      <div class="aor-plates" style="margin-top:20px;">
-        {s5.changes.items.map((t: string) => <div class="aor-plate"><p class="aor-plate__x" style="margin-top:0;">{t}</p></div>)}
+      <h3 class="aor-h3">{s5.changes.title}</h3>
+      <div class="aor-plates">
+        {s5.changes.items.map((t: string) => <div class="aor-plate"><p class="aor-plate__x">{t}</p></div>)}
       </div>
 
       <div class="aor-question">
@@ -460,7 +460,7 @@ const parts = (p: string) => p.split(/\{([^}]+)\}/);
         {s5.question.paragraphs.map((p: string) => <p>{p}</p>)}
       </div>
 
-      <h3 class="aor-h3" style="margin-top:72px;">{s5.listen.title}</h3>
+      <h3 class="aor-h3">{s5.listen.title}</h3>
       <div class="aor-tiles">
         {photos.listen.map((ph, i) => (
           <figure class="aor-tile">
@@ -472,7 +472,7 @@ const parts = (p: string) => p.split(/\{([^}]+)\}/);
       <div class="aor-plates aor-plates--3" style="margin-top:20px;">
         {s5.listen.items.slice(4).map((t: string) => <div class="aor-plate"><h3 class="aor-plate__t">{t}</h3></div>)}
       </div>
-      <p class="aor-line" style="margin-top:40px;">{s5.listen.note}</p>
+      <p class="aor-line">{s5.listen.note}</p>
 
       <div class="aor-thought">
         <p class="aor-thought__title">{s5.thought.title}</p>
@@ -520,10 +520,10 @@ const parts = (p: string) => p.split(/\{([^}]+)\}/);
         </div>
       </div>
 
-      <h3 class="aor-h3" style="margin-top:64px;">{s6.takeaway.title}</h3>
+      <h3 class="aor-h3">{s6.takeaway.title}</h3>
       {s6.takeaway.lead.map((p: string) => <p class="aor-p">{p}</p>)}
-      <div class="aor-plates aor-plates--5" style="margin-top:24px;">
-        {s6.takeaway.items.map((it: any) => <div class="aor-plate"><span class="aor-ico" set:html={ico(it.icon)} /><p class="aor-plate__x" style="margin-top:0;">{it.text}</p></div>)}
+      <div class="aor-plates aor-plates--5" style="margin-top:20px;">
+        {s6.takeaway.items.map((it: any) => <div class="aor-plate"><span class="aor-ico" set:html={ico(it.icon)} /><p class="aor-plate__x">{it.text}</p></div>)}
       </div>
       {s6.takeaway.note.map((p: string) => <p class="aor-p aor-p--sm" style="margin-top:16px;">{p}</p>)}
 
@@ -573,7 +573,7 @@ const parts = (p: string) => p.split(/\{([^}]+)\}/);
       </div>
 
       <div style="margin-top:56px;">
-        <p class="aor-h3" style="margin-bottom:10px;">{dur.fact.title}</p>
+        <p class="aor-h3" style="margin-top:0;">{dur.fact.title}</p>
         <p class="aor-p" style="max-width:none;">{dur.fact.text}</p>
         <div class="aor-rhythm">
           {dur.rhythm.map((p: string) => <p>{p}</p>)}
