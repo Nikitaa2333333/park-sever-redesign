@@ -49,7 +49,7 @@ jobs:
 
       - name: Deploy to hosting via rsync (only changed files)
         run: |
-          rsync -az --delete \
+          rsync -az --checksum --delete \
             -e "ssh -p 22 -i ~/.ssh/deploy_key" \
             dist/ \
             "${{ secrets.HOSTING_USER }}@server66.hosting.reg.ru:/var/www/${{ secrets.HOSTING_USER }}/data/www/park-sever.ru/"
