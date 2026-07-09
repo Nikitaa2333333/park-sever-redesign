@@ -34,6 +34,12 @@ const heroMobile = heroVideos.find((v: any) => v.variant === 'mobile');
 const heroAutumn = heroVideos.find((v: any) => v.variant === 'autumn-desktop');
 const heroWinter = heroVideos.find((v: any) => v.variant === 'winter-desktop');
 const heroCover = img('/images/hero-cover.jpg'); // статичная обложка hero (вместо видео)
+// LCP-картинка hero: считаем srcset заранее, чтобы отдать <link rel=preload as=image> в <head>.
+// Браузер начинает качать hero сразу при парсинге HTML (не дожидаясь разбора CSS) — режет LCP.
+// Параметры ОБЯЗАНЫ совпадать с <Image> ниже (widths/sizes/format/quality), иначе preload не переиспользуется.
+const heroPreload = heroCover
+  ? await getImage({ src: heroCover, widths: [960, 1280, 1600, 2000, 2560], sizes: '100vw', format: 'webp', quality: 87 })
+  : null;
 const _paperMeta = img('/images/paper.png'); // вырезанный лист бумаги (прозрачный фон) — фон плашки «Оазиса»
 const paperTexUrl = _paperMeta ? (await getImage({ src: _paperMeta, width: 1120, format: 'webp' })).src : undefined;
 const heroDesktopPoster = await posterOf(heroDesktop?.poster, 1920);
@@ -132,6 +138,16 @@ const navMenu = [
 ];
 ---
 <SiteLayout title={page.seo.title}>
+  {heroPreload && (
+    <link
+      slot="head"
+      rel="preload"
+      as="image"
+      imagesrcset={heroPreload.srcSet.attribute}
+      imagesizes="100vw"
+      fetchpriority="high"
+    />
+  )}
   <!-- NAV (Sticky Navigation with Mobile Hamburger) -->
   <nav class="nav">
     <div class="wrap">
