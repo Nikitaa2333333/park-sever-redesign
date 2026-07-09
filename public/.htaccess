@@ -1,0 +1,36 @@
+# Парк Север — кэш статики и сжатие (Reg.ru, Apache).
+# Цель: PageSpeed «Use efficient cache lifetimes» — ассеты отдавались с Cache-Control: none.
+# HTML НЕ кэшируем надолго (он меняется при каждом деплое) — только статику.
+
+# --- Долгий кэш для статики ---
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/webp             "access plus 1 year"
+  ExpiresByType image/jpeg             "access plus 1 year"
+  ExpiresByType image/png              "access plus 1 year"
+  ExpiresByType image/svg+xml          "access plus 1 year"
+  ExpiresByType font/woff2             "access plus 1 year"
+  ExpiresByType text/css               "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType video/mp4              "access plus 1 month"
+</IfModule>
+
+<IfModule mod_headers.c>
+  # Ассеты с хешем в имени (/_astro/*) и локальные шрифты — можно immutable на год:
+  # при изменении меняется имя файла, так что устаревшего кэша не будет.
+  <FilesMatch "\.(webp|jpe?g|png|svg|woff2|css|js)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.mp4$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+  # HTML — короткий кэш, чтобы правки сайта появлялись сразу.
+  <FilesMatch "\.html$">
+    Header set Cache-Control "public, max-age=600, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+# --- Сжатие (gzip) для текстовых ресурсов ---
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/javascript application/json image/svg+xml
+</IfModule>

@@ -50,10 +50,11 @@ const loraFace = [400,500,600].map((w) =>
     <!-- Заголовки: Monotype Corsiva (локально). Наборный/UI: Lora (тоже локально, self-hosted). -->
     <style is:inline set:html={fontFace + loraFace}></style>
     <link rel="preload" href={withBase('/fonts/monotype-corsiva.woff2')} as="font" type="font/woff2" crossorigin />
-    <!-- Предзагрузка критичных субсетов Lora (body = вес 500): без них текст на медленном
-         мобильном не успеет отрисоваться Lora к первой отрисовке (font-display:optional). -->
+    <!-- Предзагрузка критичных субсетов Lora: над сгибом текст кириллический, двух весов —
+         500 (лид hero, body) и 600 (меню, overline, кнопка «Забронировать»). Латиница над
+         сгибом не встречается, её не грузим, чтобы не отнимать канал у LCP-картинки. -->
     <link rel="preload" href={withBase('/fonts/lora/lora-500-cyrillic.woff2')} as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href={withBase('/fonts/lora/lora-500-latin.woff2')} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={withBase('/fonts/lora/lora-600-cyrillic.woff2')} as="font" type="font/woff2" crossorigin />
     <!-- раннее соединение с хостом виджета бронирования (ускоряет загрузку формы) -->
     <link rel="preconnect" href="https://widget.bronirui-online.ru" crossorigin />
     <link rel="dns-prefetch" href="//widget.bronirui-online.ru" />
