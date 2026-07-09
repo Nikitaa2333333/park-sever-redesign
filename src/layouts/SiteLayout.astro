@@ -35,12 +35,13 @@ const fontFace = `@font-face{font-family:"Monotype Corsiva";src:url(${JSON.strin
     <!-- Заголовки: Monotype Corsiva (локально, @font-face). Наборный/UI: Lora (Google). -->
     <style is:inline set:html={fontFace}></style>
     <link rel="preload" href={withBase('/fonts/monotype-corsiva.woff2')} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={withBase('/fonts/monotype-corsiva.woff')} as="font" type="font/woff" crossorigin />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <!-- раннее соединение с хостом виджета бронирования (ускоряет загрузку формы) -->
     <link rel="preconnect" href="https://widget.bronirui-online.ru" crossorigin />
     <link rel="dns-prefetch" href="//widget.bronirui-online.ru" />
-    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&display=optional" rel="stylesheet" />
   </head>
   <body>
     <slot />
