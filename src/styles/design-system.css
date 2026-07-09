@@ -314,7 +314,12 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
     content:""; position:absolute; left:0; right:0; bottom:0; height:200px;
     background:linear-gradient(to top, var(--navy) 0%, rgba(15,42,71,.82) 26%, rgba(15,42,71,.38) 60%, rgba(15,42,71,0) 100%);
   }
-  .hero .hero__wrap{ padding-top:0; padding-bottom:56px; }
+  /* бренд-группа (оверлайн + знак + «Парк Север») — ПО ЦЕНТРУ, крупнее,
+     и приподнята: чуть налезает на низ фото (там уже navy-фейд — текст читается) */
+  .hero .hero__wrap{ padding-top:0; padding-bottom:56px; margin-top:-72px; }
+  .hero__overline{ text-align:center; }
+  .hero__brand{ justify-content:center; gap:16px; }
+  .hero__mark{ height:150px; }
 }
 /* связка «крупный знак + название» в hero главной (как в референсе): логотип слева,
    заголовок рядом переносится на две строки («Парк» / «Север») сам — за счёт ширины */
