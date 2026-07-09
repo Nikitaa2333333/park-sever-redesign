@@ -126,7 +126,7 @@ const moods = [
           <div class="oasis-carousel__track">
             {heroPhotos.map((name) => (
               <figure class="oasis-card">
-                <Image src={img(name)!} alt="Стеклянный дом среди леса" widths={[400, 640, 960]} sizes="(max-width:900px) 80vw, 460px" format="webp" quality={82} loading="eager" draggable={false} />
+                <Image src={img(name)!} alt="Стеклянный дом среди леса" widths={[400, 640, 960]} sizes="(max-width:900px) 80vw, 460px" format="webp" quality={87} loading="eager" draggable={false} />
               </figure>
             ))}
           </div>
@@ -138,7 +138,7 @@ const moods = [
   <!-- БЛОК 2: Для кого этот дом — короткий блок на приглушённом фото 3.3 -->
   <section class="forwhom" id="for-whom">
     <div class="forwhom__bg">
-      <Image src={img('3.3')!} alt="Интерьер дома" widths={[960, 1440, 2000]} sizes="100vw" format="webp" quality={78} loading="lazy" />
+      <Image src={img('3.3')!} alt="Интерьер дома" widths={[960, 1440, 2000]} sizes="100vw" format="webp" quality={85} loading="lazy" />
     </div>
     <div class="forwhom__scrim"></div>
     <div class="wrap wrap--flush">
@@ -170,7 +170,7 @@ const moods = [
             ) : (
               <div class={`detail-card__media${d.frames.length > 1 ? ' is-slideshow' : ''}`} data-interval={d.interval}>
                 {d.frames.map((name, i) => (
-                  <Image class={i === 0 ? 'is-active' : ''} src={img(name)!} alt={d.title} widths={[500, 800, 1100]} sizes="(max-width:760px) 100vw, 50vw" format="webp" quality={82} loading="lazy" draggable={false} />
+                  <Image class={i === 0 ? 'is-active' : ''} src={img(name)!} alt={d.title} widths={[500, 800, 1100]} sizes="(max-width:760px) 100vw, 50vw" format="webp" quality={87} loading="lazy" draggable={false} />
                 ))}
               </div>
             )}
@@ -193,7 +193,7 @@ const moods = [
       <div class="filmstrip__track oasis-carousel__track">
         {filmstrip.map((name, i) => (
           <button class="filmstrip__item" data-full={filmstripBig[i]} aria-label="Открыть фото крупно">
-            <Image src={img(name)!} alt="Интерьер и территория" widths={[360, 520, 680]} sizes="320px" format="webp" quality={82} loading="lazy" draggable={false} />
+            <Image src={img(name)!} alt="Интерьер и территория" widths={[360, 520, 680]} sizes="320px" format="webp" quality={87} loading="lazy" draggable={false} />
           </button>
         ))}
       </div>
@@ -218,7 +218,7 @@ const moods = [
           <div class="slider-snap">
             {kitPhotos.map((name) => (
               <div class="slider-snap__slide slider-snap__slide--clean">
-                <Image src={img(name)!} alt="Комплектация дома" widths={[640, 960, 1280]} sizes="(max-width:860px) 100vw, 560px" format="webp" quality={82} loading="lazy" draggable={false} />
+                <Image src={img(name)!} alt="Комплектация дома" widths={[640, 960, 1280]} sizes="(max-width:860px) 100vw, 560px" format="webp" quality={87} loading="lazy" draggable={false} />
               </div>
             ))}
           </div>
@@ -237,7 +237,7 @@ const moods = [
     <div class="wrap wrap--flush">
       <div class="arrival-grid">
         <div class="arrival__pic">
-          <Image src={img('7')!} alt="Дом подготовлен к приезду гостей" widths={[640, 960, 1280]} sizes="(max-width:860px) 100vw, 560px" format="webp" quality={82} loading="lazy" />
+          <Image src={img('7')!} alt="Дом подготовлен к приезду гостей" widths={[640, 960, 1280]} sizes="(max-width:860px) 100vw, 560px" format="webp" quality={87} loading="lazy" />
         </div>
         <div class="arrival__text">
           <h2 class="h2">Отдых начинается ещё до вашего приезда</h2>
@@ -256,7 +256,7 @@ const moods = [
   <!-- ФИНАЛЬНЫЙ ЭКРАН: фото 8 приглушено градиентом, текст по центру, иконки-настроения -->
   <section class="finale" id="finale">
     <div class="finale__bg">
-      <Image src={img('8')!} alt="Вечер в парке" widths={[960, 1440, 2000]} sizes="100vw" format="webp" quality={80} loading="lazy" />
+      <Image src={img('8')!} alt="Вечер в парке" widths={[960, 1440, 2000]} sizes="100vw" format="webp" quality={87} loading="lazy" />
     </div>
     <div class="finale__scrim"></div>
     <div class="wrap">

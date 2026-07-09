@@ -155,7 +155,7 @@ const navMenu = [
   <header class="hero">
     <div class="hero__media">
       {heroCover && (
-        <Image class="hero__img" src={heroCover} alt="Парк Север — стеклянный дом среди леса" widths={[960, 1280, 1600, 2000, 2560]} sizes="100vw" format="webp" quality={82} loading="eager" fetchpriority="high" />
+        <Image class="hero__img" src={heroCover} alt="Парк Север — стеклянный дом среди леса" widths={[960, 1280, 1600, 2000, 2560]} sizes="100vw" format="webp" quality={87} loading="eager" fetchpriority="high" />
       )}
     </div>
     <div class="hero__scrim"></div>
@@ -211,7 +211,7 @@ const navMenu = [
           <div class="oasis-carousel__track">
             {oasisGallery.map((src: string) => (
               <figure class="oasis-card oasis-card--paper">
-                <Image src={img(src)!} alt="Оазис спокойствия среди леса" widths={[400, 640, 960]} sizes="(max-width:900px) 80vw, 420px" format="webp" quality={82} loading="lazy" draggable={false} />
+                <Image src={img(src)!} alt="Оазис спокойствия среди леса" widths={[400, 640, 960]} sizes="(max-width:900px) 80vw, 420px" format="webp" quality={87} loading="lazy" draggable={false} />
               </figure>
             ))}
           </div>
@@ -232,7 +232,7 @@ const navMenu = [
           {artSteps.map((step: any) => (
             <div class="art-step">
               <div class="art-step__img">
-                <Image src={img(step.image)!} alt={step.title} widths={[400, 640, 800]} sizes="(max-width:860px) 50vw, 33vw" format="webp" quality={82} loading="lazy" />
+                <Image src={img(step.image)!} alt={step.title} widths={[400, 640, 800]} sizes="(max-width:860px) 50vw, 33vw" format="webp" quality={87} loading="lazy" />
                 <div class="art-step__overlay">
                   <span class="art-step__num">{step.step}</span>
                   <h3 class="art-step__title">{step.title}</h3>
@@ -254,7 +254,7 @@ const navMenu = [
           {houseSlides.map((group: string[]) => (
             <div class:list={["slider-snap__slide", { "slider-snap__slide--pair": group.length === 2 }]}>
               {group.map((src: string) => (
-                <Image src={img(src)!} alt="Дом среди леса" widths={[640, 960, 1280, 1600, 2000]} sizes={group.length === 2 ? "50vw" : "100vw"} format="webp" quality={82} loading="lazy" />
+                <Image src={img(src)!} alt="Дом среди леса" widths={[640, 960, 1280, 1600, 2000]} sizes={group.length === 2 ? "50vw" : "100vw"} format="webp" quality={87} loading="lazy" />
               ))}
             </div>
           ))}
@@ -343,7 +343,7 @@ const navMenu = [
           <div class="oasis-carousel__track">
             {atmosphereGallery.map((src: string) => (
               <figure class="oasis-card oasis-card--sm">
-                <Image src={img(src)!} alt="Атмосфера для двоих" widths={[400, 640, 960]} sizes="(max-width:760px) 80vw, 480px" format="webp" quality={82} loading="lazy" draggable={false} />
+                <Image src={img(src)!} alt="Атмосфера для двоих" widths={[400, 640, 960]} sizes="(max-width:760px) 80vw, 480px" format="webp" quality={87} loading="lazy" draggable={false} />
               </figure>
             ))}
           </div>
@@ -370,7 +370,7 @@ const navMenu = [
           {worldItems.map((item: any, i: number) => (
             <a class={`world-tile ${i < 2 ? 'world-tile--wide' : 'world-tile--med'}`} href={item.href}>
               <div class="world-tile__pic">
-                <Image src={img(item.image)!} alt={item.title} widths={[400, 640, 960, 1280]} sizes="(max-width:900px) 50vw, 33vw" format="webp" quality={82} loading="lazy" />
+                <Image src={img(item.image)!} alt={item.title} widths={[400, 640, 960, 1280]} sizes="(max-width:900px) 50vw, 33vw" format="webp" quality={87} loading="lazy" />
                 <div class="world-tile__cap">
                   <div class="world-tile__title">{item.title}</div>
                   {worldDesc[i] && <p class="world-tile__desc">{worldDesc[i]}</p>}
@@ -402,7 +402,7 @@ const navMenu = [
             {advantagesItems.map((item: any, i: number) => (
               <div class={`adv-slide${i === 0 ? ' is-active' : ''}`} data-adv-slide={i}>
                 <div class="adv-slide__pic">
-                  <Image src={img(item.image)!} alt={item.text} widths={[600, 900, 1200]} sizes="(max-width:860px) 100vw, 62vw" format="webp" quality={82} loading="lazy" />
+                  <Image src={img(item.image)!} alt={item.text} widths={[600, 900, 1200]} sizes="(max-width:860px) 100vw, 62vw" format="webp" quality={87} loading="lazy" />
                 </div>
                 <div class="adv-slide__text">
                   <p class="adv-slide__desc">{item.text}</p>
@@ -420,7 +420,7 @@ const navMenu = [
                 aria-selected={i === 0 ? 'true' : 'false'}
                 aria-label={item.text}
               >
-                <Image src={img(item.image)!} alt={item.text} widths={[200, 320]} sizes="180px" format="webp" quality={80} loading="lazy" />
+                <Image src={img(item.image)!} alt={item.text} widths={[200, 320]} sizes="180px" format="webp" quality={87} loading="lazy" />
               </button>
             ))}
           </div>
