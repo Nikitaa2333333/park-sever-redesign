@@ -36,7 +36,7 @@
       "initConfig": {
         "moduleId": 5558,
         "index": 0,
-        "widget": { "position": { "top": "100px" }, "mobile": { "absolute": false, "position": { "top": "100px" } } },
+        "widget": { "zindex": 2000, "position": { "top": "100px" }, "mobile": { "absolute": false, "position": { "top": "100px" } } },
         "button": { "position": { "bottom": "50px", "left": "50px", "right": "50px" } }
       },
       "note": "Контейнер #znms-widget-1 на главной (slider). init вызывается в booking.js. Все CTA «Забронировать» = ссылка с openDeepLink — виджет сам открывает модуль 5558. КРИТИЧНО сохранить."
