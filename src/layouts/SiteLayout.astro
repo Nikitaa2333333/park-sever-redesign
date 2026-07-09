@@ -75,5 +75,27 @@ const fontFace = `@font-face{font-family:"Monotype Corsiva";src:url(${JSON.strin
         else document.addEventListener('DOMContentLoaded', run);
       })();
     </script>
+    <!-- Edge-fade лент-переключалок (.ow-menu): белые градиенты по краям появляются,
+         только когда за краем реально есть кнопки (классы fade-l/fade-r на обёртке) -->
+    <script is:inline>
+      (function () {
+        var init = function () {
+          document.querySelectorAll('.ow-menu').forEach(function (menu) {
+            var wrap = menu.parentElement;
+            if (!wrap) return;
+            var upd = function () {
+              var over = menu.scrollWidth > menu.clientWidth + 1;
+              wrap.classList.toggle('fade-l', over && menu.scrollLeft > 2);
+              wrap.classList.toggle('fade-r', over && menu.scrollLeft < menu.scrollWidth - menu.clientWidth - 2);
+            };
+            menu.addEventListener('scroll', upd, { passive: true });
+            window.addEventListener('resize', upd);
+            upd();
+          });
+        };
+        if (document.readyState !== 'loading') init();
+        else document.addEventListener('DOMContentLoaded', init);
+      })();
+    </script>
   </body>
 </html>

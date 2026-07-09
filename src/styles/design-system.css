@@ -1505,7 +1505,22 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 @media(max-width:900px){
   .ow-menu{ justify-content:flex-start; }
   .ow-menu a{ padding:11px 18px; }
+  /* прокрутка — во всю ширину экрана: кнопки уходят под самый край (не режутся на линии 32px);
+     первая кнопка стартует на привычной линии 32px за счёт внутреннего паддинга */
+  .ow-menubar .ow-menu{ margin:0 -32px; padding-left:32px; padding-right:32px; scroll-padding-left:32px; }
 }
+/* edge-fade по краям ленты кнопок (канонный приём): белый градиент показывает,
+   что за краем есть ещё кнопки. Классы fade-l/fade-r ставит скрипт по позиции скролла. */
+.ow-menubar .wrap{ position:relative; }
+.ow-menubar .wrap::before,
+.ow-menubar .wrap::after{
+  content:""; position:absolute; top:0; bottom:0; width:56px;
+  pointer-events:none; z-index:2; display:none;
+}
+.ow-menubar .wrap::before{ left:0; background:linear-gradient(to right, var(--canvas), rgba(255,255,255,0)); }
+.ow-menubar .wrap::after{ right:0; background:linear-gradient(to left, var(--canvas), rgba(255,255,255,0)); }
+.ow-menubar .wrap.fade-l::before{ display:block; }
+.ow-menubar .wrap.fade-r::after{ display:block; }
 /* «Искусство отдыха» — 7 сегментов: центр, но без обрезания левого края при переполнении */
 #aor-menubar .ow-menu{ justify-content:safe center; }
 #aor-menubar .ow-menu a{ padding:13px 20px; }
