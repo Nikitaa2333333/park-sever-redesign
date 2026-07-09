@@ -384,7 +384,7 @@ const navMenu = [
 
         <div class="world-mosaic">
           {worldItems.map((item: any, i: number) => (
-            <a class={`world-tile ${i < 2 ? 'world-tile--wide' : 'world-tile--med'}`} href={item.href}>
+            <a class={`world-tile ${i < 2 ? 'world-tile--wide' : 'world-tile--med'}`} href={item.href?.startsWith('http') ? item.href : withBase(item.href)}>
               <div class="world-tile__pic">
                 <Image src={img(item.image)!} alt={item.title} widths={[400, 640, 960, 1280]} sizes="(max-width:900px) 50vw, 33vw" format="webp" quality={87} loading="lazy" />
                 <div class="world-tile__cap">
@@ -397,7 +397,7 @@ const navMenu = [
         </div>
         
         <div style="text-align: center; margin-top: 48px;">
-          <a class="btn btn--outline-light" href="/about">Исследовать наш мир</a>
+          <a class="btn btn--outline-light" href={withBase('/our-world/')}>Исследовать наш мир</a>
         </div>
       </div>
     </section>
@@ -573,18 +573,8 @@ const navMenu = [
       });
     }
 
-    // 1b. Открытие модуля бронирования znms без перезагрузки.
-    // Все ссылки на ?znms_widget_open=... перехватываем и зовём open();
-    // если виджет ещё не готов — браузер уходит по href (deep-link сработает на загрузке).
-    document.querySelectorAll('a[href*="znms_widget_open"], [data-znms-open]').forEach(el => {
-      el.addEventListener('click', (e) => {
-        try {
-          if (window.znmsWidget && window.znmsWidget.open && window.znmsWidget.open('#znms-widget-1')) {
-            e.preventDefault();
-          }
-        } catch (err) { /* падаем на href */ }
-      });
-    });
+    // 1b. Открытие модуля бронирования — обработчик перенесён в SiteLayout.astro,
+    // чтобы «Забронировать» работало на ВСЕХ страницах, а не только на главной.
 
     // 2. Сезонное видео
     (function() {

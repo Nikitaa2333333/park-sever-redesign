@@ -16,10 +16,27 @@ const initJs = `(function(){
       var hasW=Array.prototype.some.call(el.children,function(x){return !(x.classList&&x.classList.contains('znms-skeleton'));});
       if(hasW&&sk){sk.remove();obs.disconnect();}
     });obs.observe(el,{childList:true});}
+    else{
+      // Подстраницы: инлайн-формы hero нет. Виджету всё равно нужен контейнер, чтобы
+      // инициализироваться — без него ни open(), ни deep-link (?znms_widget_open) не
+      // сработают, и «Забронировать» в шапке не открывается. Создаём скрытый off-screen:
+      // инлайн-форма не видна, а модуль open() всплывает как обычный оверлей.
+      el=document.createElement('div');el.id=c.replace(/^#/,'');
+      el.style.cssText='position:absolute;left:-9999px;top:0;width:1px;height:1px;overflow:hidden;';
+      document.body.appendChild(el);
+    }
     var t=0;(function tryInit(){t++;
       if(window.znmsWidget&&window.znmsWidget.init){try{window.znmsWidget.init(c,cfg);}catch(e){console.warn('znms widget:',e);}return;}
       if(t<120)setTimeout(tryInit,50);
     })();
+    // Все CTA «Забронировать» (ссылки ?znms_widget_open) открывают модуль без перезагрузки.
+    // Если виджет ещё не готов — не мешаем: браузер уходит по href, и deep-link сработает
+    // на загрузке. Обработчик здесь (в SiteLayout) — значит работает на ВСЕХ страницах.
+    document.querySelectorAll('a[href*="znms_widget_open"],[data-znms-open]').forEach(function(a){
+      a.addEventListener('click',function(e){
+        try{ if(window.znmsWidget&&window.znmsWidget.open&&window.znmsWidget.open(c)){e.preventDefault();} }catch(err){}
+      });
+    });
   });
 })();`;
 // @font-face объявляем здесь (а не в CSS), чтобы url() ассетов получал base-префикс.
