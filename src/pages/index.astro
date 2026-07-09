@@ -165,7 +165,7 @@ const navMenu = [
       {heroAccent && <p class="hero-accent" style="margin:16px 0 28px;">{heroAccent}</p>}
 
       <div class="hero__lead-text" style="margin-bottom:28px; max-width:556px;">
-        <p class="body-lead" style="color:#fff; font-weight:500; font-size:20px; line-height:1.4; margin:0;">{heroParas.map((p: any) => p.text).join(' ')}</p>
+        <p class="body-lead hero__lead">{heroParas.map((p: any) => p.text).join(' ')}</p>
       </div>
 
       <!-- 1.5 Модуль бронирования znms (инлайновая форма заезд/выезд/гости).
@@ -484,7 +484,7 @@ const navMenu = [
           <p style="margin-top:16px;"><a class="tel" href={c.phoneHref} style="font-size:20px; font-weight:700;">{c.phone}</a></p>
           <div class="hero__cta" style="margin-top:24px; justify-content:flex-start;">
             <a class="btn btn--navy" href="https://yandex.ru/navi?whatshere%5Bpoint%5D=37.8149250717716%2C56.45656463673545&whatshere%5Bzoom%5D=20.476816&ll=37.8149250717716%2C56.45656463635388&z=20.476816&si=j2frx76vg7073bcw444ez8w15w" target="_blank" rel="noopener noreferrer">Построить маршрут</a>
-            <a class="btn btn--ghost btn--wa-outline" href={c.whatsapp} target="_blank" rel="noopener noreferrer">Написать в WhatsApp</a>
+            <a class="btn btn--ghost btn--wa-outline" href="https://vk.me/park_sever" target="_blank" rel="noopener noreferrer">Написать в ВКонтакте</a>
           </div>
         </div>
         <div class="cmap__right">

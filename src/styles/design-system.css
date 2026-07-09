@@ -299,16 +299,21 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 /* контент hero главной: текст слева, прижат к левой линии (бывший инлайн-стиль).
    ВАЖНО: селектор .hero .hero__wrap — иначе базовый .hero .wrap перебивает по специфичности */
 .hero .hero__wrap{ text-align:left; max-width:800px; margin-left:0; padding-top:140px; padding-bottom:80px; }
+/* наборный лид hero (бывший инлайн-стиль); на мобиле мельче — строки не «плывут» */
+.hero__lead{ color:#fff; font-weight:500; font-size:20px; line-height:1.4; margin:0; }
+@media(max-width:640px){ .hero__lead{ font-size:17px; line-height:1.5; } }
 /* МОБИЛЬНЫЙ ПРИНЦИП ГЛАВНОЙ: первый экран — ЧИСТОЕ фото во весь вьюпорт (без затемнения),
    низ кадра мягко уходит в navy; текст появляется ниже при скролле, с левого края */
 @media(max-width:640px){
   .hero{ display:block; min-height:0; background:var(--navy); }
-  .hero__media{ position:relative; inset:auto; height:calc(100vh - 56px); height:calc(100svh - 56px); }
+  /* высота кадра — ОТ ШИРИНЫ (aspect-ratio), а не от вьюпорта: при скролле мобильный
+     браузер меняет высоту вьюпорта, и завязанный на неё кадр «наезжал» зумом */
+  .hero__media{ position:relative; inset:auto; height:auto; aspect-ratio:3/4; }
   .hero__media::after{
-    content:""; position:absolute; left:0; right:0; bottom:0; height:140px;
-    background:linear-gradient(to top, var(--navy), rgba(15,42,71,0));
+    content:""; position:absolute; left:0; right:0; bottom:0; height:200px;
+    background:linear-gradient(to top, var(--navy) 0%, rgba(15,42,71,.82) 26%, rgba(15,42,71,.38) 60%, rgba(15,42,71,0) 100%);
   }
-  .hero .hero__wrap{ padding-top:12px; padding-bottom:56px; }
+  .hero .hero__wrap{ padding-top:0; padding-bottom:56px; }
 }
 .hero__eyebrow{ font-family:var(--font-head); font-size:14px; font-weight:600; color:#fff; margin:0 auto 18px; max-width:48ch; }
 .hero h1{ color:#fff; max-width:20ch; margin:0; }
@@ -430,11 +435,15 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 /* ── блок «Истории Парка» на главной: ВК + отзывы Яндекс ── */
 .stories-split{ display:grid; grid-template-columns:1fr 1fr; gap:32px; align-items:start; }
 @media(max-width:860px){ .stories-split{ grid-template-columns:1fr; gap:28px; } }
+/* подзаголовки колонок — печатный Lora жирным, без линии-подчёркивания (заказчик 2026-07-09) */
 .stories-col h3{
+  font-family:var(--font-head);
+  font-weight:700;
   color:var(--ink);
-  font-size:clamp(26px,3vw,34px);
-  padding-bottom:10px;
-  border-bottom:2px solid var(--navy);
+  font-size:clamp(22px,2.4vw,28px);
+  letter-spacing:-0.02em;
+  padding-bottom:0;
+  border-bottom:0;
 }
 .reviews-frame{ border:1px solid var(--fog); border-radius:var(--r-card); overflow:hidden; height:560px; }
 .reviews-frame iframe{ width:100%; height:100%; border:0; }
@@ -596,6 +605,8 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
     display: block;
   }
   .nav__menu {
+    display: flex;               /* КРИТИЧНО: базовое правило (≤980) гасит меню display:none —
+                                    без возврата flex оверлей не открывался вовсе */
     position: fixed;
     top: 56px;
     left: 0;
@@ -619,12 +630,16 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
     opacity: 1;
     visibility: visible;
   }
+  /* порядок на мобиле: лого → «Забронировать» → гамбургер; поля шапки компактнее */
+  .nav .wrap { padding: 0 18px; gap: 12px; }
   .nav__book {
+    order: 2;
     margin-left: auto;
-    margin-right: 16px;
-    padding: 8px 16px;
-    font-size: 14px;
+    margin-right: 0;
+    padding: 8px 14px;
+    font-size: 13px;
   }
+  .nav__toggle { order: 3; padding: 8px 4px; }
 }
 
 /* CSS Слайдер на базе scroll-snap (Оазис - Вариант 22 / Дом - Вариант 9) */
