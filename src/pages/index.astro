@@ -523,6 +523,12 @@ const navMenu = [
           <a href={c.whatsapp} target="_blank" rel="noopener noreferrer">WhatsApp</a>
           <span class="foot__addr">{c.address}</span>
         </div>
+        <div class="foot__col">
+          <h4>Документы</h4>
+          <a href={withBase('/legal-information')}>Правовая информация</a>
+          <a href={withBase('/files/Договор-оферта.pdf')} target="_blank" rel="noopener noreferrer">Договор-оферта (PDF)</a>
+          <a href={withBase('/files/Правила-проживания.pdf')} target="_blank" rel="noopener noreferrer">Правила проживания (PDF)</a>
+        </div>
       </div>
       <hr class="foot__rule" />
       <div class="foot__cp">© {site.company} · {site.requisites.entity} · {site.requisites.note}</div>
