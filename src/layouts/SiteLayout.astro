@@ -80,6 +80,32 @@ const loraFace = [400,500,600].map((w) =>
   </head>
   <body>
     <slot />
+
+    <!-- Cookie-баннер: показываем один раз, пока пользователь не согласится (localStorage) -->
+    <div class="cookie-banner" id="cookie-banner" hidden role="dialog" aria-label="Уведомление об использовании cookie">
+      <p class="cookie-banner__text">
+        Мы используем файлы cookie для улучшения работы сайта. Оставаясь на сайте, вы соглашаетесь с нашей
+        <a href={withBase('/files/Политика-конфиденциальности.pdf')} target="_blank" rel="noopener noreferrer">Политикой конфиденциальности</a>.
+      </p>
+      <button class="btn btn--gold cookie-banner__btn" id="cookie-banner-accept" type="button">Хорошо</button>
+    </div>
+    <script is:inline>
+      (function () {
+        var KEY = 'ps-cookie-consent';
+        var run = function () {
+          try { if (localStorage.getItem(KEY)) return; } catch (e) {}
+          var el = document.getElementById('cookie-banner');
+          if (!el) return;
+          el.hidden = false;
+          document.getElementById('cookie-banner-accept').addEventListener('click', function () {
+            try { localStorage.setItem(KEY, '1'); } catch (e) {}
+            el.hidden = true;
+          });
+        };
+        if (document.readyState !== 'loading') run();
+        else document.addEventListener('DOMContentLoaded', run);
+      })();
+    </script>
     <script src={booking.scriptSrc} async is:inline></script>
     <script is:inline set:html={initJs}></script>
     <!-- Русский типограф (глобально): короткие слова 1–2 буквы клеятся к следующему
