@@ -891,10 +891,11 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .sec--art .shead { margin-bottom: clamp(24px, 3vw, 40px); }
 .art-steps {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 22px;
   margin-top: 24px;
 }
+.art-cta{ text-align:center; margin-top:32px; }
 /* карточка без рамок: текст лёг на фото поверх navy-градиента снизу */
 .art-step { display: flex; flex-direction: column; }
 .art-step__img {
@@ -942,12 +943,21 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 @media (max-width: 860px) {
   .art-steps { grid-template-columns: 1fr 1fr; }
 }
-/* мобила: карточки full-bleed во всю ширину экрана БЕЗ зазоров (единый фото-поток),
-   секция заканчивается вплотную — «Дом среди леса» прижат следом;
-   кегли внутри карточки контрастнее (заголовок ≠ наборный) */
+/* мобила (правка заказчика 24.08): карточки листаются в сторону (swipe), а не одна над
+   другой — иначе главная становится слишком длинной. Горизонтальная лента со scroll-snap,
+   следующая карточка выглядывает справа; кегли внутри контрастнее (заголовок ≠ наборный). */
 @media (max-width: 520px) {
-  .sec--art { padding-bottom: 0; }
-  .art-steps { grid-template-columns: 1fr; margin-left:-32px; margin-right:-32px; gap:0; }
+  .art-steps {
+    display: flex;
+    grid-template-columns: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 14px;
+    margin: 24px -32px 0;
+    padding: 0 32px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .art-step { flex: 0 0 78%; scroll-snap-align: start; }
   .art-step__title { font-size: 24px; }
   .art-step__text { font-size: 16px; }
 }
@@ -1714,6 +1724,17 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 @media(max-width:900px){ .aor-plates, .aor-plates--5{ grid-template-columns:repeat(2,1fr); } }
 @media(max-width:520px){ .aor-plates, .aor-plates--5, .aor-plates--3{ grid-template-columns:1fr; } }
 @media(max-width:900px){ .aor-plates--3{ grid-template-columns:1fr; } }
+
+/* Блок «Что входит в ваш отдых» (главная, правка 24.08) — золотой заголовок на navy-сцене,
+   плашки в ряд (узко, некрупно — 7 штук), ниже наборный текст про гастрономический сервис. */
+#whats-included .h2{ color:var(--gold-l); }
+.aor-plates--7{ grid-template-columns:repeat(7,1fr); gap:14px; margin-top:32px; }
+.aor-plates--7 .aor-plate{ padding:18px 16px; }
+@media(max-width:1100px){ .aor-plates--7{ grid-template-columns:repeat(4,1fr); } }
+@media(max-width:640px){ .aor-plates--7{ grid-template-columns:repeat(2,1fr); } }
+@media(max-width:420px){ .aor-plates--7{ grid-template-columns:1fr; } }
+.included-extra{ max-width:640px; margin:0 auto; }
+.included-extra__list{ max-width:380px; }
 
 /* колонки «вопрос-ответ» введения */
 .aor-qa{ display:grid; grid-template-columns:repeat(3,1fr); gap:40px; margin-top:56px; }

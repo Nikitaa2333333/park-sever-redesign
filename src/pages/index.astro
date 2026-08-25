@@ -56,18 +56,55 @@ const heroParas = (slider?.blocks ?? []).filter((b: any) => b.type === 'paragrap
 const heroAccent = (slider?.blocks ?? []).find((b: any) => b.type === 'paragraph' && b.variant === 'accent')?.text; // курсивная строка hero (1.4)
 const activityBadge = (slider?.blocks ?? []).find((b: any) => b.type === 'paragraph' && b.text.includes('Деятельность'))?.text;
 
-// — oasis (new) —
-const oasis = byId['oasis'];
-const oasisTitle = blockOf(oasis, 'heading')?.text;
-const oasisParas = blocksOf(oasis, 'paragraph').filter((b: any) => b.variant !== 'chips');
-const oasisChips = blocksOf(oasis, 'paragraph').find((b: any) => b.variant === 'chips')?.text;
-const oasisGallery = (blockOf(oasis, 'gallery')?.images ?? []).slice(0, 3);   // только первые 3 фото
+// маршрут до парка (Яндекс.Навигатор) — используется в нескольких CTA на странице
+const routeHref = 'https://yandex.ru/navi?whatshere%5Bpoint%5D=37.8149250717716%2C56.45656463673545&whatshere%5Bzoom%5D=20.476816&ll=37.8149250717716%2C56.45656463635388&z=20.476816&si=j2frx76vg7073bcw444ez8w15w';
 
-// — art-of-rest (new) —
-const art = byId['art-of-rest'];
-const artTitle = blockOf(art, 'heading')?.text;
-const artSubtitle = blockOf(art, 'subtitle')?.text;
-const artSteps = art?.items ?? [];
+// — oasis: контент инлайн в компоненте (правки заказчика 24.08), блок больше не читаем из JSON —
+const oasisTitle = 'Оазис спокойствия среди леса';
+const oasisParas = [
+  'Мы создали место, которого нам самим не хватало, отвечающее высшим требованиям к качеству жизни, а скрытые чеки отсутствуют. У нас предусмотрен удалённый сервис, где дом полностью укомплектован к вашему приезду по предзаказу, включая гастрономические сеты или создание особой атмосферы.',
+  'Полная приватность в стеклянном «smart» доме посреди леса, где мир сужается только до двоих.',
+  'Душа пространства — воспитанные золотистые ретриверы.',
+  'Главное сокровище территории — благородные европейские олени английской генетики, живущие на собственных пастбищах фермы «Благородный Север».',
+];
+const oasisChips = '12,4 га • Без соседей • 80 км от МКАД';
+const oasisGallery = [
+  '/images/home/art/art-step-5.jpg', // терраса на закате — заменили фото с растениями (правка 24.08)
+  '/images/home/oasis/1.2.jpg',
+  '/images/home/oasis/1.3.jpg',
+];
+
+// — «Что входит в ваш отдых» (новый блок, правка 24.08; контент — инлайн) —
+const includedTitle = 'Что входит в ваш отдых';
+const includedItems = [
+  { title: 'Инженерия комфорта', text: 'Интегрированный «Умный дом», бесшовные тёплые полы и продуманное освещение для любого сценария отдыха.' },
+  { title: 'SPA-ритуал восстановления', text: 'Магниевая и морская соль, натуральные масла, индивидуальные косметические принадлежности и мягкие халаты.' },
+  { title: 'Завтрак уже ждёт вас', text: 'Набор продуктов для завтрака в холодильнике к вашему приезду.' },
+  { title: 'Всё для огня', text: 'Полностью оборудованная зона барбекю с дровами, углями и розжигом.' },
+  { title: 'Отдых без доплат', text: 'Велосипеды, бадминтон, коврики для йоги, настольные игры, книги и творческий чемоданчик.' },
+  { title: 'Познакомиться с оленеводством', text: 'Наблюдение за оленями на пастбищах и возможность индивидуальной экскурсии по закрытой ферме.' },
+  { title: 'Четвероногие терапевты', text: 'Наши золотистые ретриверы всегда рады общению, но прекрасно понимают личные границы гостей. Если вам хочется полного уединения — мы сразу заберём их домой.' },
+];
+const includedExtraTitle = 'Дополнительные услуги по желанию';
+const includedExtraList = [
+  'Авторские гриль-сеты',
+  'Домашние супы',
+  'Праздничное оформление дома',
+  'Услуги шеф-повара',
+];
+
+// — art-of-rest: контент инлайн в компоненте (правки заказчика 24.08), блок больше не читаем из JSON.
+// Фото шагов 02–04 без изменений (те же кадры, что были); фото шага 01 — новое (пробка у выезда
+// из города), заказчица прислала исходник отдельным файлом (1024×768, в докс-вложении было
+// сжато Word'ом до 357×268 — не годилось). —
+const artTitle = 'Искусство отдыха';
+const artSubtitle = 'Путь к настоящему отдыху.';
+const artSteps = [
+  { step: '01', title: 'Перед тем как хочется уехать', text: 'Мозгу тоже нужны паузы.', image: '/images/home/art/art-step-1.jpg' },
+  { step: '02', title: 'Как почувствовать отдых', text: 'Вначале просто переключить внимание.', image: '/images/home/art/art-step-2.jpg' },
+  { step: '03', title: 'Перед тем как стать ближе', text: 'Нужно только остаться вдвоём.', image: '/images/home/art/art-step-3.jpg' },
+  { step: '04', title: 'Сколько нужно отдыхать', text: 'А может перестать считать время?', image: '/images/home/art/art-step-4.jpg' },
+];
 
 // — house-forest (new) —
 const houseForest = byId['house-forest'];
@@ -210,57 +247,81 @@ const navMenu = [
   </header>
 
   <!-- Блок 2: Оазис спокойствия среди леса (тёмная сцена с зерном бумаги + карусель «фотокарточек») -->
-  {oasis && !oasis.disabled && (
-    <section class="sec sec--gold" id="oasis" style={paperTexUrl ? `--paper-tex:url(${paperTexUrl})` : undefined}>
-      <div class="wrap wrap--flush oasis-layout">
-        <div class="oasis-paper">
-          <h2 class="h2" style="margin-bottom:24px;">{oasisTitle}</h2>
-          {oasisParas.map((p: any) => (
-            <p class="body" style="font-size:18px; line-height:1.5; font-weight:500; margin-bottom:14px;">{p.text}</p>
-          ))}
-          {oasisChips && (
-            <p class="oasis-chips">{oasisChips}</p>
-          )}
-        </div>
+  <section class="sec sec--gold" id="oasis" style={paperTexUrl ? `--paper-tex:url(${paperTexUrl})` : undefined}>
+    <div class="wrap wrap--flush oasis-layout">
+      <div class="oasis-paper">
+        <h2 class="h2" style="margin-bottom:24px;">{oasisTitle}</h2>
+        {oasisParas.map((t: string) => (
+          <p class="body" style="font-size:18px; line-height:1.5; font-weight:500; margin-bottom:14px;">{t}</p>
+        ))}
+        <p class="oasis-chips">{oasisChips}</p>
+        <a class="btn btn--navy" style="margin-top:18px;" href={routeHref} target="_blank" rel="noopener noreferrer">Проложить маршрут</a>
+      </div>
 
-        <div class="oasis-carousel oasis-carousel--wide" data-carousel>
-          <div class="oasis-carousel__track">
-            {oasisGallery.map((src: string) => (
-              <figure class="oasis-card oasis-card--paper">
-                <Image src={img(src)!} alt="Оазис спокойствия среди леса" widths={[400, 640, 960]} sizes="(max-width:900px) 80vw, 420px" format="webp" quality={87} loading="lazy" draggable={false} />
-              </figure>
-            ))}
-          </div>
+      <div class="oasis-carousel oasis-carousel--wide" data-carousel>
+        <div class="oasis-carousel__track">
+          {oasisGallery.map((src: string) => (
+            <figure class="oasis-card oasis-card--paper">
+              <Image src={img(src)!} alt="Оазис спокойствия среди леса" widths={[400, 640, 960]} sizes="(max-width:900px) 80vw, 420px" format="webp" quality={87} loading="lazy" draggable={false} />
+            </figure>
+          ))}
         </div>
       </div>
-    </section>
-  )}
+    </div>
+  </section>
+
+  <!-- Блок 2.5: Что входит в ваш отдых (тёмно-синяя сцена, золотой заголовок, плашки в ряд) -->
+  <section class="sec sec--navy" id="whats-included">
+    <div class="wrap wrap--flush">
+      <div class="shead">
+        <h2 class="h2">{includedTitle}</h2>
+      </div>
+      <div class="aor-plates aor-plates--7">
+        {includedItems.map((it: any) => (
+          <div class="aor-plate">
+            <p class="aor-plate__t">{it.title}</p>
+            <p class="aor-plate__x">{it.text}</p>
+          </div>
+        ))}
+      </div>
+
+      <div class="included-extra">
+        <h3 class="aor-h3">{includedExtraTitle}</h3>
+        <p class="aor-strong" style="margin-top:0;">Гастрономический сервис <i>(единственная категория услуг, которая оплачивается отдельно)</i></p>
+        <p class="aor-p">Для тех случаев, когда хочется полностью забыть о бытовых вопросах:</p>
+        <ul class="aor-list included-extra__list">
+          {includedExtraList.map((li: string) => <li>{li}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
 
   <!-- Блок 3: Искусство отдыха (Шаги-таймлайн) -->
-  {art && !art.disabled && (
-    <section class="sec sec--art" id="art-of-rest">
-      <div class="wrap wrap--flush">
-        <div class="shead">
-          <h2 class="h2">{artTitle}</h2>
-          {artSubtitle && <p class="lead">{artSubtitle}</p>}
-        </div>
-        <div class="art-steps">
-          {artSteps.map((step: any) => (
-            <div class="art-step">
-              <div class="art-step__img">
-                <Image src={img(step.image)!} alt={step.title} widths={[400, 640, 800]} sizes="(max-width:860px) 50vw, 33vw" format="webp" quality={87} loading="lazy" />
-                <div class="art-step__overlay">
-                  <span class="art-step__num">{step.step}</span>
-                  <h3 class="art-step__title">{step.title}</h3>
-                  <p class="art-step__text">{step.text}</p>
-                </div>
+  <section class="sec sec--art" id="art-of-rest">
+    <div class="wrap wrap--flush">
+      <div class="shead">
+        <h2 class="h2">{artTitle}</h2>
+        <p class="lead">{artSubtitle}</p>
+      </div>
+      <div class="art-steps">
+        {artSteps.map((step: any) => (
+          <div class="art-step">
+            <div class="art-step__img">
+              <Image src={img(step.image)!} alt={step.title} widths={[400, 640, 800]} sizes="(max-width:860px) 50vw, 25vw" format="webp" quality={87} loading="lazy" />
+              <div class="art-step__overlay">
+                <span class="art-step__num">{step.step}</span>
+                <h3 class="art-step__title">{step.title}</h3>
+                <p class="art-step__text">{step.text}</p>
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
-    </section>
-  )}
+      <div class="art-cta">
+        <a class="btn btn--navy" href={withBase('/art-of-rest')}>Узнать как работает отдых</a>
+      </div>
+    </div>
+  </section>
 
   <!-- Блок 4: Дом среди леса — полноэкранный фото-слайдер, текст поверх фото на коричневом градиенте -->
   {houseForest && !houseForest.disabled && (
