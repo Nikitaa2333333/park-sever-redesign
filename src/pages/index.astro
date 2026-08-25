@@ -62,7 +62,7 @@ const routeHref = 'https://yandex.ru/navi?whatshere%5Bpoint%5D=37.8149250717716%
 // — oasis: контент инлайн в компоненте (правки заказчика 24.08), блок больше не читаем из JSON —
 const oasisTitle = 'Оазис спокойствия среди леса';
 const oasisParas = [
-  'Мы создали место, которого нам самим не хватало, отвечающее высшим требованиям к качеству жизни, а скрытые чеки отсутствуют. У нас предусмотрен удалённый сервис, где дом полностью укомплектован к вашему приезду по предзаказу, включая гастрономические сеты или создание особой атмосферы.',
+  'Мы создали место, которого нам самим не хватало, отвечающее высшим требованиям к качеству жизни, а скрытые чеки отсутствуют. У нас предусмотрен удалённый сервис, где дом полностью укомплектован к вашему приезду по предзаказу.',
   'Полная приватность в стеклянном «smart» доме посреди леса, где мир сужается только до двоих.',
   'Душа пространства — воспитанные золотистые ретриверы.',
   'Главное сокровище территории — благородные европейские олени английской генетики, живущие на собственных пастбищах фермы «Благородный Север».',
@@ -97,6 +97,12 @@ const includedExtraList = [
   'Праздничное оформление дома',
   'Услуги шеф-повара',
 ];
+// мобила (правка 25.08): вместо длинного вертикального списка — свайп-карточки
+// (тот же приём, что у «Искусство отдыха»), по исходному порядку письма: 3+2+2
+// пункта + отдельная карточка под доп. услуги
+const [wI1, wI2, wI7] = includedItemsWide;
+const [nI3, nI4, nI5, nI6] = includedItemsNarrow;
+const includedMobileCards = [[wI1, wI2, nI3], [nI4, nI5], [nI6, wI7]];
 
 // — art-of-rest: контент инлайн в компоненте (правки заказчика 24.08), блок больше не читаем из JSON.
 // Фото шагов 02–04 без изменений (те же кадры, что были); фото шага 01 — новое (пробка у выезда
@@ -281,30 +287,57 @@ const navMenu = [
       <div class="shead">
         <h2 class="h2">{includedTitle}</h2>
       </div>
-      <div class="included-items included-items--3">
-        {includedItemsWide.map((it: any) => (
-          <div class="included-item">
-            <p class="included-item__t">{it.title}</p>
-            <p class="included-item__x">{it.text}</p>
-          </div>
-        ))}
-      </div>
-      <div class="included-items included-items--4">
-        {includedItemsNarrow.map((it: any) => (
-          <div class="included-item">
-            <p class="included-item__t">{it.title}</p>
-            <p class="included-item__x">{it.text}</p>
-          </div>
-        ))}
+      <!-- десктоп/планшет: две сетки-ряда без плашек -->
+      <div class="included-desktop">
+        <div class="included-items included-items--3">
+          {includedItemsWide.map((it: any) => (
+            <div class="included-item">
+              <p class="included-item__t">{it.title}</p>
+              <p class="included-item__x">{it.text}</p>
+            </div>
+          ))}
+        </div>
+        <div class="included-items included-items--4">
+          {includedItemsNarrow.map((it: any) => (
+            <div class="included-item">
+              <p class="included-item__t">{it.title}</p>
+              <p class="included-item__x">{it.text}</p>
+            </div>
+          ))}
+        </div>
+
+        <div class="included-extra">
+          <h3 class="aor-h3">{includedExtraTitle}</h3>
+          <p class="aor-strong" style="margin-top:0;">Гастрономический сервис (единственная категория услуг, которая оплачивается отдельно)</p>
+          <p class="aor-p">Для тех случаев, когда хочется полностью забыть о бытовых вопросах:</p>
+          <ul class="aor-list included-extra__list">
+            {includedExtraList.map((li: string) => <li>{li}</li>)}
+          </ul>
+        </div>
       </div>
 
-      <div class="included-extra">
-        <h3 class="aor-h3">{includedExtraTitle}</h3>
-        <p class="aor-strong" style="margin-top:0;">Гастрономический сервис (единственная категория услуг, которая оплачивается отдельно)</p>
-        <p class="aor-p">Для тех случаев, когда хочется полностью забыть о бытовых вопросах:</p>
-        <ul class="aor-list included-extra__list">
-          {includedExtraList.map((li: string) => <li>{li}</li>)}
-        </ul>
+      <!-- мобила: свайп-карточки вместо длинного списка (заказчица 25.08) -->
+      <div class="included-mobile">
+        <div class="included-swipe">
+          {includedMobileCards.map((cardItems: any[]) => (
+            <div class="included-card">
+              {cardItems.map((it: any) => (
+                <div class="included-card__item">
+                  <p class="included-card__t">{it.title}</p>
+                  <p class="included-card__x">{it.text}</p>
+                </div>
+              ))}
+            </div>
+          ))}
+          <div class="included-card">
+            <h3 class="included-card__extra-h">{includedExtraTitle}</h3>
+            <p class="included-card__extra-strong">Гастрономический сервис <span>(единственная категория услуг, которая оплачивается отдельно)</span></p>
+            <p class="included-card__extra-p">Для тех случаев, когда хочется полностью забыть о бытовых вопросах:</p>
+            <ul class="included-card__extra-list">
+              {includedExtraList.map((li: string) => <li>{li}</li>)}
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </section>
