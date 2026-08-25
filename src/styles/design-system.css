@@ -952,7 +952,7 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
     grid-template-columns: none;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
-    gap: 14px;
+    gap: 0;
     margin: 24px -32px 0;
     padding: 0 32px;
     -webkit-overflow-scrolling: touch;
@@ -1099,9 +1099,10 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
    карусель фото прижата к плашке (заказчик 2026-07-09) */
 @media (max-width:640px){
   .oasis-layout{ gap:6px; }
-  .oasis-paper{ margin:0 -28px; padding:36px 26px 42px; }
+  .oasis-paper{ margin:0 -28px; padding:48px 26px 56px; }
   .oasis-chips{ font-size:24px; }
-  .oasis-carousel--wide .oasis-carousel__track{ padding:10px 4px; }
+  .oasis-carousel--wide .oasis-carousel__track{ padding:0 4px 10px; }
+  .oasis-carousel--wide::before{ display:none; }   /* левый фейд не нужен: карусель — первый элемент, слева ничего не «доедает» (заказчик 24.08) */
 }
 
 /* зерно бумаги поверх тёмной сцены.
@@ -1210,6 +1211,12 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 @media (max-width: 760px){
   .oasis-card{ flex-basis:82%; }   /* одна карточка + явный край следующей */
   .oasis-carousel--wide .oasis-card{ flex-basis:80%; }
+}
+/* мобила (правка 24.08): карточки «Оазиса» крупнее, «Атмосферы» — как у «Оазиса»
+   (было мельче — на телефоне читалось как криво обрезанные соседние фото) */
+@media (max-width: 640px){
+  .oasis-carousel--wide .oasis-card{ flex-basis:90%; }
+  .oasis-card--sm{ flex-basis:82%; }
 }
 
 /* «Атмосфера для двоих» — та же карусель-«фотокарточки», но мельче.
