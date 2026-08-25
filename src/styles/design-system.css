@@ -78,7 +78,10 @@ a{ color:inherit; text-decoration:none; }
 /* ── контейнер / секции (много воздуха, без теней) ──── */
 .wrap{ max-width:var(--wrap); margin:0 auto; padding:0 32px; }
 .wrap--narrow{ max-width:880px; }   /* узкий контейнер для блока «Дом» (инструмент, не центр) */
-.wrap--flush{ max-width:none; margin-left:0; }   /* прижат к левой линии экрана (как hero): контент стартует в 32px от края, тянется во всю ширину */
+.wrap--flush{ max-width:none; margin-left:0; margin-right:0; width:100%; }   /* прижат к левой линии экрана (как hero): контент стартует в 32px от края, тянется во всю ширину.
+  margin-right явный (не auto): унаследованный из .wrap margin:0 auto в норм. блочном потоке гасится сам, но внутри flex-родителя
+  (например #atmosphere{display:flex}) auto-margин на кросс-оси не гасится, а «съедает» свободное место и СЖИМАЕТ .wrap--flush —
+  из-за этого правый full-bleed (margin-right:-32px у карусели внутри) не дотягивался до края экрана (баг найден 25.08). */
 .wrap--left{ margin-left:0; }   /* та же левая линия 32px, но ширина ограничена 1200px (контент не full-bleed) */
 .sec{ padding:56px 0; }
 .sec--tight{ padding-top:0; }
