@@ -78,7 +78,10 @@ a{ color:inherit; text-decoration:none; }
 /* ── контейнер / секции (много воздуха, без теней) ──── */
 .wrap{ max-width:var(--wrap); margin:0 auto; padding:0 32px; }
 .wrap--narrow{ max-width:880px; }   /* узкий контейнер для блока «Дом» (инструмент, не центр) */
-.wrap--flush{ max-width:none; margin-left:0; }   /* прижат к левой линии экрана (как hero): контент стартует в 32px от края, тянется во всю ширину */
+.wrap--flush{ max-width:none; margin-left:0; margin-right:0; width:100%; }   /* прижат к левой линии экрана (как hero): контент стартует в 32px от края, тянется во всю ширину.
+  margin-right явный (не auto): унаследованный из .wrap margin:0 auto в норм. блочном потоке гасится сам, но внутри flex-родителя
+  (например #atmosphere{display:flex}) auto-margин на кросс-оси не гасится, а «съедает» свободное место и СЖИМАЕТ .wrap--flush —
+  из-за этого правый full-bleed (margin-right:-32px у карусели внутри) не дотягивался до края экрана (баг найден 25.08). */
 .wrap--left{ margin-left:0; }   /* та же левая линия 32px, но ширина ограничена 1200px (контент не full-bleed) */
 .sec{ padding:56px 0; }
 .sec--tight{ padding-top:0; }
@@ -1750,14 +1753,18 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 @media(max-width:520px){ .aor-plates, .aor-plates--5, .aor-plates--3{ grid-template-columns:1fr; } }
 @media(max-width:900px){ .aor-plates--3{ grid-template-columns:1fr; } }
 
-/* Блок «Что входит в ваш отдых» (главная, правка 24.08) — золотой заголовок на navy-сцене,
-   плашки в ряд (узко, некрупно — 7 штук), ниже наборный текст про гастрономический сервис. */
+/* Блок «Что входит в ваш отдых» (главная, правка 24.08/25.08) — золотой заголовок на navy-сцене,
+   7 колонок текста БЕЗ плашек-коробок (заказчица: неровная высота карточек из-за разной длины
+   текста читалась как «недозаполненные коробки» — убрали фон/паддинг, разделитель между
+   колонками — тонкий золотой штрих над заголовком, тот же приём, что маркер списков сайта). */
 #whats-included .h2{ color:var(--gold-l); }
-.aor-plates--7{ grid-template-columns:repeat(7,1fr); gap:14px; margin-top:32px; }
-.aor-plates--7 .aor-plate{ padding:18px 16px; }
-@media(max-width:1100px){ .aor-plates--7{ grid-template-columns:repeat(4,1fr); } }
-@media(max-width:640px){ .aor-plates--7{ grid-template-columns:repeat(2,1fr); } }
-@media(max-width:420px){ .aor-plates--7{ grid-template-columns:1fr; } }
+.included-items{ display:grid; grid-template-columns:repeat(7,1fr); gap:28px; margin-top:36px; align-items:start; }
+.included-item__rule{ display:block; width:28px; height:2px; background:var(--gold-l); margin-bottom:16px; }
+.included-item__t{ font-family:var(--font-head); font-weight:600; font-size:18px; line-height:1.35; color:#fff; margin:0 0 10px; }
+.included-item__x{ font-family:var(--font-body); font-weight:500; font-size:16px; line-height:1.5; color:#fff; margin:0; }
+@media(max-width:1100px){ .included-items{ grid-template-columns:repeat(4,1fr); row-gap:32px; } }
+@media(max-width:640px){ .included-items{ grid-template-columns:repeat(2,1fr); } }
+@media(max-width:420px){ .included-items{ grid-template-columns:1fr; } }
 .included-extra{ max-width:640px; margin:0 auto; }
 .included-extra__list{ max-width:380px; }
 
