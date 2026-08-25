@@ -1758,13 +1758,25 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
    текста читалась как «недозаполненные коробки» — убрали фон/паддинг, разделитель между
    колонками — тонкий золотой штрих над заголовком, тот же приём, что маркер списков сайта). */
 #whats-included .h2{ color:var(--gold-l); }
-.included-items{ display:grid; grid-template-columns:repeat(7,1fr); gap:28px; margin-top:36px; align-items:start; }
-.included-item__rule{ display:block; width:28px; height:2px; background:var(--gold-l); margin-bottom:16px; }
+/* Два ряда, подобранные под длину текста (заказчица 25.08: последний ряд оставался
+   одиноким/обрезанным на вид) — ряд с длинными описаниями: 3 широкие колонки;
+   ряд с короткими: 4 узкие. 3+4=7, оба ряда заполнены на всю ширину. */
+.included-items{ display:grid; gap:36px 40px; align-items:stretch; }
+.included-items--3{ grid-template-columns:repeat(3,1fr); margin-top:36px; }
+.included-items--4{ grid-template-columns:repeat(4,1fr); margin-top:36px; }
+.included-item{ padding:0 28px; border-left:1px solid rgba(255,255,255,.18); }
+.included-items--3 .included-item:nth-child(3n+1){ border-left:0; padding-left:0; }
+.included-items--4 .included-item:nth-child(4n+1){ border-left:0; padding-left:0; }
 .included-item__t{ font-family:var(--font-head); font-weight:600; font-size:18px; line-height:1.35; color:#fff; margin:0 0 10px; }
 .included-item__x{ font-family:var(--font-body); font-weight:500; font-size:16px; line-height:1.5; color:#fff; margin:0; }
-@media(max-width:1100px){ .included-items{ grid-template-columns:repeat(4,1fr); row-gap:32px; } }
-@media(max-width:640px){ .included-items{ grid-template-columns:repeat(2,1fr); } }
-@media(max-width:420px){ .included-items{ grid-template-columns:1fr; } }
+@media(max-width:900px){
+  .included-items--3, .included-items--4{ grid-template-columns:repeat(2,1fr); }
+  .included-item:nth-child(2n+1){ border-left:0; padding-left:0; }
+}
+@media(max-width:480px){
+  .included-items--3, .included-items--4{ grid-template-columns:1fr; }
+  .included-item{ border-left:0; padding-left:0; }
+}
 .included-extra{ max-width:640px; margin:0 auto; }
 .included-extra__list{ max-width:380px; }
 
