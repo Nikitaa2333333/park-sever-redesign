@@ -270,17 +270,18 @@ const navMenu = [
     </div>
   </section>
 
-  <!-- Блок 2.5: Что входит в ваш отдых (тёмно-синяя сцена, золотой заголовок, плашки в ряд) -->
+  <!-- Блок 2.5: Что входит в ваш отдых (тёмно-синяя сцена, золотой заголовок, колонки текста без плашек) -->
   <section class="sec sec--navy" id="whats-included">
     <div class="wrap wrap--flush">
       <div class="shead">
         <h2 class="h2">{includedTitle}</h2>
       </div>
-      <div class="aor-plates aor-plates--7">
+      <div class="included-items">
         {includedItems.map((it: any) => (
-          <div class="aor-plate">
-            <p class="aor-plate__t">{it.title}</p>
-            <p class="aor-plate__x">{it.text}</p>
+          <div class="included-item">
+            <span class="included-item__rule"></span>
+            <p class="included-item__t">{it.title}</p>
+            <p class="included-item__x">{it.text}</p>
           </div>
         ))}
       </div>
