@@ -1,0 +1,493 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import LogoMark from '../../components/LogoMark.astro';
+import { site, withBase } from '../../lib/content';
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+// «Дополнительные услуги» — отдельная страница-каталог (правка заказчицы 25.08).
+// Контент инлайн (не JSON) — заказчица прямо сказала, что будет часто менять.
+// Фото есть пока только для «Сервировки» (вытащены из pptx заказчицы) — карточки
+// остальных категорий временно с плейсхолдером-номером; когда пришлют фото,
+// добавить `photo:` в объект категории — рендер уже это умеет.
+const imgAssets = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/images/services/*.{jpg,jpeg,png}',
+  { eager: true },
+);
+const img = (name: string) => imgAssets[`/src/assets/images/services/${name}`]?.default;
+const c = site.contacts;
+const booking = site.contacts.bookingHref;
+
+const socialLabels: Record<string, string> = {
+  vk: 'ВКонтакте', whatsapp: 'WhatsApp', tiktok: 'TikTok',
+  instagram: 'Instagram', telegram: 'Telegram', youtube: 'YouTube', rutube: 'RUTUBE',
+};
+
+const navMenu = [
+  { t: 'Главная', href: withBase('/') },
+  { t: 'Дома', href: withBase('/accommodation/house-1') },
+  { t: 'Искусство отдыха', href: withBase('/art-of-rest') },
+  { t: 'Атмосфера для двоих', href: withBase('/atmosphere/') },
+  { t: 'Наш мир', href: withBase('/our-world/') },
+  { t: 'Истории', href: withBase('/stories/') },
+];
+
+// — данные по категориям, для которых заказчица прислала полную информацию —
+const balloons = [
+  { name: 'Шары «Сердце», 15 шт', price: '5 600 ₽' },
+  { name: 'Шары 15 шт, золото', price: '3 400 ₽' },
+  { name: 'Шары 15 шт, красные пастель', price: '2 900 ₽' },
+];
+const cakeWeights = [
+  { weight: '400 г', price: '3 000 ₽' },
+  { weight: '800 г', price: '4 000 ₽' },
+];
+const cakeFlavors = ['Ваниль с клубникой', 'Шоколадный с вишней', 'Персик-ваниль'];
+// состав + фото — из второго pptx заказчицы (25.08, «Сервировка»). По её просьбе
+// не пишем «подходит для» (это было в файле для каждого набора) — только состав.
+// «Мужская шалость» в исходном списке заказчицы (из голосового) не упоминалась,
+// но есть в файле с полным составом и ценой — добавили как есть.
+const servings = [
+  {
+    name: 'Бордовая роза', price: '1 800 ₽', photo: 'serving-1-rose.jpg',
+    items: [
+      'Сервировка стола (бокалы, тарелки, столовые приборы согласно фото)',
+      'Оформление из салфеток «Роза на сердце» на тарелках',
+      'Оформление бордовыми лентами и бантами, открытками согласно фото',
+      'Свечи (4 высокие тонкие, 2 чайные, 1 красная на подставке)',
+      'Блюдо с конфетами (рафаэлло)',
+      'Подушка «красное сердце» на кровати в спальне',
+      'Надувная фигура «Love» в спальне',
+    ],
+  },
+  {
+    name: 'Фруктовая нежность', price: '4 100 ₽', photo: 'serving-2-fruit.jpg',
+    items: [
+      'Сервировка стола (бокалы, тарелки, столовые приборы согласно фото)',
+      'Оформление из салфеток «платье с бантом» на тарелках',
+      'Свечи (4 высокие тонкие, 2 чайные)',
+      'На прикроватных полках — два рожка из тканевых салфеток с минибукетами из сухих цветов и с конфетами (рафаэлло)',
+      'Фрукты и ягоды на тарелках (клубника, черешня, мандарины, яблоки, нектарины, бананы, виноград чёрный и зелёный) — список уточняется по сезону и наличию',
+    ],
+  },
+  {
+    name: 'Свидание на Руси', price: '2 800 ₽', photo: 'serving-3-rus.jpg',
+    items: [
+      'Сервировка стола (бокалы, тарелки, столовые приборы и салфетки согласно фото)',
+      'Птицы из салфеток на столе и два платка на стульях',
+      'Свечи (4 высокие тонкие, 2 чайные)',
+      'В креманках: сметана и варенье (вкус варенья уточняется по факту)',
+      'Блюдо с блинчиками (без начинки)',
+      'Два конвертика с блинчиками на тарелках (начинка уточняется по согласованию)',
+    ],
+  },
+  {
+    name: 'Мужская шалость: карты, сигареты и сливки', price: '3 000 ₽', photo: 'serving-4-mens.jpg',
+    items: [
+      'Сервировка стола (бокалы, тарелки, столовые приборы согласно фото)',
+      'Оформление из салфеток «пиджак для него и для неё» на тарелках',
+      'Креманки со взбитыми сливками и с клубникой',
+      'Тарелка со съедобными сигаретами',
+      'Свечи (4 высокие тонкие, 2 чайные)',
+      'Карты игральные «Советский pin up»',
+    ],
+  },
+  {
+    name: 'Особенный день для нас', price: '7 500 ₽', photo: 'serving-5-special.jpg',
+    items: [
+      'Сервировка стола (бокалы, тарелки, столовые приборы согласно фото)',
+      'Свечи (4 высокие тонкие, 2 чайные)',
+      'Брускеты, два вида: с моцареллой, черри и джемом слива-базилик; запечённый бри с джемом из инжира',
+      'Салат — сочный томат с рукколой и сыром «Страчателла»',
+      'Фруктовая тарелка: гранат, зелёный виноград, мандарин, яблоко, банан',
+      'На десерт — малиновое пирожное «Сердце»',
+    ],
+  },
+  {
+    name: 'Гастрономический сет «У панорамного окна»', price: '5 100 ₽', photo: 'serving-6-window.jpg',
+    items: [
+      'Сервировка стола (бокалы, тарелки, столовые приборы)',
+      'Свечи (2 высокие, 2 чайные)',
+      'Сырно-мясная тарелка: сыры (с белой плесенью, с голубой плесенью, маасдам, моцарелла), мясное ассорти (шейка, балык, бекон), сырокопчёные колбасы (брауншвейгская, велкомовская, миланская)',
+      'Овощная тарелка: салат листовой, зелень (лук, укроп, петрушка), помидоры черри, огурцы, редис, сладкий перец',
+      'Хлебная тарелка: багет ржаной чесночный, чиабатта, булочки пшеничные, хлеб бородинский',
+    ],
+  },
+];
+// отдельные блюда «в розницу» — из тех же слайдов файла (можно заказать без набора)
+const alacarte = [
+  { name: 'Фруктовая тарелка', desc: 'Мандарины, яблоки, бананы, виноград чёрный и зелёный и т.д. Список уточняется по сезону и наличию.', price: '1 700 ₽' },
+  { name: 'Блины', desc: '14–16 шт, часть подпечённые, со сметаной и вареньем/сгущёнкой на выбор.', price: '1 200 ₽' },
+  { name: 'Брускеты, два вида', desc: 'С моцареллой, черри и джемом слива-базилик; запечённый бри с джемом из инжира.', price: '1 600 ₽' },
+  { name: 'Салат', desc: 'Сочный томат с рукколой и сыром «Страчателла» (за 2 шт).', price: '1 200 ₽' },
+  { name: 'Сырно-мясная тарелка', desc: 'Сыры (с белой плесенью, с голубой плесенью, маасдам, моцарелла), мясное ассорти (шейка, балык, бекон), сырокопчёные колбасы.', price: '1 900 ₽' },
+  { name: 'Овощная тарелка', desc: 'Салат листовой, ассорти зелени (лук, укроп, петрушка), помидоры черри, огурцы, редис, сладкий перец.', price: '1 200 ₽' },
+  { name: 'Сырная тарелка', desc: 'Сыры (с белой плесенью, с голубой плесенью, маасдам, моцарелла), мёд, грецкие орехи, виноград.', price: '1 900 ₽' },
+  { name: 'Мясная тарелка', desc: 'Мясное ассорти (шейка, балык, бекон), сырокопчёные колбасы, бекон с/к, маслины.', price: '1 200 ₽' },
+  { name: 'Орехи ассорти', desc: 'Миндаль, кешью, фундук, арахис — жареные, фисташки.', price: '1 300 ₽' },
+  { name: 'Хлебная тарелка', desc: 'Багет ржаной чесночный, чиабатта, булочка пшеничная (2 шт), хлеб бородинский.', price: '500 ₽' },
+];
+
+// — гриль-меню, супы, шеф-повар: из pptx заказчицы (25.08) —
+const grillSets = [
+  {
+    emoji: '🥩', title: 'Северный гриль', price: '7 500 ₽',
+    desc: 'Классика отдыха за городом.',
+    items: [
+      'Замаринованное мясо: свиная шейка, куриные шашлычки на шпажках',
+      'Свежие овощи на стол: красный лук, помидоры, огурцы, зелень',
+      'Овощи для гриля: красный перец, кабачок, помидоры, грибы',
+      'Лаваш — 2 шт',
+      'Соусы: BBQ, брусничный',
+    ],
+  },
+  {
+    emoji: '🔥', title: 'Вечер у костра', price: '5 000 ₽',
+    desc: 'Для неспешного вечера на свежем воздухе.',
+    items: [
+      'Мясо: колбаски для гриля, куриные крылья (замаринованные)',
+      'Картофель для запекания (предварительно отваренный)',
+      'Свежие овощи: помидоры, огурцы, красный лук, зелень',
+      'Багет — 1 шт',
+      'Соусы: медово-горчичный, горчица',
+      'Маршмеллоу для костра',
+    ],
+  },
+  {
+    emoji: '🐑', title: 'Огонь и дым', price: '6 000 ₽',
+    desc: 'Для тех, кто любит насыщенный вкус и аромат настоящего огня.',
+    items: [
+      'Люля-кебаб из баранины — 5 шт',
+      'Бифштекс из говядины — 6 шт',
+      'Свежие овощи: помидоры, огурцы, красный лук, зелень',
+      'Лепёшка — 1 шт',
+      'Соусы: острая аджика, соус 4 перца',
+    ],
+  },
+  {
+    emoji: '🐟', title: 'Вечер на террасе', price: '8 500 ₽',
+    desc: 'Лёгкий ужин с видом на лес — рыба на гриле, овощи и неспешный вечер на террасе среди тишины и природы.',
+    items: [
+      'На выбор: стейки форели (4 шт) или дорадо (2 шт)',
+      'Картофель для запекания в фольге',
+      'Овощи для гриля: красный перец, кабачок, помидоры',
+      'Багет — 1 шт',
+      'Соус тар-тар',
+    ],
+  },
+];
+// в присланном pptx у «Борща» и «Куриного бульона» было скопировано описание
+// горохового супа («суп с копчёностями») — явная опечатка заказчицы, здесь не
+// повторяем неверный текст, оставили общее для всех троих (готовится заранее,
+// объём, хранение) — состав уточнить у заказчицы
+const soups = [
+  { title: 'Суп гороховый', price: '3 500 ₽', desc: 'Гороховый суп с копчёностями. Готовится заранее и ждёт в холодильнике к приезду, в кастрюле. Объём 2–2,5 л.' },
+  { title: 'Борщ', price: '3 500 ₽', desc: 'Готовится заранее и ждёт в холодильнике к приезду, в кастрюле. Объём 2–2,5 л.' },
+  { title: 'Куриный бульон', price: '2 500 ₽', desc: 'Готовится заранее и ждёт в холодильнике к приезду, в кастрюле. Объём 2–2,5 л.' },
+];
+// в pptx цена услуги указана дважды по-разному (3 500 ₽ и 3 000 ₽/вечер) — до
+// уточнения у заказчицы цену на сайте не показываем, только описание
+const chefDesc = 'Шеф-повар готовит и подаёт блюда на мангале в течение вечера — продукты по выбранному гриль-меню уже будут ждать вас к заселению.';
+
+// 7 категорий — 4 в первом ряду, 3 во втором (без «сироты», как «Что входит» на главной)
+const categoriesTop = [
+  { id: 'grill', num: '01', title: 'Гриль-меню', teaser: 'от 5 000 ₽', ready: true },
+  { id: 'soups', num: '02', title: 'Супы', teaser: 'от 2 500 ₽', ready: true },
+  { id: 'chef', num: '03', title: 'Шеф-повар для мангала', teaser: 'Уточняем цену', ready: true },
+  { id: 'balloons', num: '04', title: 'Оформление шарами', teaser: 'от 2 900 ₽', ready: true },
+];
+const categoriesBottom = [
+  { id: 'cake', num: '05', title: 'Торт', teaser: 'от 3 000 ₽', ready: true },
+  { id: 'serving', num: '06', title: 'Сервировка', teaser: '6 вариантов', ready: true, photo: 'serving-1-rose.jpg' },
+  { id: 'custom', num: '07', title: 'Индивидуальное оформление', teaser: 'Скоро добавим', ready: false },
+];
+const allCategories = [...categoriesTop, ...categoriesBottom];
+---
+<SiteLayout title="Дополнительные услуги — Парк Север">
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="wrap">
+      <a class="nav__logo" href={withBase('/')}><LogoMark class="nav__logo-mark" />Парк Север</a>
+      <button class="nav__toggle" aria-label="Открыть меню">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav__menu">
+        {navMenu.map((m) => <a href={m.href}>{m.t}</a>)}
+      </div>
+      <a class="nav__book" href={booking}>Забронировать</a>
+    </div>
+  </nav>
+
+  <section class="sec" id="services">
+    <div class="wrap wrap--flush">
+      <div class="shead" style="margin-bottom:8px;">
+        <h1 class="h1">Дополнительные услуги</h1>
+        <p class="lead" style="text-align:center;">Гастрономический сервис — единственная категория услуг, которая оплачивается отдельно. Для тех случаев, когда хочется полностью забыть о бытовых вопросах.</p>
+      </div>
+
+      <!-- десктоп/планшет: 4 + 3, без «сироты» в последнем ряду -->
+      <div class="svc-desktop">
+        <div class="svc-steps svc-steps--4">
+          {categoriesTop.map((cat) => (
+            <button class="svc-card" type="button" data-modal-open={`svc-${cat.id}`}>
+              <span class="svc-card__ph">{cat.num}</span>
+              <span class="svc-card__body">
+                <span class="svc-card__t">{cat.title}</span>
+                <span class="svc-card__x">{cat.teaser}</span>
+              </span>
+            </button>
+          ))}
+        </div>
+        <div class="svc-steps svc-steps--3">
+          {categoriesBottom.map((cat: any) => cat.photo ? (
+            <button class="svc-card" type="button" data-modal-open={`svc-${cat.id}`}>
+              <span class="art-step__img">
+                <Image src={img(cat.photo)!} alt={cat.title} widths={[400, 640, 800]} sizes="(max-width:900px) 50vw, 33vw" format="webp" quality={87} loading="lazy" />
+                <span class="art-step__overlay">
+                  <span class="art-step__num">{cat.num}</span>
+                  <span class="art-step__title">{cat.title}</span>
+                  <span class="art-step__text">{cat.teaser}</span>
+                </span>
+              </span>
+            </button>
+          ) : (
+            <button class="svc-card" type="button" data-modal-open={`svc-${cat.id}`}>
+              <span class="svc-card__ph">{cat.num}</span>
+              <span class="svc-card__body">
+                <span class="svc-card__t">{cat.title}</span>
+                <span class="svc-card__x">{cat.teaser}</span>
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <!-- мобила: свайп в сторону, тот же приём, что у «Искусство отдыха» -->
+      <div class="svc-mobile">
+        <div class="svc-swipe">
+          {allCategories.map((cat: any) => cat.photo ? (
+            <button class="svc-card svc-card--swipe" type="button" data-modal-open={`svc-${cat.id}`}>
+              <span class="art-step__img">
+                <Image src={img(cat.photo)!} alt={cat.title} widths={[400, 640, 800]} sizes="72vw" format="webp" quality={87} loading="lazy" />
+                <span class="art-step__overlay">
+                  <span class="art-step__num">{cat.num}</span>
+                  <span class="art-step__title">{cat.title}</span>
+                  <span class="art-step__text">{cat.teaser}</span>
+                </span>
+              </span>
+            </button>
+          ) : (
+            <button class="svc-card svc-card--swipe" type="button" data-modal-open={`svc-${cat.id}`}>
+              <span class="svc-card__ph">{cat.num}</span>
+              <span class="svc-card__body">
+                <span class="svc-card__t">{cat.title}</span>
+                <span class="svc-card__x">{cat.teaser}</span>
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="foot">
+    <div class="wrap wrap--flush">
+      <div class="foot__cols">
+        <div>
+          <div class="foot__brand">Парк Север</div>
+          <p class="foot__about">Пространство на краю леса для тех, кто выбирает тишину. Приватный дом без потока людей и лишнего, на территории 12,4 га. Без соседей. Только природа, животные и ощущение, что никуда не нужно спешить.</p>
+          <div class="socials">
+            {site.socials.map((s: any) => <a href={s.href} target="_blank" rel="noopener noreferrer">{socialLabels[s.type] ?? s.type}</a>)}
+          </div>
+        </div>
+        <div class="foot__col">
+          <h4>Разделы</h4>
+          {navMenu.map((m) => <a href={m.href}>{m.t}</a>)}
+        </div>
+        <div class="foot__col">
+          <h4>Контакты</h4>
+          <a href={c.phoneHref}>{c.phone}</a>
+          <a href={c.emailHref}>{c.email}</a>
+          <a href={c.whatsapp} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+          <span class="foot__addr">{c.address}</span>
+        </div>
+        <div class="foot__col">
+          <h4>Документы</h4>
+          <a href={withBase('/legal-information')}>Правовая информация</a>
+          <a href={withBase('/files/Договор-оферта.pdf')} target="_blank" rel="noopener noreferrer">Договор-оферта (PDF)</a>
+          <a href={withBase('/files/Правила-проживания.pdf')} target="_blank" rel="noopener noreferrer">Правила проживания (PDF)</a>
+          <a href={withBase('/files/Политика-конфиденциальности.pdf')} target="_blank" rel="noopener noreferrer">Политика конфиденциальности (PDF)</a>
+        </div>
+      </div>
+      <hr class="foot__rule" />
+      <div class="foot__cp">© {site.company} · {site.requisites.entity} · {site.requisites.note}</div>
+    </div>
+  </footer>
+
+  <!-- МОДАЛЫ: по одному на категорию, механика — как «Полная комплектация дома» -->
+  <div class="modal" id="svc-grill" aria-hidden="true">
+    <div class="modal__scrim" data-modal-close></div>
+    <div class="modal__panel" role="dialog" aria-modal="true" aria-label="Гриль-меню">
+      <button class="modal__close" data-modal-close aria-label="Закрыть">&times;</button>
+      <div class="modal__head"><h3 class="modal__title">Гриль-меню</h3></div>
+      {grillSets.map((s) => (
+        <>
+          <h4 class="modal__h">{s.emoji} {s.title} — {s.price}</h4>
+          <p class="svc-modal__note" style="margin-bottom:10px;">{s.desc}</p>
+          <ul class="modal__list">
+            {s.items.map((it: string) => <li>{it}</li>)}
+          </ul>
+        </>
+      ))}
+    </div>
+  </div>
+
+  <div class="modal" id="svc-soups" aria-hidden="true">
+    <div class="modal__scrim" data-modal-close></div>
+    <div class="modal__panel" role="dialog" aria-modal="true" aria-label="Супы">
+      <button class="modal__close" data-modal-close aria-label="Закрыть">&times;</button>
+      <div class="modal__head"><h3 class="modal__title">Супы</h3></div>
+      {soups.map((s) => (
+        <>
+          <h4 class="modal__h">{s.title} — {s.price}</h4>
+          <p class="svc-modal__note">{s.desc}</p>
+        </>
+      ))}
+    </div>
+  </div>
+
+  <div class="modal" id="svc-chef" aria-hidden="true">
+    <div class="modal__scrim" data-modal-close></div>
+    <div class="modal__panel" role="dialog" aria-modal="true" aria-label="Шеф-повар для мангала">
+      <button class="modal__close" data-modal-close aria-label="Закрыть">&times;</button>
+      <div class="modal__head"><h3 class="modal__title">Шеф-повар для мангала</h3></div>
+      <p class="svc-modal__note">{chefDesc}</p>
+      <p class="svc-modal__note" style="margin-top:16px;">Стоимость уточняется.</p>
+    </div>
+  </div>
+
+  <div class="modal" id="svc-balloons" aria-hidden="true">
+    <div class="modal__scrim" data-modal-close></div>
+    <div class="modal__panel" role="dialog" aria-modal="true" aria-label="Оформление шарами">
+      <button class="modal__close" data-modal-close aria-label="Закрыть">&times;</button>
+      <div class="modal__head"><h3 class="modal__title">Оформление шарами</h3></div>
+      <ul class="modal__list">
+        {balloons.map((b) => <li><b>{b.name}</b> — {b.price}</li>)}
+      </ul>
+    </div>
+  </div>
+
+  <div class="modal" id="svc-cake" aria-hidden="true">
+    <div class="modal__scrim" data-modal-close></div>
+    <div class="modal__panel" role="dialog" aria-modal="true" aria-label="Торт">
+      <button class="modal__close" data-modal-close aria-label="Закрыть">&times;</button>
+      <div class="modal__head"><h3 class="modal__title">Торт</h3></div>
+      <h4 class="modal__h">Бенто-торт</h4>
+      <ul class="modal__list">
+        {cakeWeights.map((w) => <li>Вес {w.weight} — {w.price}</li>)}
+      </ul>
+      <h4 class="modal__h">3 вкуса на выбор</h4>
+      <ul class="modal__list">
+        {cakeFlavors.map((f) => <li>{f}</li>)}
+      </ul>
+    </div>
+  </div>
+
+  <div class="modal" id="svc-serving" aria-hidden="true">
+    <div class="modal__scrim" data-modal-close></div>
+    <div class="modal__panel" role="dialog" aria-modal="true" aria-label="Сервировка">
+      <button class="modal__close" data-modal-close aria-label="Закрыть">&times;</button>
+      <div class="modal__head"><h3 class="modal__title">Сервировка</h3></div>
+      {servings.map((s: any) => (
+        <div class="svc-serving-item">
+          <Image class="svc-serving-item__pic" src={img(s.photo)!} alt={s.name} widths={[400, 640, 960]} sizes="(max-width:560px) 94vw, 490px" format="webp" quality={87} loading="lazy" />
+          <h4 class="modal__h">{s.name} — {s.price}</h4>
+          <ul class="modal__list">
+            {s.items.map((it: string) => <li>{it}</li>)}
+          </ul>
+        </div>
+      ))}
+      <h4 class="modal__h" style="margin-top:36px;">Меню по блюдам — можно заказать отдельно</h4>
+      <ul class="modal__list">
+        {alacarte.map((d) => <li><b>{d.name}</b> — {d.price}. {d.desc}</li>)}
+      </ul>
+    </div>
+  </div>
+
+  <div class="modal" id="svc-custom" aria-hidden="true">
+    <div class="modal__scrim" data-modal-close></div>
+    <div class="modal__panel" role="dialog" aria-modal="true" aria-label="Индивидуальное оформление">
+      <button class="modal__close" data-modal-close aria-label="Закрыть">&times;</button>
+      <div class="modal__head"><h3 class="modal__title">Индивидуальное оформление</h3></div>
+      <p class="svc-modal__note">Условия уточняются — добавим подробности в ближайшее время.</p>
+    </div>
+  </div>
+
+  <style>
+    #services{ padding-top:calc(56px + 48px); }
+
+    /* ряд карточек-категорий: тот же ритм, что у «Искусство отдыха» на главной
+       (номер + заголовок), но пока без фото — заказчица пришлёт позже. */
+    .svc-steps{ display:grid; gap:22px; margin-top:28px; }
+    .svc-steps--4{ grid-template-columns:repeat(4,1fr); }
+    .svc-steps--3{ grid-template-columns:repeat(3,1fr); margin-top:22px; }
+    .svc-card{
+      display:flex; flex-direction:column; width:100%; text-align:left;
+      background:none; border:0; padding:0; font:inherit; color:inherit; cursor:pointer;
+    }
+    .svc-card__ph{
+      aspect-ratio:4/5; border:1px solid var(--hair-gold);
+      display:flex; align-items:center; justify-content:center;
+      font-family:var(--font-display); font-weight:400; font-size:44px; color:var(--gold-l);
+    }
+    .svc-card__body{ padding:16px 2px 0; }
+    .svc-card__t{ display:block; font-family:var(--font-head); font-weight:600; font-size:18px; line-height:1.3; color:var(--ink); margin:0 0 6px; }
+    .svc-card__x{ display:block; font-family:var(--font-body); font-weight:500; font-size:15px; color:var(--ink); }
+    @media(max-width:900px){ .svc-steps--4, .svc-steps--3{ grid-template-columns:repeat(2,1fr); } }
+
+    .svc-mobile{ display:none; }
+    .svc-swipe{
+      display:flex; overflow-x:auto; scroll-snap-type:x mandatory;
+      gap:16px; margin:28px -32px 0; padding:0 32px 4px;
+      -webkit-overflow-scrolling:touch;
+    }
+    .svc-card--swipe{ flex:0 0 60%; scroll-snap-align:start; }
+    @media(max-width:520px){
+      .svc-desktop{ display:none; }
+      .svc-mobile{ display:block; }
+      .svc-card--swipe{ flex-basis:72%; }
+    }
+
+    .svc-modal__note{ font-family:var(--font-body); font-weight:500; font-size:17px; line-height:1.5; color:var(--ink); }
+
+    /* фото внутри карточки-раскрытия «Сервировка» — чистый кадр, без рамки/тени (канон) */
+    .svc-serving-item{ margin-top:32px; }
+    .svc-serving-item:first-of-type{ margin-top:24px; }
+    .svc-serving-item__pic{ display:block; width:100%; height:auto; margin-bottom:14px; }
+  </style>
+
+  <script is:inline>
+    (function () {
+      document.querySelectorAll('[data-modal-open]').forEach((btn) => {
+        const id = btn.getAttribute('data-modal-open');
+        const modal = document.getElementById(id);
+        if (!modal) return;
+        btn.addEventListener('click', () => {
+          modal.classList.add('open');
+          modal.setAttribute('aria-hidden', 'false');
+          document.body.style.overflow = 'hidden';
+        });
+      });
+      const closeAll = () => {
+        document.querySelectorAll('.modal.open').forEach((m) => {
+          m.classList.remove('open');
+          m.setAttribute('aria-hidden', 'true');
+        });
+        document.body.style.overflow = '';
+      };
+      document.querySelectorAll('.modal [data-modal-close]').forEach((el) => el.addEventListener('click', closeAll));
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAll(); });
+    })();
+  </script>
+</SiteLayout>
