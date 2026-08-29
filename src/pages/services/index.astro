@@ -192,7 +192,7 @@ const chefDesc = 'Шеф-повар готовит и подаёт блюда н
 // 7 категорий — 4 в первом ряду, 3 во втором (без «сироты», как «Что входит» на главной)
 const categoriesTop = [
   { id: 'grill', num: '01', title: 'Гриль-меню', teaser: 'от 5 000 ₽', ready: true },
-  { id: 'soups', num: '02', title: 'Супы', teaser: 'от 2 500 ₽', ready: true },
+  { id: 'soups', num: '02', title: 'Супы', teaser: 'от 2 500 ₽', ready: true, photo: 'soup-1.jpg' },
   { id: 'chef', num: '03', title: 'Шеф-повар для мангала', teaser: 'Уточняем цену', ready: true },
   { id: 'balloons', num: '04', title: 'Оформление шарами', teaser: 'от 2 900 ₽', ready: true },
 ];
@@ -228,7 +228,18 @@ const allCategories = [...categoriesTop, ...categoriesBottom];
       <!-- десктоп/планшет: 4 + 3, без «сироты» в последнем ряду -->
       <div class="svc-desktop">
         <div class="svc-steps svc-steps--4">
-          {categoriesTop.map((cat) => (
+          {categoriesTop.map((cat: any) => cat.photo ? (
+            <button class="svc-card" type="button" data-modal-open={`svc-${cat.id}`}>
+              <span class="art-step__img">
+                <Image src={img(cat.photo)!} alt={cat.title} widths={[400, 640, 800]} sizes="(max-width:900px) 50vw, 25vw" format="webp" quality={87} loading="lazy" />
+                <span class="art-step__overlay">
+                  <span class="art-step__num">{cat.num}</span>
+                  <span class="art-step__title">{cat.title}</span>
+                  <span class="art-step__text">{cat.teaser}</span>
+                </span>
+              </span>
+            </button>
+          ) : (
             <button class="svc-card" type="button" data-modal-open={`svc-${cat.id}`}>
               <span class="svc-card__ph">{cat.num}</span>
               <span class="svc-card__body">
