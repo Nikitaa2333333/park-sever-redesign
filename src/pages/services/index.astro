@@ -1,0 +1,300 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import LogoMark from '../../components/LogoMark.astro';
+import { site, withBase } from '../../lib/content';
+
+// «Дополнительные услуги» — отдельная страница-каталог (правка заказчицы 25.08).
+// Контент инлайн (не JSON) — заказчица прямо сказала, что будет часто менять.
+// Фото пока нет ни по одной категории (ждём от заказчицы) — карточки временно
+// с плейсхолдером-номером вместо фото; когда пришлют фото, вставить в <Image>
+// по образцу art-step на главной.
+const c = site.contacts;
+const booking = site.contacts.bookingHref;
+
+const socialLabels: Record<string, string> = {
+  vk: 'ВКонтакте', whatsapp: 'WhatsApp', tiktok: 'TikTok',
+  instagram: 'Instagram', telegram: 'Telegram', youtube: 'YouTube', rutube: 'RUTUBE',
+};
+
+const navMenu = [
+  { t: 'Главная', href: withBase('/') },
+  { t: 'Дома', href: withBase('/accommodation/house-1') },
+  { t: 'Искусство отдыха', href: withBase('/art-of-rest') },
+  { t: 'Атмосфера для двоих', href: withBase('/atmosphere/') },
+  { t: 'Наш мир', href: withBase('/our-world/') },
+  { t: 'Истории', href: withBase('/stories/') },
+];
+
+// — данные по категориям, для которых заказчица прислала полную информацию —
+const balloons = [
+  { name: 'Шары «Сердце», 15 шт', price: '5 600 ₽' },
+  { name: 'Шары 15 шт, золото', price: '3 400 ₽' },
+  { name: 'Шары 15 шт, красные пастель', price: '2 900 ₽' },
+];
+const cakeWeights = [
+  { weight: '400 г', price: '3 000 ₽' },
+  { weight: '800 г', price: '4 000 ₽' },
+];
+const cakeFlavors = ['Ваниль с клубникой', 'Шоколадный с вишней', 'Персик-ваниль'];
+// состав каждого набора заказчица не прислала (просила писать «что входит», а не
+// «для кого») — пока только названия и цены, компоновку добавим, когда пришлют
+const servings = [
+  { name: 'Бордовая роза', price: '1 800 ₽' },
+  { name: 'Фруктовая нежность', price: '4 100 ₽' },
+  { name: 'Свидание на Руси', price: '2 800 ₽' },
+  { name: 'Особенный день для нас', price: '7 500 ₽' },
+  { name: 'Гастрономический сет «У панорамного окна»', price: '5 100 ₽' },
+];
+
+// 7 категорий — 4 в первом ряду, 3 во втором (без «сироты», как «Что входит» на главной)
+const categoriesTop = [
+  { id: 'grill', num: '01', title: 'Гриль-меню', teaser: 'Скоро добавим', ready: false },
+  { id: 'soups', num: '02', title: 'Супы', teaser: 'Скоро добавим', ready: false },
+  { id: 'chef', num: '03', title: 'Шеф-повар для мангала', teaser: 'Скоро добавим', ready: false },
+  { id: 'balloons', num: '04', title: 'Оформление шарами', teaser: 'от 2 900 ₽', ready: true },
+];
+const categoriesBottom = [
+  { id: 'cake', num: '05', title: 'Торт', teaser: 'от 3 000 ₽', ready: true },
+  { id: 'serving', num: '06', title: 'Сервировка', teaser: '5 вариантов', ready: true },
+  { id: 'custom', num: '07', title: 'Индивидуальное оформление', teaser: 'Скоро добавим', ready: false },
+];
+const allCategories = [...categoriesTop, ...categoriesBottom];
+---
+<SiteLayout title="Дополнительные услуги — Парк Север">
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="wrap">
+      <a class="nav__logo" href={withBase('/')}><LogoMark class="nav__logo-mark" />Парк Север</a>
+      <button class="nav__toggle" aria-label="Открыть меню">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav__menu">
+        {navMenu.map((m) => <a href={m.href}>{m.t}</a>)}
+      </div>
+      <a class="nav__book" href={booking}>Забронировать</a>
+    </div>
+  </nav>
+
+  <section class="sec" id="services">
+    <div class="wrap wrap--flush">
+      <div class="shead" style="margin-bottom:8px;">
+        <h1 class="h1">Дополнительные услуги</h1>
+        <p class="lead" style="text-align:center;">Гастрономический сервис — единственная категория услуг, которая оплачивается отдельно. Для тех случаев, когда хочется полностью забыть о бытовых вопросах.</p>
+      </div>
+
+      <!-- десктоп/планшет: 4 + 3, без «сироты» в последнем ряду -->
+      <div class="svc-desktop">
+        <div class="svc-steps svc-steps--4">
+          {categoriesTop.map((cat) => (
+            <button class="svc-card" type="button" data-modal-open={`svc-${cat.id}`}>
+              <span class="svc-card__ph">{cat.num}</span>
+              <span class="svc-card__body">
+                <span class="svc-card__t">{cat.title}</span>
+                <span class="svc-card__x">{cat.teaser}</span>
+              </span>
+            </button>
+          ))}
+        </div>
+        <div class="svc-steps svc-steps--3">
+          {categoriesBottom.map((cat) => (
+            <button class="svc-card" type="button" data-modal-open={`svc-${cat.id}`}>
+              <span class="svc-card__ph">{cat.num}</span>
+              <span class="svc-card__body">
+                <span class="svc-card__t">{cat.title}</span>
+                <span class="svc-card__x">{cat.teaser}</span>
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <!-- мобила: свайп в сторону, тот же приём, что у «Искусство отдыха» -->
+      <div class="svc-mobile">
+        <div class="svc-swipe">
+          {allCategories.map((cat) => (
+            <button class="svc-card svc-card--swipe" type="button" data-modal-open={`svc-${cat.id}`}>
+              <span class="svc-card__ph">{cat.num}</span>
+              <span class="svc-card__body">
+                <span class="svc-card__t">{cat.title}</span>
+                <span class="svc-card__x">{cat.teaser}</span>
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="foot">
+    <div class="wrap wrap--flush">
+      <div class="foot__cols">
+        <div>
+          <div class="foot__brand">Парк Север</div>
+          <p class="foot__about">Пространство на краю леса для тех, кто выбирает тишину. Приватный дом без потока людей и лишнего, на территории 12,4 га. Без соседей. Только природа, животные и ощущение, что никуда не нужно спешить.</p>
+          <div class="socials">
+            {site.socials.map((s: any) => <a href={s.href} target="_blank" rel="noopener noreferrer">{socialLabels[s.type] ?? s.type}</a>)}
+          </div>
+        </div>
+        <div class="foot__col">
+          <h4>Разделы</h4>
+          {navMenu.map((m) => <a href={m.href}>{m.t}</a>)}
+        </div>
+        <div class="foot__col">
+          <h4>Контакты</h4>
+          <a href={c.phoneHref}>{c.phone}</a>
+          <a href={c.emailHref}>{c.email}</a>
+          <a href={c.whatsapp} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+          <span class="foot__addr">{c.address}</span>
+        </div>
+        <div class="foot__col">
+          <h4>Документы</h4>
+          <a href={withBase('/legal-information')}>Правовая информация</a>
+          <a href={withBase('/files/Договор-оферта.pdf')} target="_blank" rel="noopener noreferrer">Договор-оферта (PDF)</a>
+          <a href={withBase('/files/Правила-проживания.pdf')} target="_blank" rel="noopener noreferrer">Правила проживания (PDF)</a>
+          <a href={withBase('/files/Политика-конфиденциальности.pdf')} target="_blank" rel="noopener noreferrer">Политика конфиденциальности (PDF)</a>
+        </div>
+      </div>
+      <hr class="foot__rule" />
+      <div class="foot__cp">© {site.company} · {site.requisites.entity} · {site.requisites.note}</div>
+    </div>
+  </footer>
+
+  <!-- МОДАЛЫ: по одному на категорию, механика — как «Полная комплектация дома» -->
+  <div class="modal" id="svc-grill" aria-hidden="true">
+    <div class="modal__scrim" data-modal-close></div>
+    <div class="modal__panel" role="dialog" aria-modal="true" aria-label="Гриль-меню">
+      <button class="modal__close" data-modal-close aria-label="Закрыть">&times;</button>
+      <div class="modal__head"><h3 class="modal__title">Гриль-меню</h3></div>
+      <p class="svc-modal__note">Меню уточняется — добавим подробности в ближайшее время.</p>
+    </div>
+  </div>
+
+  <div class="modal" id="svc-soups" aria-hidden="true">
+    <div class="modal__scrim" data-modal-close></div>
+    <div class="modal__panel" role="dialog" aria-modal="true" aria-label="Супы">
+      <button class="modal__close" data-modal-close aria-label="Закрыть">&times;</button>
+      <div class="modal__head"><h3 class="modal__title">Супы</h3></div>
+      <p class="svc-modal__note">Меню уточняется — добавим подробности в ближайшее время.</p>
+    </div>
+  </div>
+
+  <div class="modal" id="svc-chef" aria-hidden="true">
+    <div class="modal__scrim" data-modal-close></div>
+    <div class="modal__panel" role="dialog" aria-modal="true" aria-label="Шеф-повар для мангала">
+      <button class="modal__close" data-modal-close aria-label="Закрыть">&times;</button>
+      <div class="modal__head"><h3 class="modal__title">Шеф-повар для мангала</h3></div>
+      <p class="svc-modal__note">Условия уточняются — добавим подробности в ближайшее время.</p>
+    </div>
+  </div>
+
+  <div class="modal" id="svc-balloons" aria-hidden="true">
+    <div class="modal__scrim" data-modal-close></div>
+    <div class="modal__panel" role="dialog" aria-modal="true" aria-label="Оформление шарами">
+      <button class="modal__close" data-modal-close aria-label="Закрыть">&times;</button>
+      <div class="modal__head"><h3 class="modal__title">Оформление шарами</h3></div>
+      <ul class="modal__list">
+        {balloons.map((b) => <li><b>{b.name}</b> — {b.price}</li>)}
+      </ul>
+    </div>
+  </div>
+
+  <div class="modal" id="svc-cake" aria-hidden="true">
+    <div class="modal__scrim" data-modal-close></div>
+    <div class="modal__panel" role="dialog" aria-modal="true" aria-label="Торт">
+      <button class="modal__close" data-modal-close aria-label="Закрыть">&times;</button>
+      <div class="modal__head"><h3 class="modal__title">Торт</h3></div>
+      <h4 class="modal__h">Бенто-торт</h4>
+      <ul class="modal__list">
+        {cakeWeights.map((w) => <li>Вес {w.weight} — {w.price}</li>)}
+      </ul>
+      <h4 class="modal__h">3 вкуса на выбор</h4>
+      <ul class="modal__list">
+        {cakeFlavors.map((f) => <li>{f}</li>)}
+      </ul>
+    </div>
+  </div>
+
+  <div class="modal" id="svc-serving" aria-hidden="true">
+    <div class="modal__scrim" data-modal-close></div>
+    <div class="modal__panel" role="dialog" aria-modal="true" aria-label="Сервировка">
+      <button class="modal__close" data-modal-close aria-label="Закрыть">&times;</button>
+      <div class="modal__head"><h3 class="modal__title">Сервировка</h3></div>
+      <ul class="modal__list">
+        {servings.map((s) => <li><b>{s.name}</b> — {s.price}</li>)}
+      </ul>
+      <p class="svc-modal__note" style="margin-top:20px;">Состав каждого набора уточняется — добавим описание в ближайшее время.</p>
+    </div>
+  </div>
+
+  <div class="modal" id="svc-custom" aria-hidden="true">
+    <div class="modal__scrim" data-modal-close></div>
+    <div class="modal__panel" role="dialog" aria-modal="true" aria-label="Индивидуальное оформление">
+      <button class="modal__close" data-modal-close aria-label="Закрыть">&times;</button>
+      <div class="modal__head"><h3 class="modal__title">Индивидуальное оформление</h3></div>
+      <p class="svc-modal__note">Условия уточняются — добавим подробности в ближайшее время.</p>
+    </div>
+  </div>
+
+  <style>
+    #services{ padding-top:calc(56px + 48px); }
+
+    /* ряд карточек-категорий: тот же ритм, что у «Искусство отдыха» на главной
+       (номер + заголовок), но пока без фото — заказчица пришлёт позже. */
+    .svc-steps{ display:grid; gap:22px; margin-top:28px; }
+    .svc-steps--4{ grid-template-columns:repeat(4,1fr); }
+    .svc-steps--3{ grid-template-columns:repeat(3,1fr); margin-top:22px; }
+    .svc-card{
+      display:flex; flex-direction:column; width:100%; text-align:left;
+      background:none; border:0; padding:0; font:inherit; color:inherit; cursor:pointer;
+    }
+    .svc-card__ph{
+      aspect-ratio:4/5; border:1px solid var(--hair-gold);
+      display:flex; align-items:center; justify-content:center;
+      font-family:var(--font-display); font-weight:400; font-size:44px; color:var(--gold-l);
+    }
+    .svc-card__body{ padding:16px 2px 0; }
+    .svc-card__t{ display:block; font-family:var(--font-head); font-weight:600; font-size:18px; line-height:1.3; color:var(--ink); margin:0 0 6px; }
+    .svc-card__x{ display:block; font-family:var(--font-body); font-weight:500; font-size:15px; color:var(--ink); }
+    @media(max-width:900px){ .svc-steps--4, .svc-steps--3{ grid-template-columns:repeat(2,1fr); } }
+
+    .svc-mobile{ display:none; }
+    .svc-swipe{
+      display:flex; overflow-x:auto; scroll-snap-type:x mandatory;
+      gap:16px; margin:28px -32px 0; padding:0 32px 4px;
+      -webkit-overflow-scrolling:touch;
+    }
+    .svc-card--swipe{ flex:0 0 60%; scroll-snap-align:start; }
+    @media(max-width:520px){
+      .svc-desktop{ display:none; }
+      .svc-mobile{ display:block; }
+      .svc-card--swipe{ flex-basis:72%; }
+    }
+
+    .svc-modal__note{ font-family:var(--font-body); font-weight:500; font-size:17px; line-height:1.5; color:var(--ink); }
+  </style>
+
+  <script is:inline>
+    (function () {
+      document.querySelectorAll('[data-modal-open]').forEach((btn) => {
+        const id = btn.getAttribute('data-modal-open');
+        const modal = document.getElementById(id);
+        if (!modal) return;
+        btn.addEventListener('click', () => {
+          modal.classList.add('open');
+          modal.setAttribute('aria-hidden', 'false');
+          document.body.style.overflow = 'hidden';
+        });
+      });
+      const closeAll = () => {
+        document.querySelectorAll('.modal.open').forEach((m) => {
+          m.classList.remove('open');
+          m.setAttribute('aria-hidden', 'true');
+        });
+        document.body.style.overflow = '';
+      };
+      document.querySelectorAll('.modal [data-modal-close]').forEach((el) => el.addEventListener('click', closeAll));
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAll(); });
+    })();
+  </script>
+</SiteLayout>
