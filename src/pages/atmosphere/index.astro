@@ -176,40 +176,6 @@ const messengers = [
     </div>
   </section>
 
-  <!-- АТМОСФЕРА СЕЗОНА: 8 праздников, два ряда, второй со смещением -->
-  <section class="sec sec--cream" id="seasons">
-    <div class="wrap wrap--flush">
-      <div class="shead" style="margin-bottom:44px;">
-        <h2 class="h2">{seasons.heading}</h2>
-        <p class="sub">{seasons.subtitle}</p>
-      </div>
-      {seasonRows.map((row, ri) => (
-        <div class={`season-row${ri === 1 ? ' season-row--offset' : ''}`}>
-          {row.map((s: any) => (
-            <article class="season-card" data-gallery={JSON.stringify(seasonGalleries[s.id])} data-win={`win-${s.id}`} role="button" tabindex="0" aria-label={`Подробнее: ${s.label}`}>
-              <div class="season-card__pic">
-                <Image src={img(s.cover)!} alt={s.label} widths={[420, 640, 900]} sizes="(max-width:1000px) 46vw, 290px" format="webp" quality={87} loading="lazy" draggable={false} />
-              </div>
-              <div class="season-card__body">
-                <!-- фразы-перечисление из ТЗ — верх плашки, нужны для поиска (заказчица, 2026-07-08) -->
-                <p class="season-card__tags">{s.tags.join(' • ')}</p>
-                <h3 class="season-card__label">{s.label}: {s.title.toLowerCase()}</h3>
-                <p class="season-card__text">{firstSentence(s.paragraphs[0])}</p>
-                <span class="season-card__more">Смотреть фото</span>
-              </div>
-              <!-- контент карточки-раскрытия; внизу — фразы-перечисление из ТЗ (нужны для поиска) -->
-              <div id={`win-${s.id}`} hidden>
-                <h3 class="atm-win__title">{s.label}: {s.title.toLowerCase()}</h3>
-                {s.paragraphs.map((p: string) => <p class="atm-win__text">{p}</p>)}
-                <p class="atm-win__tags">{s.tags.join(' • ')}</p>
-              </div>
-            </article>
-          ))}
-        </div>
-      ))}
-    </div>
-  </section>
-
   <!-- ОТДЫХ НАЧИНАЕТСЯ ЕЩЁ ДО ВАШЕГО ПРИЕЗДА: карусель слева, текст справа -->
   <section class="sec sec--green atm-prep" id="prepared">
     <div class="wrap wrap--flush">
@@ -236,6 +202,7 @@ const messengers = [
           <ul class="atm-prep__list">
             {prepared.extras.map((li: string) => <li>{li}</li>)}
           </ul>
+          <a href={withBase('/services/')}>Подробнее о дополнительных услугах</a>
           <p class="atm-prep__accent">{prepared.accent}</p>
           <a class="btn btn--gold" href="#story">{prepared.button}</a>
         </div>
@@ -279,6 +246,40 @@ const messengers = [
           </article>
         ))}
       </div>
+    </div>
+  </section>
+
+  <!-- АТМОСФЕРА СЕЗОНА: 8 праздников, два ряда, второй со смещением -->
+  <section class="sec sec--cream" id="seasons">
+    <div class="wrap wrap--flush">
+      <div class="shead" style="margin-bottom:44px;">
+        <h2 class="h2">{seasons.heading}</h2>
+        <p class="sub">{seasons.subtitle}</p>
+      </div>
+      {seasonRows.map((row, ri) => (
+        <div class={`season-row${ri === 1 ? ' season-row--offset' : ''}`}>
+          {row.map((s: any) => (
+            <article class="season-card" data-gallery={JSON.stringify(seasonGalleries[s.id])} data-win={`win-${s.id}`} role="button" tabindex="0" aria-label={`Подробнее: ${s.label}`}>
+              <div class="season-card__pic">
+                <Image src={img(s.cover)!} alt={s.label} widths={[420, 640, 900]} sizes="(max-width:1000px) 46vw, 290px" format="webp" quality={87} loading="lazy" draggable={false} />
+              </div>
+              <div class="season-card__body">
+                <!-- фразы-перечисление из ТЗ — верх плашки, нужны для поиска (заказчица, 2026-07-08) -->
+                <p class="season-card__tags">{s.tags.join(' • ')}</p>
+                <h3 class="season-card__label">{s.label}: {s.title.toLowerCase()}</h3>
+                <p class="season-card__text">{firstSentence(s.paragraphs[0])}</p>
+                <span class="season-card__more">Смотреть фото</span>
+              </div>
+              <!-- контент карточки-раскрытия; внизу — фразы-перечисление из ТЗ (нужны для поиска) -->
+              <div id={`win-${s.id}`} hidden>
+                <h3 class="atm-win__title">{s.label}: {s.title.toLowerCase()}</h3>
+                {s.paragraphs.map((p: string) => <p class="atm-win__text">{p}</p>)}
+                <p class="atm-win__tags">{s.tags.join(' • ')}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      ))}
     </div>
   </section>
 

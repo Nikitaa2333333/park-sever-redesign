@@ -1694,6 +1694,15 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
     linear-gradient(180deg,rgba(15,42,71,.42),rgba(15,42,71,0) 26%),
     linear-gradient(180deg,rgba(15,42,71,0) 56%,rgba(15,42,71,.7)); }
 .aor-hero .wrap{ position:relative; z-index:2; padding-bottom:64px; padding-top:140px; }
+
+/* — hero: копирайт-плашка справа, с раскрытием предупреждения по наведению/фокусу — */
+.aor-copyright{ position:absolute; right:32px; bottom:64px; z-index:3; text-align:right;
+  font-family:var(--font-body); font-weight:500; font-size:13px; letter-spacing:.02em; color:#fff; cursor:help; }
+.aor-copyright__tip{ display:none; position:absolute; right:0; bottom:calc(100% + 12px); z-index:6;
+  width:min(360px,74vw); background:var(--sand); color:var(--ink); border:1px solid var(--hair-gold);
+  padding:16px 18px; font-family:var(--font-body); font-weight:500; font-size:14px; line-height:1.5; text-align:left; }
+.aor-copyright:hover .aor-copyright__tip, .aor-copyright:focus .aor-copyright__tip{ display:block; }
+@media(max-width:640px){ .aor-copyright{ top:24px; right:24px; bottom:auto; font-size:12px; } }
 .aor-hero__title{ font-family:var(--font-display); font-weight:500; letter-spacing:0;
   font-size:clamp(56px,8.5vw,110px); line-height:1.0; color:#fff; margin:0; }
 .aor-hero__lead{ font-family:var(--font-body); font-weight:500; font-size:20px; line-height:1.4;

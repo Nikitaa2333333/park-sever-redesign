@@ -78,6 +78,10 @@ const parts = (p: string) => p.split(/\{([^}]+)\}/);
       <Image src={img(photos.hero)!} alt="Утро в стеклянном доме среди леса" widths={[960, 1440, 2000]} sizes="100vw" format="webp" quality={87} loading="eager" />
     </div>
     <div class="aor-hero__scrim"></div>
+    <div class="aor-copyright" tabindex="0">
+      Авторская концепция. Все права защищены.
+      <span class="aor-copyright__tip">Копирование текстов, фотографий и концепции страницы без письменного разрешения запрещено и преследуется по закону.</span>
+    </div>
     <div class="wrap wrap--flush">
       <h1 class="aor-hero__title">{data.page.title}</h1>
       <p class="aor-hero__lead">{data.page.intro}</p>
