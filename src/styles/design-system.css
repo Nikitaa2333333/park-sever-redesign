@@ -1534,10 +1534,10 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .ow-menu a{
   font-family:var(--font-head); font-weight:600; font-size:15px; color:var(--ink);
   padding:13px 26px; white-space:nowrap; cursor:pointer;
-  border:1px solid var(--navy); border-left:0;
+  border:1px solid var(--navy); margin-left:-1px;
   transition:background .15s, color .15s;
 }
-.ow-menu a:first-child{ border-left:1px solid var(--navy); }
+.ow-menu a:first-child{ margin-left:0; }
 .ow-menu a:hover{ background:var(--frost); color:var(--navy); }
 .ow-menu a.is-active{ background:var(--navy); color:#fff; }
 @media(max-width:900px){
