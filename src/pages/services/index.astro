@@ -189,19 +189,18 @@ const soups = [
 // уточнения у заказчицы цену на сайте не показываем, только описание
 const chefDesc = 'Шеф-повар готовит и подаёт блюда на мангале в течение вечера — продукты по выбранному гриль-меню уже будут ждать вас к заселению.';
 
-// 7 категорий — 4 в первом ряду, 3 во втором (без «сироты», как «Что входит» на главной)
-const categoriesTop = [
-  { id: 'grill', num: '01', title: 'Гриль-меню', teaser: 'от 5 000 ₽', ready: true },
-  { id: 'soups', num: '02', title: 'Супы', teaser: 'от 2 500 ₽', ready: true, photo: 'soup-1.jpg' },
-  { id: 'chef', num: '03', title: 'Шеф-повар для мангала', teaser: 'Уточняем цену', ready: true },
-  { id: 'balloons', num: '04', title: 'Оформление шарами', teaser: 'от 2 900 ₽', ready: true },
+// навигация по разделам — верхняя вкладочная менюшка, как «Этап 1,2,3» на /art-of-rest
+// (заказчица 29.08: убрать модальные окошки, категория открывается сразу по клику
+// на вкладку, без промежуточного клика по карточке)
+const tabs = [
+  { id: 'grill', num: '01', title: 'Гриль-меню' },
+  { id: 'soups', num: '02', title: 'Супы' },
+  { id: 'chef', num: '03', title: 'Шеф-повар для мангала' },
+  { id: 'balloons', num: '04', title: 'Оформление шарами' },
+  { id: 'cake', num: '05', title: 'Торт' },
+  { id: 'serving', num: '06', title: 'Сервировка' },
+  { id: 'custom', num: '07', title: 'Индивидуальное оформление' },
 ];
-const categoriesBottom = [
-  { id: 'cake', num: '05', title: 'Торт', teaser: 'от 3 000 ₽', ready: true },
-  { id: 'serving', num: '06', title: 'Сервировка', teaser: '6 вариантов', ready: true, photo: 'serving-1-rose.jpg' },
-  { id: 'custom', num: '07', title: 'Индивидуальное оформление', teaser: 'Скоро добавим', ready: false },
-];
-const allCategories = [...categoriesTop, ...categoriesBottom];
 ---
 <SiteLayout title="Дополнительные услуги — Парк Север">
   <!-- NAV -->
@@ -224,82 +223,138 @@ const allCategories = [...categoriesTop, ...categoriesBottom];
         <h1 class="h1">Дополнительные услуги</h1>
         <p class="lead" style="text-align:center;">Гастрономический сервис — единственная категория услуг, которая оплачивается отдельно. Для тех случаев, когда хочется полностью забыть о бытовых вопросах.</p>
       </div>
+    </div>
+  </section>
 
-      <!-- десктоп/планшет: 4 + 3, без «сироты» в последнем ряду -->
-      <div class="svc-desktop">
-        <div class="svc-steps svc-steps--4">
-          {categoriesTop.map((cat: any) => cat.photo ? (
-            <button class="svc-card" type="button" data-modal-open={`svc-${cat.id}`}>
-              <span class="art-step__img">
-                <Image src={img(cat.photo)!} alt={cat.title} widths={[400, 640, 800]} sizes="(max-width:900px) 50vw, 25vw" format="webp" quality={87} loading="lazy" />
-                <span class="art-step__overlay">
-                  <span class="art-step__num">{cat.num}</span>
-                  <span class="art-step__title">{cat.title}</span>
-                  <span class="art-step__text">{cat.teaser}</span>
-                </span>
-              </span>
-            </button>
-          ) : (
-            <button class="svc-card" type="button" data-modal-open={`svc-${cat.id}`}>
-              <span class="svc-card__ph">{cat.num}</span>
-              <span class="svc-card__body">
-                <span class="svc-card__t">{cat.title}</span>
-                <span class="svc-card__x">{cat.teaser}</span>
-              </span>
-            </button>
-          ))}
-        </div>
-        <div class="svc-steps svc-steps--3">
-          {categoriesBottom.map((cat: any) => cat.photo ? (
-            <button class="svc-card" type="button" data-modal-open={`svc-${cat.id}`}>
-              <span class="art-step__img">
-                <Image src={img(cat.photo)!} alt={cat.title} widths={[400, 640, 800]} sizes="(max-width:900px) 50vw, 33vw" format="webp" quality={87} loading="lazy" />
-                <span class="art-step__overlay">
-                  <span class="art-step__num">{cat.num}</span>
-                  <span class="art-step__title">{cat.title}</span>
-                  <span class="art-step__text">{cat.teaser}</span>
-                </span>
-              </span>
-            </button>
-          ) : (
-            <button class="svc-card" type="button" data-modal-open={`svc-${cat.id}`}>
-              <span class="svc-card__ph">{cat.num}</span>
-              <span class="svc-card__body">
-                <span class="svc-card__t">{cat.title}</span>
-                <span class="svc-card__x">{cat.teaser}</span>
-              </span>
-            </button>
-          ))}
-        </div>
+  <!-- Верхняя вкладочная навигация по категориям — как «Этап 1,2,3» на /art-of-rest.
+       Клик по вкладке сразу показывает раздел, без промежуточного клика по карточке/модала. -->
+  <div class="ow-menubar" id="svc-menubar">
+    <div class="wrap wrap--flush">
+      <nav class="ow-menu" aria-label="Категории услуг">
+        {tabs.map((t, i) => (
+          <a href={'#' + t.id} data-svc-tab={t.id} class={i === 0 ? 'is-active' : undefined}>{t.num}. {t.title}</a>
+        ))}
+      </nav>
+    </div>
+  </div>
+
+  <!-- 01 ГРИЛЬ-МЕНЮ -->
+  <div data-svc-panel="grill">
+  <section class="sec" id="grill">
+    <div class="wrap wrap--flush">
+      <h2 class="h2">Гриль-меню</h2>
+      <div class="aor-duo">
+        {grillSets.map((s) => (
+          <div>
+            <h3 class="aor-h3" style="margin-top:0;">{s.emoji} {s.title} — {s.price}</h3>
+            <p class="aor-p">{s.desc}</p>
+            <ul class="aor-list">
+              {s.items.map((it: string) => <li>{it}</li>)}
+            </ul>
+          </div>
+        ))}
       </div>
+    </div>
+  </section>
+  </div>
 
-      <!-- мобила: свайп в сторону, тот же приём, что у «Искусство отдыха» -->
-      <div class="svc-mobile">
-        <div class="svc-swipe">
-          {allCategories.map((cat: any) => cat.photo ? (
-            <button class="svc-card svc-card--swipe" type="button" data-modal-open={`svc-${cat.id}`}>
-              <span class="art-step__img">
-                <Image src={img(cat.photo)!} alt={cat.title} widths={[400, 640, 800]} sizes="72vw" format="webp" quality={87} loading="lazy" />
-                <span class="art-step__overlay">
-                  <span class="art-step__num">{cat.num}</span>
-                  <span class="art-step__title">{cat.title}</span>
-                  <span class="art-step__text">{cat.teaser}</span>
-                </span>
-              </span>
-            </button>
-          ) : (
-            <button class="svc-card svc-card--swipe" type="button" data-modal-open={`svc-${cat.id}`}>
-              <span class="svc-card__ph">{cat.num}</span>
-              <span class="svc-card__body">
-                <span class="svc-card__t">{cat.title}</span>
-                <span class="svc-card__x">{cat.teaser}</span>
-              </span>
-            </button>
+  <!-- 02 СУПЫ -->
+  <div data-svc-panel="soups" hidden>
+  <section class="sec sec--cream" id="soups">
+    <div class="wrap wrap--flush">
+      <h2 class="h2">Супы</h2>
+      <div class="aor-split">
+        <div>
+          {soups.map((s) => (
+            <>
+              <h3 class="aor-h3">{s.title} — {s.price}</h3>
+              <p class="aor-p">{s.desc}</p>
+            </>
           ))}
+        </div>
+        <div class="aor-split__pic">
+          <Image src={img('soup-1.jpg')!} alt="Суп" widths={[520, 800, 1100]} sizes="(max-width:860px) 100vw, 44vw" format="webp" quality={87} loading="lazy" />
         </div>
       </div>
     </div>
   </section>
+  </div>
+
+  <!-- 03 ШЕФ-ПОВАР ДЛЯ МАНГАЛА -->
+  <div data-svc-panel="chef" hidden>
+  <section class="sec" id="chef">
+    <div class="wrap wrap--flush">
+      <h2 class="h2">Шеф-повар для мангала</h2>
+      <p class="aor-p" style="margin-top:24px;">{chefDesc}</p>
+      <p class="aor-p">Стоимость уточняется.</p>
+    </div>
+  </section>
+  </div>
+
+  <!-- 04 ОФОРМЛЕНИЕ ШАРАМИ -->
+  <div data-svc-panel="balloons" hidden>
+  <section class="sec sec--cream" id="balloons">
+    <div class="wrap wrap--flush">
+      <h2 class="h2">Оформление шарами</h2>
+      <ul class="aor-list" style="margin-top:24px;">
+        {balloons.map((b) => <li><b>{b.name}</b> — {b.price}</li>)}
+      </ul>
+    </div>
+  </section>
+  </div>
+
+  <!-- 05 ТОРТ -->
+  <div data-svc-panel="cake" hidden>
+  <section class="sec" id="cake">
+    <div class="wrap wrap--flush">
+      <h2 class="h2">Торт</h2>
+      <h3 class="aor-h3">Бенто-торт</h3>
+      <ul class="aor-list">
+        {cakeWeights.map((w) => <li>Вес {w.weight} — {w.price}</li>)}
+      </ul>
+      <h3 class="aor-h3">3 вкуса на выбор</h3>
+      <ul class="aor-list">
+        {cakeFlavors.map((f) => <li>{f}</li>)}
+      </ul>
+    </div>
+  </section>
+  </div>
+
+  <!-- 06 СЕРВИРОВКА -->
+  <div data-svc-panel="serving" hidden>
+  <section class="sec sec--cream" id="serving">
+    <div class="wrap wrap--flush">
+      <h2 class="h2">Сервировка</h2>
+      {servings.map((s: any) => (
+        <div class="aor-split">
+          <div>
+            <h3 class="aor-h3">{s.name} — {s.price}</h3>
+            <ul class="aor-list">
+              {s.items.map((it: string) => <li>{it}</li>)}
+            </ul>
+          </div>
+          <div class="aor-split__pic">
+            <Image src={img(s.photo)!} alt={s.name} widths={[520, 800, 1100]} sizes="(max-width:860px) 100vw, 44vw" format="webp" quality={87} loading="lazy" />
+          </div>
+        </div>
+      ))}
+      <h3 class="aor-h3" style="margin-top:56px;">Меню по блюдам — можно заказать отдельно</h3>
+      <ul class="aor-list">
+        {alacarte.map((d) => <li><b>{d.name}</b> — {d.price}. {d.desc}</li>)}
+      </ul>
+    </div>
+  </section>
+  </div>
+
+  <!-- 07 ИНДИВИДУАЛЬНОЕ ОФОРМЛЕНИЕ -->
+  <div data-svc-panel="custom" hidden>
+  <section class="sec" id="custom">
+    <div class="wrap wrap--flush">
+      <h2 class="h2">Индивидуальное оформление</h2>
+      <p class="aor-p" style="margin-top:24px;">Условия уточняются — добавим подробности в ближайшее время.</p>
+    </div>
+  </section>
+  </div>
 
   <!-- FOOTER -->
   <footer class="foot">
@@ -336,169 +391,51 @@ const allCategories = [...categoriesTop, ...categoriesBottom];
     </div>
   </footer>
 
-  <!-- МОДАЛЫ: по одному на категорию, механика — как «Полная комплектация дома» -->
-  <div class="modal" id="svc-grill" aria-hidden="true">
-    <div class="modal__scrim" data-modal-close></div>
-    <div class="modal__panel" role="dialog" aria-modal="true" aria-label="Гриль-меню">
-      <button class="modal__close" data-modal-close aria-label="Закрыть">&times;</button>
-      <div class="modal__head"><h3 class="modal__title">Гриль-меню</h3></div>
-      {grillSets.map((s) => (
-        <>
-          <h4 class="modal__h">{s.emoji} {s.title} — {s.price}</h4>
-          <p class="svc-modal__note" style="margin-bottom:10px;">{s.desc}</p>
-          <ul class="modal__list">
-            {s.items.map((it: string) => <li>{it}</li>)}
-          </ul>
-        </>
-      ))}
-    </div>
-  </div>
-
-  <div class="modal" id="svc-soups" aria-hidden="true">
-    <div class="modal__scrim" data-modal-close></div>
-    <div class="modal__panel" role="dialog" aria-modal="true" aria-label="Супы">
-      <button class="modal__close" data-modal-close aria-label="Закрыть">&times;</button>
-      <div class="modal__head"><h3 class="modal__title">Супы</h3></div>
-      {soups.map((s) => (
-        <>
-          <h4 class="modal__h">{s.title} — {s.price}</h4>
-          <p class="svc-modal__note">{s.desc}</p>
-        </>
-      ))}
-    </div>
-  </div>
-
-  <div class="modal" id="svc-chef" aria-hidden="true">
-    <div class="modal__scrim" data-modal-close></div>
-    <div class="modal__panel" role="dialog" aria-modal="true" aria-label="Шеф-повар для мангала">
-      <button class="modal__close" data-modal-close aria-label="Закрыть">&times;</button>
-      <div class="modal__head"><h3 class="modal__title">Шеф-повар для мангала</h3></div>
-      <p class="svc-modal__note">{chefDesc}</p>
-      <p class="svc-modal__note" style="margin-top:16px;">Стоимость уточняется.</p>
-    </div>
-  </div>
-
-  <div class="modal" id="svc-balloons" aria-hidden="true">
-    <div class="modal__scrim" data-modal-close></div>
-    <div class="modal__panel" role="dialog" aria-modal="true" aria-label="Оформление шарами">
-      <button class="modal__close" data-modal-close aria-label="Закрыть">&times;</button>
-      <div class="modal__head"><h3 class="modal__title">Оформление шарами</h3></div>
-      <ul class="modal__list">
-        {balloons.map((b) => <li><b>{b.name}</b> — {b.price}</li>)}
-      </ul>
-    </div>
-  </div>
-
-  <div class="modal" id="svc-cake" aria-hidden="true">
-    <div class="modal__scrim" data-modal-close></div>
-    <div class="modal__panel" role="dialog" aria-modal="true" aria-label="Торт">
-      <button class="modal__close" data-modal-close aria-label="Закрыть">&times;</button>
-      <div class="modal__head"><h3 class="modal__title">Торт</h3></div>
-      <h4 class="modal__h">Бенто-торт</h4>
-      <ul class="modal__list">
-        {cakeWeights.map((w) => <li>Вес {w.weight} — {w.price}</li>)}
-      </ul>
-      <h4 class="modal__h">3 вкуса на выбор</h4>
-      <ul class="modal__list">
-        {cakeFlavors.map((f) => <li>{f}</li>)}
-      </ul>
-    </div>
-  </div>
-
-  <div class="modal" id="svc-serving" aria-hidden="true">
-    <div class="modal__scrim" data-modal-close></div>
-    <div class="modal__panel" role="dialog" aria-modal="true" aria-label="Сервировка">
-      <button class="modal__close" data-modal-close aria-label="Закрыть">&times;</button>
-      <div class="modal__head"><h3 class="modal__title">Сервировка</h3></div>
-      {servings.map((s: any) => (
-        <div class="svc-serving-item">
-          <Image class="svc-serving-item__pic" src={img(s.photo)!} alt={s.name} widths={[400, 640, 960]} sizes="(max-width:560px) 94vw, 490px" format="webp" quality={87} loading="lazy" />
-          <h4 class="modal__h">{s.name} — {s.price}</h4>
-          <ul class="modal__list">
-            {s.items.map((it: string) => <li>{it}</li>)}
-          </ul>
-        </div>
-      ))}
-      <h4 class="modal__h" style="margin-top:36px;">Меню по блюдам — можно заказать отдельно</h4>
-      <ul class="modal__list">
-        {alacarte.map((d) => <li><b>{d.name}</b> — {d.price}. {d.desc}</li>)}
-      </ul>
-    </div>
-  </div>
-
-  <div class="modal" id="svc-custom" aria-hidden="true">
-    <div class="modal__scrim" data-modal-close></div>
-    <div class="modal__panel" role="dialog" aria-modal="true" aria-label="Индивидуальное оформление">
-      <button class="modal__close" data-modal-close aria-label="Закрыть">&times;</button>
-      <div class="modal__head"><h3 class="modal__title">Индивидуальное оформление</h3></div>
-      <p class="svc-modal__note">Условия уточняются — добавим подробности в ближайшее время.</p>
-    </div>
-  </div>
-
   <style>
     #services{ padding-top:calc(56px + 48px); }
-
-    /* ряд карточек-категорий: тот же ритм, что у «Искусство отдыха» на главной
-       (номер + заголовок), но пока без фото — заказчица пришлёт позже. */
-    .svc-steps{ display:grid; gap:22px; margin-top:28px; }
-    .svc-steps--4{ grid-template-columns:repeat(4,1fr); }
-    .svc-steps--3{ grid-template-columns:repeat(3,1fr); margin-top:22px; }
-    .svc-card{
-      display:flex; flex-direction:column; width:100%; text-align:left;
-      background:none; border:0; padding:0; font:inherit; color:inherit; cursor:pointer;
-    }
-    .svc-card__ph{
-      aspect-ratio:4/5; border:1px solid var(--hair-gold);
-      display:flex; align-items:center; justify-content:center;
-      font-family:var(--font-display); font-weight:400; font-size:44px; color:var(--gold-l);
-    }
-    .svc-card__body{ padding:16px 2px 0; }
-    .svc-card__t{ display:block; font-family:var(--font-head); font-weight:600; font-size:18px; line-height:1.3; color:var(--ink); margin:0 0 6px; }
-    .svc-card__x{ display:block; font-family:var(--font-body); font-weight:500; font-size:15px; color:var(--ink); }
-    @media(max-width:900px){ .svc-steps--4, .svc-steps--3{ grid-template-columns:repeat(2,1fr); } }
-
-    .svc-mobile{ display:none; }
-    .svc-swipe{
-      display:flex; overflow-x:auto; scroll-snap-type:x mandatory;
-      gap:16px; margin:28px -32px 0; padding:0 32px 4px;
-      -webkit-overflow-scrolling:touch;
-    }
-    .svc-card--swipe{ flex:0 0 60%; scroll-snap-align:start; }
-    @media(max-width:520px){
-      .svc-desktop{ display:none; }
-      .svc-mobile{ display:block; }
-      .svc-card--swipe{ flex-basis:72%; }
-    }
-
-    .svc-modal__note{ font-family:var(--font-body); font-weight:500; font-size:17px; line-height:1.5; color:var(--ink); }
-
-    /* фото внутри карточки-раскрытия «Сервировка» — чистый кадр, без рамки/тени (канон) */
-    .svc-serving-item{ margin-top:32px; }
-    .svc-serving-item:first-of-type{ margin-top:24px; }
-    .svc-serving-item__pic{ display:block; width:100%; height:auto; margin-bottom:14px; }
+    #svc-menubar .ow-menu{ justify-content:safe center; }
+    #svc-menubar .ow-menu a{ padding:13px 20px; }
   </style>
 
   <script is:inline>
-    (function () {
-      document.querySelectorAll('[data-modal-open]').forEach((btn) => {
-        const id = btn.getAttribute('data-modal-open');
-        const modal = document.getElementById(id);
-        if (!modal) return;
-        btn.addEventListener('click', () => {
-          modal.classList.add('open');
-          modal.setAttribute('aria-hidden', 'false');
-          document.body.style.overflow = 'hidden';
-        });
+    // мобильное меню
+    const toggle = document.querySelector('.nav__toggle');
+    const menu = document.querySelector('.nav__menu');
+    if (toggle && menu) {
+      toggle.addEventListener('click', () => {
+        toggle.classList.toggle('active');
+        menu.classList.toggle('open');
       });
-      const closeAll = () => {
-        document.querySelectorAll('.modal.open').forEach((m) => {
-          m.classList.remove('open');
-          m.setAttribute('aria-hidden', 'true');
-        });
-        document.body.style.overflow = '';
+      menu.querySelectorAll('a').forEach(l => l.addEventListener('click', () => {
+        toggle.classList.remove('active');
+        menu.classList.remove('open');
+      }));
+    }
+
+    // Вкладки категорий — та же механика «странички», что у /art-of-rest:
+    // клик по вкладке переключает панель, hash в URL, без модалов.
+    (function () {
+      if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+      const tabs = Array.from(document.querySelectorAll('[data-svc-tab]'));
+      const panels = Array.from(document.querySelectorAll('[data-svc-panel]'));
+      if (!tabs.length) return;
+      const show = (id, scroll) => {
+        const panel = panels.find(p => p.dataset.svcPanel === id);
+        if (!panel) return;
+        panels.forEach(p => { p.hidden = p !== panel; });
+        tabs.forEach(t => t.classList.toggle('is-active', t.dataset.svcTab === id));
+        if (scroll) {
+          const bar = document.getElementById('svc-menubar');
+          window.scrollTo(0, Math.max(0, panel.offsetTop - (bar ? bar.offsetHeight : 0) - 56));
+        }
       };
-      document.querySelectorAll('.modal [data-modal-close]').forEach((el) => el.addEventListener('click', closeAll));
-      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAll(); });
+      tabs.forEach(t => t.addEventListener('click', (e) => {
+        e.preventDefault();
+        history.replaceState(null, '', '#' + t.dataset.svcTab);
+        show(t.dataset.svcTab, true);
+      }));
+      const initial = new URLSearchParams(location.search).get('tab') || location.hash.replace('#', '');
+      if (initial) { show(initial, false); window.scrollTo(0, 0); }
     })();
   </script>
 </SiteLayout>
