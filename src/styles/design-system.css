@@ -2123,20 +2123,15 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .atm-prep__accent{ font-family:var(--font-display); font-weight:500; letter-spacing:0;
   font-size:clamp(26px,3vw,36px); line-height:1.15; color:#fff; margin:26px 0 0; }
 .atm-prep .btn{ margin-top:28px; }
-/* «Подробнее о доп. услугах» — заказчица явно попросила выделить сильнее обычной
-   текстовой ссылки: золото, крупнее, жирнее (осознанное отступление от канона
-   «ссылки в цвет текста» — только для этого конкретного CTA) */
-.atm-prep__more{ display:inline-block; font-family:var(--font-head); font-weight:700;
-  font-size:19px; color:var(--gold-l); text-decoration:underline; text-underline-offset:3px;
-  margin-top:22px; }
-.atm-prep__more:hover{ text-decoration:none; }
-/* «Уточнить детали» — мессенджеры кнопками для удобного тапа, но тихими (белый
-   контур на зелёном, `.btn--outline-light` — тот же приём, что у CTA на фото-сценах
-   главной), без акцента золотом — не должны конкурировать с «Подробнее» */
-.atm-prep__mess-label{ font-family:var(--font-head); font-weight:500; font-size:16px; color:#fff; margin:20px 0 10px; }
-.atm-prep__mess-btns{ display:flex; flex-wrap:wrap; gap:10px; }
-.atm-prep__mess-btn{ padding:9px 20px; font-size:15px; }
-.atm-prep__mess-btn:hover{ background:#fff; color:var(--green); }
+/* «Подробнее о доп. услугах» — заказчица попросила выделить сильнее обычной
+   ссылки, затем уточнила: именно кнопкой (не текстовой ссылкой ни в каком виде).
+   `.btn btn--gold` — тот же золотой CTA, что и остальные акценты сцены. */
+.atm-prep__more-btn{ margin-top:22px; }
+/* «Уточнить детали» — тихая строка с мессенджерами, НЕ кнопка (заказчица вернула
+   как было: кнопка тут не нужна, только у «Подробнее»; здесь просто удобные ссылки) */
+.atm-prep__mess{ font-family:var(--font-head); font-weight:500; font-size:16px; color:#fff; margin:20px 0 0; }
+.atm-prep__mess a{ font-weight:600; color:#fff; text-decoration:underline; text-underline-offset:3px; }
+.atm-prep__mess a:hover{ text-decoration:none; }
 
 /* — «Примеры работ»: тексты по нажатию — */
 .atm-ex-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; align-items:start; }
