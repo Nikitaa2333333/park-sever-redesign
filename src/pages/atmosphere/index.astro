@@ -147,9 +147,12 @@ const messengers = [
           </ul>
           <a class="atm-prep__more" href={withBase('/services/')}>Подробнее о дополнительных услугах</a>
           <p class="atm-prep__accent">{prepared.accent}</p>
-          <p class="atm-prep__mess">Уточнить детали: {messengers.map((m, i) => (
-            <Fragment>{i > 0 && ' · '}<a href={m.href} target="_blank" rel="noopener noreferrer">{m.label}</a></Fragment>
-          ))}</p>
+          <p class="atm-prep__mess-label">Уточнить детали:</p>
+          <div class="atm-prep__mess-btns">
+            {messengers.map((m) => (
+              <a class="btn btn--outline-light atm-prep__mess-btn" href={m.href} target="_blank" rel="noopener noreferrer">{m.label}</a>
+            ))}
+          </div>
         </div>
       </div>
     </div>
