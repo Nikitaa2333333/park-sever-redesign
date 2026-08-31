@@ -2123,6 +2123,15 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .atm-prep__accent{ font-family:var(--font-display); font-weight:500; letter-spacing:0;
   font-size:clamp(26px,3vw,36px); line-height:1.15; color:#fff; margin:26px 0 0; }
 .atm-prep .btn{ margin-top:28px; }
+/* «Подробнее о доп. услугах» — заказчица попросила выделить сильнее обычной
+   ссылки, затем уточнила: именно кнопкой (не текстовой ссылкой ни в каком виде).
+   `.btn btn--gold` — тот же золотой CTA, что и остальные акценты сцены. */
+.atm-prep__more-btn{ margin-top:22px; }
+/* «Уточнить детали» — тихая строка с мессенджерами, НЕ кнопка (заказчица вернула
+   как было: кнопка тут не нужна, только у «Подробнее»; здесь просто удобные ссылки) */
+.atm-prep__mess{ font-family:var(--font-head); font-weight:500; font-size:16px; color:#fff; margin:20px 0 0; }
+.atm-prep__mess a{ font-weight:600; color:#fff; text-decoration:underline; text-underline-offset:3px; }
+.atm-prep__mess a:hover{ text-decoration:none; }
 
 /* — «Примеры работ»: тексты по нажатию — */
 .atm-ex-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; align-items:start; }

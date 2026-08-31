@@ -52,9 +52,10 @@ const heroTitle = blockOf(slider, 'heading')?.text; // "Парк Север"
 const _htWords = (heroTitle ?? '').trim().split(/\s+/);
 const heroTitleAccent = _htWords.length > 1 ? _htWords.pop() : ''; // последнее слово — золотой акцент («Север»)
 const heroTitleMain = _htWords.join(' ');
-const heroParas = (slider?.blocks ?? []).filter((b: any) => b.type === 'paragraph' && !b.disabled && b.variant !== 'accent' && !b.text.includes('Деятельность'));
-const heroAccent = (slider?.blocks ?? []).find((b: any) => b.type === 'paragraph' && b.variant === 'accent')?.text; // курсивная строка hero (1.4)
 const activityBadge = (slider?.blocks ?? []).find((b: any) => b.type === 'paragraph' && b.text.includes('Деятельность'))?.text;
+// hero: курсивная строка-акцент и лид-абзац — инлайн (правка заказчицы 31.08), больше не читаем из JSON
+const heroAccent = 'Private smart lodge';
+const heroLead = 'Парк Север строго один-единственный lodge на территории 12,4 га леса. Сюда приезжают за редкой роскошью — побыть только вдвоем (или в одиночестве), в абсолютной тишине и выдохнуть суету дел. Здесь нет других Гостей.';
 
 // маршрут до парка (Яндекс.Навигатор) — используется в нескольких CTA на странице
 const routeHref = 'https://yandex.ru/navi?whatshere%5Bpoint%5D=37.8149250717716%2C56.45656463673545&whatshere%5Bzoom%5D=20.476816&ll=37.8149250717716%2C56.45656463635388&z=20.476816&si=j2frx76vg7073bcw444ez8w15w';
@@ -233,7 +234,7 @@ const navMenu = [
       {heroAccent && <p class="hero-accent" style="margin:16px 0 28px;">{heroAccent}</p>}
 
       <div class="hero__lead-text" style="margin-bottom:28px; max-width:556px;">
-        <p class="body-lead hero__lead">{heroParas.map((p: any) => p.text).join(' ')}</p>
+        <p class="body-lead hero__lead">{heroLead}</p>
       </div>
 
       <!-- 1.5 Модуль бронирования znms (инлайновая форма заезд/выезд/гости).

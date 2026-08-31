@@ -145,9 +145,11 @@ const messengers = [
           <ul class="atm-prep__list">
             {prepared.extras.map((li: string) => <li>{li}</li>)}
           </ul>
-          <a href={withBase('/services/')}>Подробнее о дополнительных услугах</a>
+          <a class="btn btn--gold atm-prep__more-btn" href={withBase('/services/')}>Подробнее о дополнительных услугах</a>
           <p class="atm-prep__accent">{prepared.accent}</p>
-          <a class="btn btn--gold" href="#story">{prepared.button}</a>
+          <p class="atm-prep__mess">Уточнить детали: {messengers.map((m, i) => (
+            <Fragment>{i > 0 && ' · '}<a href={m.href} target="_blank" rel="noopener noreferrer">{m.label}</a></Fragment>
+          ))}</p>
         </div>
       </div>
     </div>
