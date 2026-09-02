@@ -275,7 +275,7 @@
       "items": [
         { "title": "Собаки", "image": "/images/home/world/2.2.jpg", "href": "/our-world/#retrievers" },
         { "title": "Олени", "image": "/images/home/world/2.3.jpg", "href": "/our-world/#deer" },
-        { "title": "Пруд", "image": "/images/home/world/2.4.jpg", "href": "/our-world/#pond" },
+        { "title": "О нас", "image": "/images/our-world/about-1.jpg", "href": "/our-world/#about" },
         { "title": "Велопрогулки", "image": "/images/home/world/2.5.jpg", "href": "/our-world/#bikes" },
         { "title": "Интересные места рядом", "image": "/images/home/world/2.6.jpg", "href": "/our-world/#places" }
       ]

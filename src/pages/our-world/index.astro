@@ -141,8 +141,28 @@ const navMenu = [
     </div>
   </div>
 
+  <!-- О НАС: кто стоит за Парк Север (правка заказчицы 02.09, текст из докса дословно) -->
+  <section class="sec ow-section" id="about" data-ow-panel="about">
+    <div class="wrap wrap--flush">
+      <div class="split2 ow-split">
+        <div>
+          <h2 class="h2">{ow.about.heading}</h2>
+          <p class="ow-par">{ow.about.intro}</p>
+          {ow.about.paragraphsBefore.map((p: string) => <p class="ow-par" set:html={p} />)}
+          {ow.about.notLines.map((p: string) => <p class="ow-par">{p}</p>)}
+          {ow.about.paragraphsAfter.map((p: string) => <p class="ow-par" set:html={p} />)}
+        </div>
+        {ow.about.photo && img(ow.about.photo) && (
+          <div class="ow-photo ow-photo--owner">
+            <Image src={img(ow.about.photo)!} alt="Екатерина Валова с оленями фермы «Благородный Север»" widths={[420, 600]} sizes="(max-width:860px) 90vw, 420px" />
+          </div>
+        )}
+      </div>
+    </div>
+  </section>
+
   <!-- РЕТРИВЕРЫ -->
-  <section class="sec ow-section" id="retrievers" data-ow-panel="retrievers">
+  <section class="sec ow-section" id="retrievers" data-ow-panel="retrievers" hidden>
     <div class="wrap wrap--flush">
       <div class="split2 ow-split">
         <div>
