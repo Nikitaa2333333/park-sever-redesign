@@ -153,8 +153,8 @@ const navMenu = [
           {ow.about.paragraphsAfter.map((p: string) => <p class="ow-par" set:html={p} />)}
         </div>
         {ow.about.photo && img(ow.about.photo) && (
-          <div class="ow-photo ow-photo--owner">
-            <Image src={img(ow.about.photo)!} alt="Екатерина Валова с оленями фермы «Благородный Север»" widths={[420, 600]} sizes="(max-width:860px) 90vw, 420px" />
+          <div class="ow-photo ow-photo--about">
+            <Image src={img(ow.about.photo)!} alt="Екатерина Валова с оленями фермы «Благородный Север»" widths={[420, 600, 900, 1080]} sizes="(max-width:860px) 90vw, 30vw" />
           </div>
         )}
       </div>

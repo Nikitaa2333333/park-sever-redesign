@@ -1595,9 +1595,11 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .ow-split--about .ow-photo{ position:sticky; top:calc(56px + 96px); }
 @media(max-width:860px){ .ow-split--about{ grid-template-columns:1fr; } .ow-split--about .ow-photo{ position:static; } }
 .ow-photo img{ display:block; width:100%; height:auto; object-fit:cover; }
-/* фото хозяйки — узкий вертикальный исходник 591×1048: держим компактный портрет */
+/* фото хозяйки (retrievers) — узкий вертикальный исходник 591×1048: держим компактный портрет */
 .ow-photo--owner{ max-width:400px; }
 .ow-photo--owner img{ aspect-ratio:3/4; }
+/* фото «О нас» — заполняет всю свою колонку (30% экрана), без потолка (заказчица: «фотку покрупнее») */
+.ow-photo--about img{ aspect-ratio:4/5; }
 /* пруд: два кадра рядом, заполняют правую часть до края страницы */
 .ow-photo-stack{ display:grid; grid-template-columns:repeat(2,1fr); gap:24px; }
 .ow-photo-stack .ow-photo img{ aspect-ratio:4/3; height:100%; }
