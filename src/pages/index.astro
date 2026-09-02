@@ -267,7 +267,10 @@ const navMenu = [
           <p class="body" style="font-size:18px; line-height:1.5; font-weight:500; margin-bottom:14px;">{t}</p>
         ))}
         <p class="oasis-chips">{oasisChips}</p>
-        <a class="btn btn--navy" style="margin-top:18px;" href={routeHref} target="_blank" rel="noopener noreferrer">Проложить маршрут</a>
+        <div class="oasis-cta-row">
+          <a class="btn btn--navy" href={routeHref} target="_blank" rel="noopener noreferrer">Проложить маршрут</a>
+          <a class="btn btn--ghost" href={withBase('/our-world/#about')}>О нас</a>
+        </div>
       </div>
 
       <div class="oasis-carousel oasis-carousel--wide" data-carousel>
