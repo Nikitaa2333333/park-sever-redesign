@@ -1587,6 +1587,13 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   align-items:start;
 }
 @media(max-width:860px){ .ow-split{ grid-template-columns:1fr; } }
+/* «О нас» — текст (16 абзацев) намного длиннее обычной короткой врезки-био
+   (retrievers), поэтому текстовая колонка шире. Заказчица уточнила точным
+   числом: «70% от ширины экрана» — задаём буквально в vw (не fr-пропорцию
+   от контейнера), photo забирает остаток; фото прилипает к верху колонки. */
+.ow-split--about{ grid-template-columns:70vw 1fr; }
+.ow-split--about .ow-photo{ position:sticky; top:calc(56px + 96px); }
+@media(max-width:860px){ .ow-split--about{ grid-template-columns:1fr; } .ow-split--about .ow-photo{ position:static; } }
 .ow-photo img{ display:block; width:100%; height:auto; object-fit:cover; }
 /* фото хозяйки — узкий вертикальный исходник 591×1048: держим компактный портрет */
 .ow-photo--owner{ max-width:400px; }
