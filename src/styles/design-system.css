@@ -1655,6 +1655,10 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   background:linear-gradient(to right, rgba(255,255,255,0), var(--canvas));
 }
 .ow-strip .oasis-carousel__track{ padding:0 4px; }
+/* базовый gap:28px у .oasis-carousel__track (общий для всех каруселей сайта — Оазис,
+   Атмосфера и т.д.) на узком мобильном экране между фото-лентами «Наш мир» смотрелся
+   «конским» (заказчица) — сужен точечно только для .ow-strip, не глобально. */
+@media(max-width:520px){ .ow-strip .oasis-carousel__track{ gap:14px; } }
 .ow-strip__item{ flex:0 0 clamp(260px, 30%, 380px); scroll-snap-align:start; margin:0; }
 .ow-strip__item img{
   display:block; width:100%; height:auto; aspect-ratio:4/3; object-fit:cover;
