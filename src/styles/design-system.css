@@ -1573,6 +1573,9 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   font-family:var(--font-body); font-weight:500; font-size:20px; line-height:1.4;
   color:var(--ink); max-width:62ch; margin:0 0 18px;
 }
+/* на мобиле 20px читается крупно (заказчица) — тот же кегль, что у остального
+   наборного текста сайта (.aor-p — 18px), только на телефоне */
+@media(max-width:520px){ .ow-par{ font-size:17px; } }
 /* текстовые блоки — две РАВНЫЕ колонки во всю ширину контента:
    браузер сам делит ширину пополам, правая колонка доходит до правого края страницы */
 .ow-cols{ column-count:2; column-gap:72px; column-fill:balance; width:100%; }
