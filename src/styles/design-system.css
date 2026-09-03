@@ -166,7 +166,8 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   border-radius:var(--r-btn); display:inline-block; cursor:pointer; transition:background .2s, color .2s, filter .2s; letter-spacing:-0.01em; }
 .btn:hover{ filter:brightness(0.93); }
 .btn--navy{ background:var(--navy); color:var(--on-navy); }       /* основной CTA */
-.btn--ghost{ background:transparent; color:var(--ink); border:1px solid var(--fog); }
+.btn--ghost{ background:transparent; color:var(--ink); border:1px solid var(--navy); }
+.btn--ghost:hover{ background:var(--navy); color:#fff; }
 .btn--light{ background:#fff; color:var(--navy); }                /* CTA на тёмном/фото */
 .btn--outline-light{ background:transparent; color:#fff; border:1px solid #fff; }
 .btn--gold{ background:var(--gold-l); color:var(--ink); }         /* золотой CTA (#d3b07a), текст тёмный */
