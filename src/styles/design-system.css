@@ -77,6 +77,12 @@ a{ color:inherit; text-decoration:none; }
 
 /* ── контейнер / секции (много воздуха, без теней) ──── */
 .wrap{ max-width:var(--wrap); margin:0 auto; padding:0 32px; }
+/* мобила (заказчица 03.09: «поля контента шире» = отступы уже — сначала точечно на #about,
+   теперь подтвердила — на ВСЕХ вкладках): базовые 32px паддинга сайта сужаем до 20px на
+   телефоне. Компенсирующая правка — в конце файла (см. «мобильный full-bleed 20px»):
+   любой блок, что «пробивает» это поле margin-right:-32px, должен на этом же брейкпоинте
+   получить -20px, иначе бленд промахнётся мимо края экрана и появится горизонтальный скролл. */
+@media(max-width:520px){ .wrap{ padding-left:20px; padding-right:20px; } }
 .wrap--narrow{ max-width:880px; }   /* узкий контейнер для блока «Дом» (инструмент, не центр) */
 .wrap--flush{ max-width:none; margin-left:0; margin-right:0; width:100%; }   /* прижат к левой линии экрана (как hero): контент стартует в 32px от края, тянется во всю ширину.
   margin-right явный (не auto): унаследованный из .wrap margin:0 auto в норм. блочном потоке гасится сам, но внутри flex-родителя
@@ -111,6 +117,8 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   color:#fff; margin:0 0 8px; }
 .lead{ font-weight:500; font-size:19px; line-height:1.55; color:var(--ink); max-width:60ch; letter-spacing:-0.01em; }
 .body{ font-weight:500; font-size:16px; line-height:1.6; color:var(--ink); max-width:64ch; }
+/* мобила (заказчица, правка «текст меньше» — распространили с .ow-par на весь наборный сайта) */
+@media(max-width:520px){ .lead{ font-size:17px; } }
 .eyebrow{ font-family:var(--font-head); font-size:14px; font-weight:600; color:var(--navy); letter-spacing:0; }
 /* акцент-слово в заголовке (фирменный приём) */
 .hl{ color:var(--navy); }
@@ -974,8 +982,8 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     gap: 0;
-    margin: 24px -32px 0;
-    padding: 0 32px;
+    margin: 24px -20px 0;
+    padding: 0 20px;
     -webkit-overflow-scrolling: touch;
   }
   .art-step { flex: 0 0 78%; scroll-snap-align: start; }
@@ -1597,11 +1605,6 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .ow-split--about{ grid-template-columns:70vw 1fr; }
 .ow-split--about .ow-photo{ position:sticky; top:calc(56px + 96px); }
 @media(max-width:860px){ .ow-split--about{ grid-template-columns:1fr; } .ow-split--about .ow-photo{ position:static; } }
-/* мобила: базовые 32px `.wrap`-паддинга (общие на весь сайт — их не трогаем,
-   от них зависят full-bleed бленды каруселей по всему проекту) заказчице
-   показались широкими именно для текстового блока «О нас» — сузили только
-   здесь, точечно по #about, а не глобально в .wrap. */
-@media(max-width:520px){ #about .wrap{ padding-left:20px; padding-right:20px; } }
 .ow-photo img{ display:block; width:100%; height:auto; object-fit:cover; }
 /* фото хозяйки (retrievers) — узкий вертикальный исходник 591×1048: держим компактный портрет */
 .ow-photo--owner{ max-width:400px; }
@@ -1749,6 +1752,8 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   color:var(--ink); max-width:66ch; margin:0 0 16px; }
 .aor-p:last-child{ margin-bottom:0; }
 .sec--navy .aor-p{ color:#fff; }
+/* мобила — тот же принцип, что у .ow-par/.lead (заказчица: наборный текст мельче на телефоне) */
+@media(max-width:520px){ .aor-p{ font-size:16px; } }
 .aor-p--sm{ font-size:16px; line-height:1.55; }   /* второстепенная заметка — единственный младший кегль наборного */
 
 /* иконки — залитые Material Symbols (fill=currentColor, размер задаёт контейнер) */
@@ -1820,7 +1825,7 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .included-mobile{ display:none; }
 .included-swipe{
   display:flex; overflow-x:auto; scroll-snap-type:x mandatory;
-  gap:14px; margin:24px -32px 0; padding:0 32px 4px;
+  gap:14px; margin:24px -20px 0; padding:0 20px 4px;
   -webkit-overflow-scrolling:touch;
 }
 .included-card{
@@ -2218,4 +2223,20 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   .season-row{ grid-template-columns:1fr; }
   .atm-marquee__group{ gap:44px; padding-right:44px; }
   .atm-icons__item{ flex:0 0 112px; }
+}
+
+/* ══════════════ мобильный full-bleed 20px (заказчица 03.09) ══════════════
+   .wrap на ≤520px сузился с 32px до 20px (см. правило у .wrap). Всё, что «пробивает»
+   это поле через margin-right:-32px (не имея своей компенсирующей padding-обвязки —
+   те случаи уже поправлены точечно, в месте объявления: .art-steps, .included-swipe),
+   должно на этом же брейкпоинте получить -20px, иначе бленд промахнётся мимо
+   истинного края экрана и на странице появится лишний горизонтальный скролл. Блок
+   размещён в конце файла намеренно — при равной специфичности выигрывает последнее
+   правило в каскаде, а не медиа-запрос, объявленный раньше. */
+@media(max-width:520px){
+  .oasis-carousel{ margin-right:-20px; }
+  .filmstrip{ margin-right:-20px; }
+  .ow-strip{ margin-right:-20px; }
+  .atm-marquee{ margin-left:-20px; margin-right:-20px; }
+  .atm-hero__video{ margin:0 -20px; }
 }
