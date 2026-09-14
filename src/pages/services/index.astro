@@ -7,9 +7,8 @@ import type { ImageMetadata } from 'astro';
 
 // «Дополнительные услуги» — отдельная страница-каталог (правка заказчицы 25.08).
 // Контент инлайн (не JSON) — заказчица прямо сказала, что будет часто менять.
-// Фото есть пока только для «Сервировки» (вытащены из pptx заказчицы) — карточки
-// остальных категорий временно с плейсхолдером-номером; когда пришлют фото,
-// добавить `photo:` в объект категории — рендер уже это умеет.
+// Фото: «Сервировка» — из pptx заказчицы; гриль/шеф/шары/торт/индивидуальное —
+// из папок заказчицы (правки docx «08.09.2026»), оптимизированы sharp → max 1600px.
 const imgAssets = import.meta.glob<{ default: ImageMetadata }>(
   '/src/assets/images/services/*.{jpg,jpeg,png}',
   { eager: true },
@@ -17,6 +16,14 @@ const imgAssets = import.meta.glob<{ default: ImageMetadata }>(
 const img = (name: string) => imgAssets[`/src/assets/images/services/${name}`]?.default;
 const c = site.contacts;
 const booking = site.contacts.bookingHref;
+
+// кнопки мессенджеров для «Индивидуального оформления» (docx 08.09: «кнопки на все
+// наши мессенджеры») — те же контакты, что в `messengers` на /atmosphere/
+const messengers = [
+  { label: 'Написать в ВКонтакте', href: 'https://vk.me/park_sever', cls: 'btn--navy' },
+  { label: 'Telegram', href: 'https://t.me/park_sever', cls: 'btn--ghost' },
+  { label: 'WhatsApp', href: c.whatsapp, cls: 'btn--ghost' },
+];
 
 const socialLabels: Record<string, string> = {
   vk: 'ВКонтакте', whatsapp: 'WhatsApp', tiktok: 'TikTok',
@@ -37,7 +44,14 @@ const balloons = [
   { name: 'Шары «Сердце», 15 шт', price: '5 600 ₽' },
   { name: 'Шары 15 шт, золото', price: '3 400 ₽' },
   { name: 'Шары 15 шт, красные пастель', price: '2 900 ₽' },
+  // docx 08.09: «К Шарам добавить: Фонтан из шаров…»
+  { name: 'Фонтан из шаров', price: '3 200 ₽', desc: 'Фонтан 1 шт (9 шаров), из них фольгированные звёзды (или сердца) — 3 шт. В фонтане можно менять цвета шаров.' },
 ];
+// фото шаров/торта/индивидуального оформления — из папок заказчицы (08.09)
+const balloonPhotos = ['balloons-2.jpg', 'balloons-3.jpg', 'balloons-4.jpg', 'balloons-5.jpg'];
+const cakePhotos = ['cake-2.jpg', 'cake-3.jpg', 'cake-4.jpg', 'cake-5.jpg'];
+const customPhotos = ['custom-2.jpg', 'custom-3.jpg', 'custom-4.jpg', 'custom-5.jpg'];
+const chefPhotos = ['chef-1.jpg', 'chef-2.jpg', 'chef-3.jpg', 'chef-4.jpg'];
 const cakeWeights = [
   { weight: '400 г', price: '3 000 ₽' },
   { weight: '800 г', price: '4 000 ₽' },
@@ -45,8 +59,7 @@ const cakeWeights = [
 const cakeFlavors = ['Ваниль с клубникой', 'Шоколадный с вишней', 'Персик-ваниль'];
 // состав + фото — из второго pptx заказчицы (25.08, «Сервировка»). По её просьбе
 // не пишем «подходит для» (это было в файле для каждого набора) — только состав.
-// «Мужская шалость» в исходном списке заказчицы (из голосового) не упоминалась,
-// но есть в файле с полным составом и ценой — добавили как есть.
+// «Мужская шалость» (была 4-й, из pptx) убрана полностью по docx 08.09.
 const servings = [
   {
     name: 'Бордовая роза', price: '1 800 ₽', photo: 'serving-1-rose.jpg',
@@ -79,17 +92,6 @@ const servings = [
       'В креманках: сметана и варенье (вкус варенья уточняется по факту)',
       'Блюдо с блинчиками (без начинки)',
       'Два конвертика с блинчиками на тарелках (начинка уточняется по согласованию)',
-    ],
-  },
-  {
-    name: 'Мужская шалость: карты, сигареты и сливки', price: '3 000 ₽', photo: 'serving-4-mens.jpg',
-    items: [
-      'Сервировка стола (бокалы, тарелки, столовые приборы согласно фото)',
-      'Оформление из салфеток «пиджак для него и для неё» на тарелках',
-      'Креманки со взбитыми сливками и с клубникой',
-      'Тарелка со съедобными сигаретами',
-      'Свечи (4 высокие тонкие, 2 чайные)',
-      'Карты игральные «Советский pin up»',
     ],
   },
   {
@@ -134,7 +136,7 @@ const grillSets = [
     emoji: '🥩', title: 'Северный гриль', price: '7 500 ₽',
     desc: 'Классика отдыха за городом.',
     items: [
-      'Замаринованное мясо: свиная шейка, куриные шашлычки на шпажках',
+      'Замаринованное мясо: свиная шейка (0,7–0,8 кг), куриное бедро без кости (0,7–0,8 кг)',
       'Свежие овощи на стол: красный лук, помидоры, огурцы, зелень',
       'Овощи для гриля: красный перец, кабачок, помидоры, грибы',
       'Лаваш — 2 шт',
@@ -168,7 +170,7 @@ const grillSets = [
     emoji: '🐟', title: 'Вечер на террасе', price: '8 500 ₽',
     desc: 'Лёгкий ужин с видом на лес — рыба на гриле, овощи и неспешный вечер на террасе среди тишины и природы.',
     items: [
-      'На выбор: стейки форели (4 шт) или дорадо (2 шт)',
+      'На выбор: стейки форели (2 шт) или дорадо (2 шт)',
       'Картофель для запекания в фольге',
       'Овощи для гриля: красный перец, кабачок, помидоры',
       'Багет — 1 шт',
@@ -185,9 +187,9 @@ const soups = [
   { title: 'Борщ', price: '3 500 ₽', desc: 'Готовится заранее и ждёт в холодильнике к приезду, в кастрюле. Объём 2–2,5 л.' },
   { title: 'Куриный бульон', price: '2 500 ₽', desc: 'Готовится заранее и ждёт в холодильнике к приезду, в кастрюле. Объём 2–2,5 л.' },
 ];
-// в pptx цена услуги указана дважды по-разному (3 500 ₽ и 3 000 ₽/вечер) — до
-// уточнения у заказчицы цену на сайте не показываем, только описание
+// цена — из docx 08.09 («Стоимость услуги – 4 т.р.»), снимает разночтение pptx (3 500 / 3 000)
 const chefDesc = 'Шеф-повар готовит и подаёт блюда на мангале в течение вечера — продукты по выбранному гриль-меню уже будут ждать вас к заселению.';
+const chefPrice = '4 000 ₽';
 
 // навигация по разделам — верхняя вкладочная менюшка, как «Этап 1,2,3» на /art-of-rest
 // (заказчица 29.08: убрать модальные окошки, категория открывается сразу по клику
@@ -222,6 +224,7 @@ const tabs = [
       <div class="shead" style="margin-bottom:8px;">
         <h1 class="h1">Дополнительные услуги</h1>
         <p class="lead" style="text-align:center;">Гастрономический сервис — единственная категория услуг, которая оплачивается отдельно. Для тех случаев, когда хочется полностью забыть о бытовых вопросах.</p>
+        <p class="lead" style="text-align:center;">Вы можете заказать дополнительные услуги как при бронировании на сайте, так и после оформления брони проживания — мы дополнительно направим ссылку.</p>
       </div>
     </div>
   </section>
@@ -243,8 +246,25 @@ const tabs = [
   <section class="sec" id="grill">
     <div class="wrap wrap--flush">
       <h2 class="h2">Гриль-меню</h2>
+      <!-- первые два сета + фото корзины (docx 08.09 «Добавить фото к гриль-меню»), остальные два — ниже в две колонки -->
+      <div class="aor-split">
+        <div>
+          {grillSets.slice(0, 2).map((s) => (
+            <>
+              <h3 class="aor-h3">{s.emoji} {s.title} — {s.price}</h3>
+              <p class="aor-p">{s.desc}</p>
+              <ul class="aor-list">
+                {s.items.map((it: string) => <li>{it}</li>)}
+              </ul>
+            </>
+          ))}
+        </div>
+        <div class="aor-split__pic">
+          <Image src={img('grill-1.jpg')!} alt="Корзина с продуктами для гриля" widths={[520, 800, 1100]} sizes="(max-width:860px) 100vw, 44vw" format="webp" quality={87} loading="lazy" />
+        </div>
+      </div>
       <div class="aor-duo">
-        {grillSets.map((s) => (
+        {grillSets.slice(2).map((s) => (
           <div>
             <h3 class="aor-h3" style="margin-top:0;">{s.emoji} {s.title} — {s.price}</h3>
             <p class="aor-p">{s.desc}</p>
@@ -286,7 +306,14 @@ const tabs = [
     <div class="wrap wrap--flush">
       <h2 class="h2">Шеф-повар для мангала</h2>
       <p class="aor-p" style="margin-top:24px;">{chefDesc}</p>
-      <p class="aor-p">Стоимость уточняется.</p>
+      <p class="aor-strong">Стоимость услуги — {chefPrice}</p>
+      <div class="aor-tiles">
+        {chefPhotos.map((p) => (
+          <figure class="aor-tile">
+            <Image src={img(p)!} alt="Шеф-повар для мангала" widths={[320, 520, 800]} sizes="(max-width:520px) 100vw, (max-width:900px) 50vw, 25vw" format="webp" quality={85} loading="lazy" />
+          </figure>
+        ))}
+      </div>
     </div>
   </section>
   </div>
@@ -296,9 +323,23 @@ const tabs = [
   <section class="sec sec--cream" id="balloons">
     <div class="wrap wrap--flush">
       <h2 class="h2">Оформление шарами</h2>
-      <ul class="aor-list" style="margin-top:24px;">
-        {balloons.map((b) => <li><b>{b.name}</b> — {b.price}</li>)}
-      </ul>
+      <div class="aor-split">
+        <div>
+          <ul class="aor-list" style="margin-top:0;">
+            {balloons.map((b) => <li><b>{b.name}</b> — {b.price}{b.desc ? `. ${b.desc}` : ''}</li>)}
+          </ul>
+        </div>
+        <div class="aor-split__pic">
+          <Image src={img('balloons-1.jpg')!} alt="Оформление шарами в спальне" widths={[520, 800, 1100]} sizes="(max-width:860px) 100vw, 44vw" format="webp" quality={87} loading="lazy" />
+        </div>
+      </div>
+      <div class="aor-tiles">
+        {balloonPhotos.map((p) => (
+          <figure class="aor-tile">
+            <Image src={img(p)!} alt="Оформление шарами" widths={[320, 520, 800]} sizes="(max-width:520px) 100vw, (max-width:900px) 50vw, 25vw" format="webp" quality={85} loading="lazy" />
+          </figure>
+        ))}
+      </div>
     </div>
   </section>
   </div>
@@ -308,14 +349,28 @@ const tabs = [
   <section class="sec" id="cake">
     <div class="wrap wrap--flush">
       <h2 class="h2">Торт</h2>
-      <h3 class="aor-h3">Бенто-торт</h3>
-      <ul class="aor-list">
-        {cakeWeights.map((w) => <li>Вес {w.weight} — {w.price}</li>)}
-      </ul>
-      <h3 class="aor-h3">3 вкуса на выбор</h3>
-      <ul class="aor-list">
-        {cakeFlavors.map((f) => <li>{f}</li>)}
-      </ul>
+      <div class="aor-split">
+        <div>
+          <h3 class="aor-h3">Бенто-торт</h3>
+          <ul class="aor-list">
+            {cakeWeights.map((w) => <li>Вес {w.weight} — {w.price}</li>)}
+          </ul>
+          <h3 class="aor-h3">3 вкуса на выбор</h3>
+          <ul class="aor-list">
+            {cakeFlavors.map((f) => <li>{f}</li>)}
+          </ul>
+        </div>
+        <div class="aor-split__pic">
+          <Image src={img('cake-1.jpg')!} alt="Бенто-торт" widths={[520, 800, 1100]} sizes="(max-width:860px) 100vw, 44vw" format="webp" quality={87} loading="lazy" />
+        </div>
+      </div>
+      <div class="aor-tiles">
+        {cakePhotos.map((p) => (
+          <figure class="aor-tile">
+            <Image src={img(p)!} alt="Бенто-торт" widths={[320, 520, 800]} sizes="(max-width:520px) 100vw, (max-width:900px) 50vw, 25vw" format="webp" quality={85} loading="lazy" />
+          </figure>
+        ))}
+      </div>
     </div>
   </section>
   </div>
@@ -351,7 +406,25 @@ const tabs = [
   <section class="sec" id="custom">
     <div class="wrap wrap--flush">
       <h2 class="h2">Индивидуальное оформление</h2>
-      <p class="aor-p" style="margin-top:24px;">Условия уточняются — добавим подробности в ближайшее время.</p>
+      <div class="aor-split">
+        <div>
+          <p class="aor-p" style="margin-top:0;">Условия уточняются в зависимости от заказа.</p>
+          <p class="aor-p">Расскажите о вашем поводе:</p>
+          <div class="oasis-cta-row">
+            {messengers.map((m) => <a class={`btn ${m.cls}`} href={m.href} target="_blank" rel="noopener noreferrer">{m.label}</a>)}
+          </div>
+        </div>
+        <div class="aor-split__pic">
+          <Image src={img('custom-1.jpg')!} alt="Индивидуальное оформление стола" widths={[520, 800, 1100]} sizes="(max-width:860px) 100vw, 44vw" format="webp" quality={87} loading="lazy" />
+        </div>
+      </div>
+      <div class="aor-tiles">
+        {customPhotos.map((p) => (
+          <figure class="aor-tile">
+            <Image src={img(p)!} alt="Индивидуальное оформление" widths={[320, 520, 800]} sizes="(max-width:520px) 100vw, (max-width:900px) 50vw, 25vw" format="webp" quality={85} loading="lazy" />
+          </figure>
+        ))}
+      </div>
     </div>
   </section>
   </div>
