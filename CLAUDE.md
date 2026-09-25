@@ -42,6 +42,7 @@
 - `src/pages/index.astro` — главная.
 - `src/styles/design-system.css` — дизайн-система (токены + классы).
 - `src/layouts/SiteLayout.astro` — каркас, шрифты, инициализация виджета брони.
+- `checkin/` — отдельный PHP-модуль онлайн-регистрации гостя (анкета + договор найма + ПЭП + PDF), см. `checkin/README.md`. Не часть Astro-сборки, деплоится отдельно (в rsync стоит `--exclude '/checkin/'`).
 
 ## Интеграции (в `site.json` → integrations)
 
