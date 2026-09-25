@@ -9,6 +9,7 @@ return [
     'house-1' => [
         'name' => 'Дом №1 «Nordic Gold»',
         'short' => 'Nordic Gold',
+        'photo' => 'img/house-1.jpg', // кадр с главной (hero)
         'guests' => 2,
         'inventory' => [
             ['group' => 'Остекление', 'items' => [
@@ -42,6 +43,7 @@ return [
     'house-2' => [
         'name' => 'Дом №2',
         'short' => 'Дом №2',
+        'photo' => 'img/house-1.jpg', // ⚠ заменить на фото второго дома
         'guests' => 2,
         'inventory' => [
             ['group' => 'Остекление', 'items' => [

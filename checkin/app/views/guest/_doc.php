@@ -4,7 +4,7 @@
 $sheet = function (string $id, string $title, string $html) {
     return '<section class="sheet" id="' . $id . '" role="dialog" aria-modal="true" aria-label="' . h($title) . '">'
         . '<div class="sheet__panel"><header class="sheet__head"><h3>' . h($title) . '</h3>'
-        . '<button type="button" class="sheet__close" data-sheet-close aria-label="Закрыть">' . icon('x') . '</button></header>'
+        . '<button type="button" class="sheet__close" data-sheet-close aria-label="Закрыть">×</button></header>'
         . '<div class="sheet__body">' . $html . '</div>'
         . '<footer class="sheet__foot"><button type="button" class="btn btn--navy btn--wide" data-sheet-close>Прочитал(а)</button></footer></div></section>';
 };

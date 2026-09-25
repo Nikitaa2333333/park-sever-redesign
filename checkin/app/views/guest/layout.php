@@ -13,7 +13,7 @@
 <body class="g">
 <header class="g-top"><div class="g-top__in">
   <span class="g-logo">Парк Север</span>
-  <span class="g-top__note"><?= icon('lock') ?>Защищённая персональная ссылка</span>
+  <span class="g-top__note">Персональная ссылка</span>
 </div></header>
 <div class="g-main">
   <main><?= $body ?></main>

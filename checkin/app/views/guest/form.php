@@ -16,7 +16,7 @@ $acc = acceptance_texts(true);
 $check = function (string $name, string $html, bool $required = true, string $extra = '') use ($v, $e) {
     return '<label class="agree' . (isset($e[$name]) ? ' agree--err' : '') . '"' . $extra . '>'
         . '<input type="checkbox" name="' . $name . '" value="1"' . ($required ? ' required' : '') . ' data-accept' . (!empty($v[$name]) ? ' checked' : '') . '>'
-        . '<span class="agree__box">' . icon('check') . '</span><span class="agree__text">' . $html . '</span></label>';
+        . '<span class="agree__text">' . $html . '</span></label>';
 };
 ?>
 <section class="welcome">
@@ -43,7 +43,6 @@ $check = function (string $name, string $html, bool $required = true, string $ex
 
   <fieldset class="g-step" data-step="1" data-title="Знакомство">
     <legend class="step-head">
-      <span class="step-head__ico"><?= icon('user') ?></span>
       <span class="g-h2">Давайте познакомимся</span>
       <span class="step-head__sub">Как в паспорте — эти данные войдут в договор.</span>
     </legend>
@@ -59,7 +58,6 @@ $check = function (string $name, string $html, bool $required = true, string $ex
 
   <fieldset class="g-step" data-step="2" data-title="Паспорт">
     <legend class="step-head">
-      <span class="step-head__ico"><?= icon('identification-card') ?></span>
       <span class="g-h2">Паспорт</span>
       <span class="step-head__sub">Нужен для договора найма. Данные хранятся зашифрованными и видны только администратору.</span>
     </legend>
@@ -78,7 +76,6 @@ $check = function (string $name, string $html, bool $required = true, string $ex
 
   <fieldset class="g-step" data-step="3" data-title="Поездка">
     <legend class="step-head">
-      <span class="step-head__ico"><?= icon('car') ?></span>
       <span class="g-h2">Как приедете?</span>
       <span class="step-head__sub">Номер машины нужен для пропуска — шлагбаум откроется сам.</span>
     </legend>
@@ -90,7 +87,6 @@ $check = function (string $name, string $html, bool $required = true, string $ex
 
     <label class="toggle">
       <input type="checkbox" name="has_guest2" value="1" <?= !empty($v['has_guest2']) ? 'checked' : '' ?> data-toggle="guest2">
-      <span class="toggle__ico"><?= icon('users') ?></span>
       <span class="toggle__text"><b>Со мной второй гость</b><span>Добавим его в договор — ему ничего заполнять не нужно</span></span>
       <span class="toggle__switch"></span>
     </label>
@@ -107,7 +103,6 @@ $check = function (string $name, string $html, bool $required = true, string $ex
 
   <fieldset class="g-step" data-step="4" data-title="Правила фермы">
     <legend class="step-head">
-      <span class="step-head__ico"><?= icon('leaf') ?></span>
       <span class="g-h2">Пара правил фермы</span>
       <span class="step-head__sub">Рядом с вами живут ретриверы и благородные олени. Чтобы всем было спокойно — вот о чём мы просим.</span>
     </legend>
@@ -118,7 +113,6 @@ $check = function (string $name, string $html, bool $required = true, string $ex
 
   <fieldset class="g-step" data-step="5" data-title="Договор и подпись">
     <legend class="step-head">
-      <span class="step-head__ico"><?= icon('signature') ?></span>
       <span class="g-h2">Договор и подпись</span>
       <span class="step-head__sub">Проверьте данные, откройте документы и подпишите одной кнопкой.</span>
     </legend>
@@ -127,19 +121,16 @@ $check = function (string $name, string $html, bool $required = true, string $ex
 
     <div class="docs-list">
       <button type="button" class="doc-row" data-sheet="sheet-contract">
-        <span class="doc-row__ico"><?= icon('file-text') ?></span>
         <span class="doc-row__t"><b>Договор найма жилого дома</b><span><?= count($doc['contract']) ?> разделов · ~5 минут</span></span>
         <span class="doc-row__go">Читать</span>
       </button>
       <?php if ($doc['inventory']): ?>
       <button type="button" class="doc-row" data-sheet="sheet-inventory">
-        <span class="doc-row__ico"><?= icon('list-checks') ?></span>
         <span class="doc-row__t"><b>Опись имущества дома</b><span>Приложение № 1<?= $doc['defects'] ? ' · есть отметки о дефектах' : '' ?></span></span>
         <span class="doc-row__go">Читать</span>
       </button>
       <?php endif; ?>
       <button type="button" class="doc-row" data-sheet="sheet-consent">
-        <span class="doc-row__ico"><?= icon('shield-check') ?></span>
         <span class="doc-row__t"><b>Согласие на обработку данных</b><span>152-ФЗ · отдельный документ</span></span>
         <span class="doc-row__go">Читать</span>
       </button>
@@ -152,12 +143,12 @@ $check = function (string $name, string $html, bool $required = true, string $ex
       <?= $check('agree_guest2', h($acc['agree_guest2']), false, ' data-guest2-only' . (empty($v['has_guest2']) ? ' hidden' : '')) ?>
     </div>
 
-    <button class="btn btn--gold btn--wide btn--sign" type="submit" data-sign><?= icon('signature') ?>Подписать договор найма и подтвердить регистрацию</button>
-    <p class="note note--lock"><?= icon('lock') ?>Это простая электронная подпись (ст. 434, 438 ГК РФ, 63-ФЗ). Мы сохраним дату и время, IP-адрес и данные устройства, а вам — PDF-копию договора.</p>
+    <button class="btn btn--gold btn--wide btn--sign" type="submit" data-sign>Подписать договор найма</button>
+    <p class="note">Нажимая кнопку, вы подтверждаете регистрацию. Это простая электронная подпись (ст. 434, 438 ГК РФ, 63-ФЗ). Мы сохраним дату и время, IP-адрес и данные устройства, а вам — PDF-копию договора.</p>
   </fieldset>
 
   <div class="g-nav" data-nav hidden>
     <button class="g-nav__back" type="button" data-prev>Назад</button>
-    <button class="btn btn--navy" type="button" data-next>Продолжить<?= icon('arrow-right') ?></button>
+    <button class="btn btn--navy" type="button" data-next>Продолжить</button>
   </div>
 </form>

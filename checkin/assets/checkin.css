@@ -31,8 +31,7 @@ button{ font:inherit }
 .g-top__in{ display:contents }
 @media (min-width:720px){ .g-top{ display:block } .g-top__in{ display:flex; align-items:center; justify-content:space-between; gap:16px; max-width:640px; margin:0 auto } }
 .g-logo{ font-family:var(--font-display); font-size:30px; line-height:1; white-space:nowrap }
-.g-top__note{ display:inline-flex; align-items:center; gap:7px; font-size:13px; font-weight:600 }
-.g-top__note .ico{ color:var(--gold-l); font-size:16px }
+.g-top__note{ font-size:13px; font-weight:600 }
 .g-main{ padding:0 var(--gut); max-width:calc(640px + var(--gut) * 2); margin:0 auto }
 
 .welcome{ padding:34px 0 8px }
@@ -42,27 +41,26 @@ button{ font:inherit }
 .g-p{ margin:0 0 18px }
 .g-block{ padding:28px 0 12px }
 .note{ font-size:14px; line-height:1.5; margin:10px 0 18px }
-.note--lock{ display:flex; gap:9px; align-items:flex-start; margin-top:14px }
-.note--lock .ico{ color:var(--navy); font-size:18px; margin-top:1px }
 .g-alert{ margin:18px 0 0; padding:14px 16px; background:var(--sand); border-left:3px solid var(--navy); font-weight:600 }
-.done-mark{ display:inline-flex; align-items:center; gap:8px; margin:0 0 16px; padding:7px 12px; background:var(--navy); color:#fff; font-size:14px; font-weight:600 }
-.done-mark .ico{ color:var(--gold-l); font-size:18px }
+.done-mark{ display:inline-block; margin:0 0 16px; padding:7px 12px; background:var(--navy); color:#fff; font-size:14px; font-weight:600 }
 
-/* «билет» — условия брони */
+/* «билет» — условия брони: фото дома с navy-градиентом, даты, цена гротеском (заказчик) */
+:root{ --font-sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif }
 .ticket{ border:1px solid var(--fog); background:#fff }
-.ticket__house{ display:flex; align-items:center; gap:10px; margin:0; padding:14px 18px 0; font-weight:600; font-size:16px }
-.ticket__house .ico{ color:var(--gold-l); font-size:22px }
-.ticket__dates{ display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:10px; padding:12px 18px 16px }
+.ticket__cover{ position:relative; aspect-ratio:16/8; background:var(--navy); display:flex; align-items:flex-end; overflow:hidden }
+.ticket__cover img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover }
+.ticket__cover::before{ content:""; position:absolute; inset:0; background:linear-gradient(to top, var(--navy) 0%, rgba(15,42,71,.72) 34%, rgba(15,42,71,0) 70%) }
+.ticket__house{ position:relative; margin:0; padding:16px 18px 14px; color:#fff; font-family:var(--font-display); font-size:30px; line-height:1 }
+.ticket__dates{ display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:10px; padding:16px 18px }
 .ticket__dates > div{ display:flex; flex-direction:column; min-width:0 }
 .ticket__dates > div:last-child{ text-align:right }
 .ticket__lbl{ font-size:13px; font-weight:600 }
 .ticket__dates b{ font-size:23px; font-weight:600; line-height:1.2; white-space:nowrap }
 .ticket__dates span{ font-size:14px }
-.ticket__mid{ display:flex !important; flex-direction:column; align-items:center; gap:2px; text-align:center }
-.ticket__mid span{ font-size:13px; font-weight:600; padding:3px 8px; background:var(--cream); white-space:nowrap }
-.ticket__mid .ico{ color:var(--gold-l); font-size:22px }
-.ticket__foot{ display:flex; flex-wrap:wrap; gap:4px 20px; padding:12px 18px; background:var(--cream); font-size:14px }
-.ticket__foot b{ font-weight:600 }
+.ticket__mid{ display:flex !important; align-items:center; justify-content:center }
+.ticket__mid span{ font-size:13px; font-weight:600; padding:4px 10px; background:var(--cream); white-space:nowrap }
+.ticket__foot{ display:flex; flex-wrap:wrap; gap:4px 20px; padding:12px 18px; background:var(--cream); font-family:var(--font-sans); font-size:14px; font-weight:400 }
+.ticket__foot b{ font-weight:600; font-variant-numeric:tabular-nums }
 @media (max-width:380px){ .ticket__dates b{ font-size:20px } }
 
 /* ── форма ───────────────────────────────────────── */
@@ -78,7 +76,6 @@ html:not(.js) .progress{ display:none }
 .g-step{ border:0; margin:0; padding:18px 0 8px; min-width:0 }
 .step-head{ float:left; width:100%; padding:0; margin:0 0 22px; display:block }
 .step-head + *{ clear:both }
-.step-head__ico{ width:46px; height:46px; display:grid; place-items:center; background:var(--cream); color:var(--navy); font-size:24px; margin:0 0 14px }
 .step-head .g-h2{ display:block }
 .step-head__sub{ display:block; font-size:16px; line-height:1.5 }
 
@@ -109,8 +106,7 @@ html:not(.js) .progress{ display:none }
 .passport__title{ margin:0 0 16px; font-size:13px; font-weight:600; letter-spacing:.06em; text-transform:uppercase }
 
 .toggle{ display:flex; align-items:center; gap:14px; padding:16px; border:1px solid var(--fog); cursor:pointer; margin:8px 0 18px }
-.toggle input, .agree input{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap }
-.toggle__ico{ width:42px; height:42px; flex:0 0 42px; display:grid; place-items:center; background:var(--cream); color:var(--navy); font-size:22px }
+.toggle input{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap }
 .toggle__text{ flex:1; display:flex; flex-direction:column; font-size:14px; line-height:1.4 }
 .toggle__text b{ font-size:16px; font-weight:600 }
 .toggle__switch{ flex:0 0 46px; height:26px; background:var(--fog); position:relative; transition:background .2s }
@@ -130,23 +126,18 @@ html:not(.js) .progress{ display:none }
 .rule__head .ico{ color:var(--gold-l); font-size:24px }
 .rule__text{ margin:0; font-size:14.5px; line-height:1.5 }
 
-/* галочки-согласия — карточки */
-.agrees{ margin:18px 0 20px; display:grid; gap:10px }
-.agree{ display:flex; gap:14px; align-items:flex-start; padding:15px 16px; border:1px solid var(--fog); cursor:pointer; font-size:15px; line-height:1.45; background:#fff }
-.agree__box{ flex:0 0 26px; width:26px; height:26px; border:1.5px solid var(--navy); display:grid; place-items:center; color:#fff; font-size:16px; background:#fff }
-.agree__box .ico{ visibility:hidden }
-.agree input:checked + .agree__box{ background:var(--navy) }
-.agree input:checked + .agree__box .ico{ visibility:visible }
-.agree:has(input:checked){ border-color:var(--navy); background:var(--frost) }
-.agree input:focus-visible + .agree__box{ outline:2px solid var(--gold-l); outline-offset:2px }
-.agree--err{ border:2px solid var(--ink); background:var(--sand) }
-.g-step[data-step="4"] .agree{ margin-top:14px }
+/* согласия — обычные чекбоксы, без карточек */
+.agrees{ margin:22px 0 22px; display:grid; gap:14px }
+.agree{ display:flex; gap:12px; align-items:flex-start; cursor:pointer; font-size:15px; line-height:1.45 }
+.agree input{ flex:0 0 20px; width:20px; height:20px; margin:2px 0 0; accent-color:var(--navy); cursor:pointer }
+.agree input:focus-visible{ outline:2px solid var(--gold-l); outline-offset:2px }
+.agree--err{ background:var(--sand); padding:10px 12px; margin:0 -12px }
+.g-step[data-step="4"] .agree{ margin-top:18px }
 
 /* документы — строки, открываются шторкой */
 .docs-list{ display:grid; margin:0 0 6px }
 .doc-row{ display:flex; align-items:center; gap:14px; width:100%; padding:15px 16px; border:1px solid var(--fog); margin-top:-1px; background:#fff; font:inherit; color:var(--ink); text-align:left; cursor:pointer; text-decoration:none }
 .doc-row:hover{ background:var(--cream) }
-.doc-row__ico{ color:var(--gold-l); font-size:28px; display:grid }
 .doc-row__t{ flex:1; display:flex; flex-direction:column; font-size:13px; line-height:1.4; min-width:0 }
 .doc-row__t b{ font-size:16px; font-weight:600 }
 .doc-row__go{ display:inline-flex; align-items:center; gap:6px; font-size:14px; font-weight:600; text-decoration:underline; text-underline-offset:3px; white-space:nowrap }
@@ -161,7 +152,7 @@ html:not(.js) .progress{ display:none }
 @media (prefers-reduced-motion:reduce){ .js .sheet__panel{ animation:none } }
 .sheet__head{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:16px 20px; border-bottom:1px solid var(--fog) }
 .sheet__head h3{ margin:0; font-size:18px; font-weight:600; line-height:1.3 }
-.sheet__close{ background:none; border:0; padding:6px; font-size:24px; color:var(--ink); cursor:pointer; display:grid }
+.sheet__close{ background:none; border:0; padding:0 6px; font:400 30px/1 var(--font-body); color:var(--ink); cursor:pointer }
 html:not(.js) .sheet__close, html:not(.js) .sheet__foot{ display:none }
 .sheet__body{ overflow:auto; padding:6px 20px 18px; -webkit-overflow-scrolling:touch }
 .sheet__body h4{ font-size:16px; font-weight:600; margin:18px 0 6px; line-height:1.35 }
@@ -205,7 +196,7 @@ body.sheet-lock{ overflow:hidden }
 .btn:disabled{ background:var(--fog); border-color:var(--fog); color:var(--ink); cursor:not-allowed }
 .btn--wide{ width:100% }
 .btn--sm{ min-height:38px; padding:8px 14px; font-size:14px }
-.btn--sign{ min-height:62px; font-size:17px; padding:14px 20px }
+.btn--sign{ min-height:58px; font-size:17px; padding:14px 20px; white-space:nowrap }
 
 .g-nav{ position:sticky; bottom:0; z-index:4; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 0 calc(12px + env(safe-area-inset-bottom)); background:#fff; border-top:1px solid var(--fog); margin-top:8px }
 .g-nav .btn{ margin-left:auto; min-width:200px }
