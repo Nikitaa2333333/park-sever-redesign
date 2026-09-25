@@ -9,7 +9,6 @@
       <b><?= h(fmt_dm($terms['checkin_at'])) ?></b>
       <span><?= h(fmt_wd($terms['checkin_at'])) ?>, с <?= h(fmt_time($terms['checkin_at'])) ?></span>
     </div>
-    <div class="ticket__mid"><span><?= h(nights_label($terms['nights'])) ?></span></div>
     <div>
       <span class="ticket__lbl">Выезд</span>
       <b><?= h(fmt_dm($terms['checkout_at'])) ?></b>
