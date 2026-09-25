@@ -293,6 +293,11 @@ function new_token(): string
 function fmt_date(string $dt): string { return date('d.m.Y', strtotime($dt)); }
 function fmt_time(string $dt): string { return date('H:i', strtotime($dt)); }
 function fmt_dt(string $dt): string { return date('d.m.Y H:i', strtotime($dt)); }
+const MONTHS_GEN = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+const WEEKDAYS = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
+function fmt_dm(string $dt): string { $t = strtotime($dt); return date('j', $t) . ' ' . MONTHS_GEN[(int)date('n', $t) - 1]; }
+function fmt_wd(string $dt): string { return WEEKDAYS[(int)date('w', strtotime($dt))]; }
+function nights_label(int $n): string { return $n . ' ' . plural($n, 'ночь', 'ночи', 'ночей'); }
 function fmt_rub(int $n): string { return number_format($n, 0, ',', "\u{202F}") . "\u{00A0}₽"; }
 
 function fmt_utc_as_msk(string $utc): string
@@ -315,6 +320,8 @@ function plural(int $n, string $one, string $few, string $many): string
     if ($n10 >= 2 && $n10 <= 4 && ($n100 < 10 || $n100 >= 20)) return $few;
     return $many;
 }
+
+require_once __DIR__ . '/icons.php';
 
 function houses(): array
 {
@@ -414,7 +421,7 @@ function security_headers(): void
 function field(string $name, string $label, array $v, array $errors, array $attrs = [], string $hint = ''): string
 {
     $type = $attrs['type'] ?? 'text';
-    $req = !empty($attrs['required']);
+    $req = !empty($attrs['required']) || !empty($attrs['data-req']); // data-req: обязательно, когда блок включён
     unset($attrs['type'], $attrs['required']);
     $a = '';
     foreach ($attrs as $k => $val) $a .= ' ' . $k . '="' . h((string)$val) . '"';
@@ -424,7 +431,7 @@ function field(string $name, string $label, array $v, array $errors, array $attr
     $html = '<div class="fld' . ($err ? ' fld--err' : '') . '">'
         . '<label for="' . $id . '">' . h($label) . ($req ? '' : ' <span class="fld__opt">необязательно</span>') . '</label>';
     if ($type === 'textarea') {
-        $html .= '<textarea id="' . $id . '" name="' . $name . '"' . ($req ? ' required' : '') . $a . '>' . h($value) . '</textarea>';
+        $html .= '<textarea id="' . $id . '" name="' . $name . '"' . (!empty($attrs['data-req']) ? '' : ($req ? ' required' : '')) . $a . '>' . h($value) . '</textarea>';
     } else {
         $html .= '<input id="' . $id . '" name="' . $name . '" type="' . $type . '" value="' . h($value) . '"' . ($req ? ' required' : '') . $a . '>';
     }

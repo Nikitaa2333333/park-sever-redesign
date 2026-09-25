@@ -70,8 +70,12 @@ function guest_route(string $token, string $action): void
         ])]);
         return;
     }
+    $firstName = '';
+    if ($sig = latest_contract_signature((int)$stay['id'])) {
+        $firstName = (string)(json_decode(decrypt_str($sig['payload_enc']), true)['fields']['first_name'] ?? '');
+    }
     echo render('guest/layout', ['title' => 'Договор подписан', 'body' => render('guest/done', [
-        'stay' => $stay, 'signatures' => signatures_for((int)$stay['id']),
+        'stay' => $stay, 'signatures' => signatures_for((int)$stay['id']), 'firstName' => $firstName,
     ])]);
 }
 

@@ -1,26 +1,21 @@
-<?php /** @var array $stay @var array $signatures */ $terms = stay_terms($stay); ?>
-<section class="g-hero">
-  <div class="g-wrap">
-    <h1 class="g-h1">Спасибо!</h1>
-    <p class="g-lead">Регистрация пройдена, договор подписан. Ждём вас в Парке Север к <?= h(fmt_time($stay['checkin_at'])) ?>! Гаечка, Рыжуля и Бэлла готовы встречать 🐾</p>
-    <?php require __DIR__ . '/_terms.php'; ?>
-  </div>
+<?php /** @var array $stay @var array $signatures @var string $firstName */ $terms = stay_terms($stay); ?>
+<section class="welcome welcome--done">
+  <p class="done-mark"><?= icon('seal-check') ?>Договор подписан</p>
+  <h1 class="g-h1">Спасибо<?= $firstName !== '' ? ', ' . h($firstName) : '' ?>!</h1>
+  <p class="g-lead">Регистрация пройдена, договор подписан. Ждём вас в Парке Север к <?= h(fmt_time($stay['checkin_at'])) ?>! Гаечка, Рыжуля и Бэлла готовы встречать 🐾</p>
+  <?php require __DIR__ . '/_terms.php'; ?>
 </section>
-<section class="g-sec">
-  <div class="g-wrap">
-    <h2 class="g-h2">Ваши документы</h2>
-    <p class="g-p">Сохраните копию — она подписана простой электронной подписью и имеет ту же силу, что и бумажный договор.</p>
-    <ul class="docs">
-      <?php foreach (array_reverse($signatures) as $s): ?>
-        <li>
-          <div>
-            <p class="docs__t"><?= $s['kind'] === 'contract' ? 'Договор найма' : 'Доп. соглашение о продлении' ?> № <?= h($s['doc_number']) ?></p>
-            <p class="docs__m">Подписан <?= h(fmt_utc_as_msk($s['signed_at_utc'])) ?></p>
-          </div>
-          <a class="btn btn--ghost" href="<?= h(url($stay['token'] . '/pdf?s=' . $s['id'])) ?>">Скачать PDF</a>
-        </li>
-      <?php endforeach; ?>
-    </ul>
-    <p class="g-p g-p--sm">Нашли ошибку в данных? Напишите нам — администратор поправит условия, и вы переподпишете договор по этой же ссылке.</p>
+<section class="g-block">
+  <h2 class="g-h2">Ваши документы</h2>
+  <p class="g-p">Копия подписана простой электронной подписью и имеет ту же силу, что и бумажный договор. Сохраните её.</p>
+  <div class="docs-list">
+    <?php foreach (array_reverse($signatures) as $s): ?>
+      <a class="doc-row" href="<?= h(url($stay['token'] . '/pdf?s=' . $s['id'])) ?>">
+        <span class="doc-row__ico"><?= icon('file-text') ?></span>
+        <span class="doc-row__t"><b><?= $s['kind'] === 'contract' ? 'Договор найма' : 'Доп. соглашение о продлении' ?> № <?= h($s['doc_number']) ?></b><span>Подписан <?= h(fmt_utc_as_msk($s['signed_at_utc'])) ?></span></span>
+        <span class="doc-row__go"><?= icon('download-simple') ?>PDF</span>
+      </a>
+    <?php endforeach; ?>
   </div>
+  <p class="note">Нашли ошибку в данных? Напишите нам — поправим, и вы переподпишете договор по этой же ссылке.</p>
 </section>

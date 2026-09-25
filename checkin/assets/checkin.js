@@ -1,5 +1,5 @@
-// Экран гостя: пошаговая анкета. Без JS форма работает одной страницей —
-// все шаги видны, проверку делает сервер.
+// Экран гостя. Без JS форма работает одной страницей — все шаги и документы видны,
+// проверку делает сервер.
 (function () {
   var d = document;
   d.documentElement.classList.add('js');
@@ -14,14 +14,38 @@
   });
   d.querySelectorAll('input[name=client_opened]').forEach(function (i) { i.value = new Date().toISOString(); });
 
-  // Кнопка «Подписать» активна только когда стоят все обязательные галочки
+  // ── шторки с документами ──
+  var lastFocus = null;
+  function openSheet(id) {
+    var s = d.getElementById(id);
+    if (!s) return;
+    lastFocus = d.activeElement;
+    s.classList.add('is-open');
+    d.body.classList.add('sheet-lock');
+    s.querySelector('.sheet__body').scrollTop = 0;
+    s.querySelector('.sheet__close').focus();
+  }
+  function closeSheets() {
+    var open = d.querySelectorAll('.sheet.is-open');
+    if (!open.length) return;
+    open.forEach(function (s) { s.classList.remove('is-open'); });
+    d.body.classList.remove('sheet-lock');
+    if (lastFocus) lastFocus.focus();
+  }
+  d.addEventListener('click', function (e) {
+    var opener = e.target.closest('[data-sheet]');
+    if (opener) { e.preventDefault(); openSheet(opener.getAttribute('data-sheet')); return; }
+    if (e.target.closest('[data-sheet-close]') || e.target.classList.contains('sheet')) closeSheets();
+  });
+  d.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeSheets(); });
+
+  // ── кнопка «Подписать» активна только при всех обязательных галочках ──
   function syncSign(form) {
     var btn = form.querySelector('[data-sign]');
     if (!btn) return;
-    var ok = Array.prototype.every.call(form.querySelectorAll('[data-accept]'), function (c) {
+    btn.disabled = !Array.prototype.every.call(form.querySelectorAll('[data-accept]'), function (c) {
       return !c.required || c.checked;
     });
-    btn.disabled = !ok;
   }
   d.querySelectorAll('form').forEach(function (form) {
     syncSign(form);
@@ -29,8 +53,8 @@
     form.addEventListener('submit', function (e) {
       if (e.defaultPrevented) return;
       var btn = form.querySelector('[data-sign]');
-      if (btn) { btn.disabled = true; btn.textContent = 'Подписываем…'; }
-      try { sessionStorage.removeItem(draftKey); } catch (e) {}
+      if (btn) { btn.disabled = true; btn.lastChild.textContent = 'Подписываем…'; }
+      try { sessionStorage.removeItem(draftKey); } catch (err) {}
     });
   });
 
@@ -38,10 +62,11 @@
   if (!form) return;
 
   var steps = Array.prototype.slice.call(form.querySelectorAll('.g-step'));
+  var bars = form.querySelectorAll('.progress__bars i');
+  var label = form.querySelector('[data-progress-label]');
   var nav = form.querySelector('[data-nav]');
   var prev = form.querySelector('[data-prev]');
   var next = form.querySelector('[data-next]');
-  var links = form.querySelectorAll('[data-step-link]');
   var current = 1;
   nav.hidden = false;
   form.setAttribute('novalidate', '');
@@ -62,35 +87,27 @@
   syncGuest2();
 
   // ── маски ──
-  var code = form.querySelector('[name=passport_code]');
-  code.addEventListener('input', function () {
-    var v = code.value.replace(/\D/g, '').slice(0, 6);
-    code.value = v.length > 3 ? v.slice(0, 3) + '-' + v.slice(3) : v;
-  });
-  ['passport_number'].forEach(function (n) {
-    var i = form.querySelector('[name=' + n + ']');
-    i.addEventListener('input', function () { i.value = i.value.replace(/\D/g, '').slice(0, 6); });
-  });
-  var ser = form.querySelector('[name=passport_series]');
-  ser.addEventListener('input', function () {
-    var v = ser.value.replace(/\D/g, '').slice(0, 4);
-    ser.value = v.length > 2 ? v.slice(0, 2) + ' ' + v.slice(2) : v;
-  });
-  var plate = form.querySelector('[name=car_plate]');
-  plate.addEventListener('input', function () { plate.value = plate.value.toUpperCase().replace(/\s/g, ''); });
+  function mask(name, fn) {
+    var i = form.querySelector('[name=' + name + ']');
+    i.addEventListener('input', function () { i.value = fn(i.value); });
+  }
+  mask('passport_code', function (v) { v = v.replace(/\D/g, '').slice(0, 6); return v.length > 3 ? v.slice(0, 3) + '-' + v.slice(3) : v; });
+  mask('passport_series', function (v) { v = v.replace(/\D/g, '').slice(0, 4); return v.length > 2 ? v.slice(0, 2) + ' ' + v.slice(2) : v; });
+  mask('passport_number', function (v) { return v.replace(/\D/g, '').slice(0, 6); });
+  mask('car_plate', function (v) { return v.toUpperCase().replace(/\s/g, ''); });
 
   // ── проверка шага ──
   function showErr(input, msg) {
-    var f = input.closest('.fld');
+    var f = input.closest('.fld') || input.closest('.agree');
     if (!f) return;
-    f.classList.toggle('fld--err', !!msg);
+    f.classList.toggle(f.classList.contains('agree') ? 'agree--err' : 'fld--err', !!msg);
     var p = f.querySelector('.fld__err');
     if (p) p.textContent = msg || '';
   }
-  function validateStep(n) {
+  function validateStep(n, silent) {
     var first = null;
     steps[n - 1].querySelectorAll('input, textarea').forEach(function (i) {
-      if (i.type === 'hidden' || i.closest('[hidden]')) return;
+      if (i.type === 'hidden' || i.closest('[hidden]') || i.name === 'has_guest2') return;
       var msg = '';
       if (!i.checkValidity()) {
         msg = i.validity.valueMissing ? (i.type === 'checkbox' ? 'Нужна отметка' : 'Заполните поле')
@@ -98,53 +115,42 @@
           : i.validity.rangeOverflow ? 'Проверьте дату'
           : i.validity.typeMismatch ? 'Проверьте формат' : i.validationMessage;
       }
-      if (i.type !== 'checkbox') showErr(i, msg);
+      if (!silent) showErr(i, msg);
       if (msg && !first) first = i;
     });
-    if (first) { first.focus(); first.scrollIntoView({ block: 'center' }); }
+    if (first && !silent) {
+      (first.closest('.agree') || first).scrollIntoView({ block: 'center' });
+      if (first.type !== 'checkbox') first.focus({ preventScroll: true });
+    }
     return !first;
   }
   form.addEventListener('input', function (e) {
-    var f = e.target.closest('.fld--err');
-    if (f && e.target.checkValidity()) showErr(e.target, '');
+    if (e.target.closest('.fld--err') && e.target.checkValidity()) showErr(e.target, '');
     saveDraft();
+  });
+  form.addEventListener('change', function (e) {
+    if (e.target.type === 'checkbox' && e.target.checked) showErr(e.target, '');
   });
 
   // ── шаги ──
-  function go(n, focusTop) {
+  function go(n, scroll) {
     current = n;
     steps.forEach(function (s, i) { s.hidden = i !== n - 1; });
-    links.forEach(function (l) {
-      var k = +l.getAttribute('data-step-link');
-      l.classList.toggle('is-active', k === n);
-      l.classList.toggle('is-done', k < n);
-    });
-    prev.hidden = n === 1;
+    bars.forEach(function (b, i) { b.classList.toggle('is-on', i < n); });
+    label.textContent = 'Шаг ' + n + ' из ' + steps.length + ' · ' + steps[n - 1].getAttribute('data-title');
+    prev.style.visibility = n === 1 ? 'hidden' : 'visible';
     next.hidden = n === steps.length;
     if (n === steps.length) buildReview();
-    if (focusTop !== false) window.scrollTo(0, form.getBoundingClientRect().top + window.pageYOffset - 8);
+    if (scroll !== false) {
+      var top = form.getBoundingClientRect().top + window.pageYOffset;
+      if (window.pageYOffset > top || n > 1) window.scrollTo(0, top);
+    }
   }
   next.addEventListener('click', function () { if (validateStep(current)) go(current + 1); });
   prev.addEventListener('click', function () { go(current - 1); });
-  links.forEach(function (l) {
-    l.addEventListener('click', function () {
-      var k = +l.getAttribute('data-step-link');
-      if (k < current) return go(k);
-      for (var s = current; s < k; s++) { if (!validateStep(s)) return go(s, false); }
-      go(k);
-    });
-  });
-  form.querySelectorAll('[data-goto]').forEach(function (a) {
-    a.addEventListener('click', function (e) {
-      e.preventDefault();
-      go(+a.getAttribute('data-goto'), false);
-      var t = d.querySelector(a.getAttribute('href'));
-      if (t) { if (t.tagName === 'DETAILS') t.open = true; t.scrollIntoView({ block: 'start' }); }
-    });
-  });
   form.addEventListener('submit', function (e) {
     for (var s = 1; s <= steps.length; s++) {
-      if (!validateStep(s)) { e.preventDefault(); go(s, false); validateStep(s); return; }
+      if (!validateStep(s, true)) { e.preventDefault(); go(s, false); validateStep(s); return; }
     }
   }, true);
 
@@ -153,20 +159,18 @@
   function dmy(s) { return s ? s.split('-').reverse().join('.') : ''; }
   function buildReview() {
     var rows = [
-      ['Арендатор', [val('last_name'), val('first_name'), val('middle_name')].join(' ').trim()],
-      ['Дата рождения', dmy(val('birth_date'))],
-      ['Паспорт', val('passport_series') + ' ' + val('passport_number') + ', выдан ' + dmy(val('passport_date')) + ', код ' + val('passport_code')],
-      ['Кем выдан', val('passport_issuer')],
-      ['Адрес регистрации', val('reg_address')],
-      ['Телефон, email', val('phone') + ', ' + val('email')],
-      ['Автомобиль', (val('car_brand') + ' ' + val('car_plate')).trim() || '—']
+      ['Арендатор', [val('last_name'), val('first_name'), val('middle_name')].join(' ').trim() + ', ' + dmy(val('birth_date'))],
+      ['Контакты', val('phone') + ' · ' + val('email')],
+      ['Паспорт', val('passport_series') + ' ' + val('passport_number') + ', выдан ' + dmy(val('passport_date')) + ', ' + val('passport_issuer') + ', код ' + val('passport_code')],
+      ['Регистрация', val('reg_address')],
+      ['Автомобиль', (val('car_brand') + ' ' + val('car_plate')).trim() || 'без автомобиля']
     ];
     if (g2box.checked) {
       rows.push(['Второй гость', [val('g2_last_name'), val('g2_first_name'), val('g2_middle_name')].join(' ').trim() + ', ' + dmy(val('g2_birth_date')) + ', ' + val('g2_doc')]);
     }
     var box = form.querySelector('[data-review]');
     box.innerHTML = '';
-    var h = d.createElement('h3'); h.className = 'g-h3'; h.textContent = 'Проверьте данные'; box.appendChild(h);
+    var h = d.createElement('h3'); h.textContent = 'Проверьте данные'; box.appendChild(h);
     var dl = d.createElement('dl');
     rows.forEach(function (r) {
       var w = d.createElement('div');
@@ -175,10 +179,14 @@
       w.appendChild(dt); w.appendChild(dd); dl.appendChild(w);
     });
     box.appendChild(dl);
-    var edit = d.createElement('button');
-    edit.type = 'button'; edit.className = 'linkish'; edit.textContent = 'Исправить';
-    edit.addEventListener('click', function () { go(1); });
-    box.appendChild(edit);
+    var edits = d.createElement('div'); edits.className = 'review__edit';
+    [['Изменить личные данные', 1], ['Изменить паспорт', 2], ['Изменить поездку', 3]].forEach(function (x) {
+      var b = d.createElement('button');
+      b.type = 'button'; b.className = 'linkish'; b.textContent = x[0];
+      b.addEventListener('click', function () { go(x[1]); });
+      edits.appendChild(b);
+    });
+    box.appendChild(edits);
     box.hidden = false;
   }
 
@@ -192,8 +200,7 @@
     try { sessionStorage.setItem(draftKey, JSON.stringify(data)); } catch (e) {}
   }
   (function restoreDraft() {
-    var hasServerValues = !!form.querySelector('[name=last_name]').value;
-    if (hasServerValues) return;
+    if (form.querySelector('[name=last_name]').value) return; // сервер уже вернул значения
     var raw = null;
     try { raw = sessionStorage.getItem(draftKey); } catch (e) {}
     if (!raw) return;
@@ -210,8 +217,4 @@
 
   var errStep = +form.getAttribute('data-first-error-step');
   go(errStep || 1, !!errStep);
-  if (errStep) {
-    var bad = steps[errStep - 1].querySelector('.fld--err input, .check--err input');
-    if (bad) bad.focus();
-  }
 })();

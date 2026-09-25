@@ -1,7 +1,21 @@
-<dl class="terms">
-  <div><dt>Объект</dt><dd><?= h($terms['house_name']) ?></dd></div>
-  <div><dt>Заезд</dt><dd><?= h(fmt_date($terms['checkin_at'])) ?> с <?= h(fmt_time($terms['checkin_at'])) ?></dd></div>
-  <div><dt>Выезд</dt><dd><?= h(fmt_date($terms['checkout_at'])) ?> до <?= h(fmt_time($terms['checkout_at'])) ?></dd></div>
-  <div><dt>Стоимость</dt><dd><?= h(fmt_rub($terms['price'])) ?> <span class="terms__sub">за <?= $terms['nights'] ?> <?= plural($terms['nights'], 'сутки', 'суток', 'суток') ?></span></dd></div>
-  <div><dt>Депозит</dt><dd><?= h(fmt_rub($terms['deposit'])) ?> <span class="terms__sub">возвратный</span></dd></div>
-</dl>
+<?php /** @var array $terms */ ?>
+<div class="ticket">
+  <p class="ticket__house"><?= icon('house') ?><?= h($terms['house_name']) ?></p>
+  <div class="ticket__dates">
+    <div>
+      <span class="ticket__lbl">Заезд</span>
+      <b><?= h(fmt_dm($terms['checkin_at'])) ?></b>
+      <span><?= h(fmt_wd($terms['checkin_at'])) ?>, с <?= h(fmt_time($terms['checkin_at'])) ?></span>
+    </div>
+    <div class="ticket__mid"><span><?= h(nights_label($terms['nights'])) ?></span><?= icon('arrow-right') ?></div>
+    <div>
+      <span class="ticket__lbl">Выезд</span>
+      <b><?= h(fmt_dm($terms['checkout_at'])) ?></b>
+      <span><?= h(fmt_wd($terms['checkout_at'])) ?>, до <?= h(fmt_time($terms['checkout_at'])) ?></span>
+    </div>
+  </div>
+  <div class="ticket__foot">
+    <span>Стоимость <b><?= h(fmt_rub($terms['price'])) ?></b></span>
+    <span>Депозит <b><?= h(fmt_rub($terms['deposit'])) ?></b> · вернём после выезда</span>
+  </div>
+</div>

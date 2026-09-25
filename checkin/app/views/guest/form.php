@@ -1,23 +1,30 @@
 <?php
 /** @var array $stay @var array $terms @var array $doc @var array $v @var array $errors @var string $formToken */
 $e = $errors;
-$step1 = ['last_name','first_name','middle_name','birth_date','passport_series','passport_number','passport_issuer','passport_date','passport_code','reg_address','phone','email','car_brand','car_plate'];
+$stepOf = [
+    'last_name' => 1, 'first_name' => 1, 'middle_name' => 1, 'birth_date' => 1, 'phone' => 1, 'email' => 1,
+    'passport_series' => 2, 'passport_number' => 2, 'passport_date' => 2, 'passport_code' => 2, 'passport_issuer' => 2, 'reg_address' => 2,
+    'car_brand' => 3, 'car_plate' => 3,
+    'agree_rules' => 4,
+];
 $firstErrStep = null;
 foreach ($e as $k => $_) {
-    $s = in_array($k, $step1, true) ? 1 : (str_starts_with($k, 'g2_') ? 2 : 4);
+    $s = $stepOf[$k] ?? (str_starts_with($k, 'g2_') ? 3 : 5);
     $firstErrStep = $firstErrStep === null ? $s : min($firstErrStep, $s);
 }
 $acc = acceptance_texts(true);
+$check = function (string $name, string $html, bool $required = true, string $extra = '') use ($v, $e) {
+    return '<label class="agree' . (isset($e[$name]) ? ' agree--err' : '') . '"' . $extra . '>'
+        . '<input type="checkbox" name="' . $name . '" value="1"' . ($required ? ' required' : '') . ' data-accept' . (!empty($v[$name]) ? ' checked' : '') . '>'
+        . '<span class="agree__box">' . icon('check') . '</span><span class="agree__text">' . $html . '</span></label>';
+};
 ?>
-<section class="g-hero">
-  <div class="g-wrap">
-    <h1 class="g-h1"><?= $stay['resign_required'] ? 'Условия обновлены' : 'Добро пожаловать в Парк Север' ?></h1>
-    <p class="g-lead"><?= $stay['resign_required']
-        ? 'Администратор изменил условия проживания. Ваши данные уже заполнены — проверьте их и подпишите новую редакцию договора.'
-        : 'Заполните анкету и подпишите договор найма — это займёт 3–4 минуты. На въезде ничего оформлять не придётся.' ?></p>
-    <?php require __DIR__ . '/_terms.php'; ?>
-    <p class="g-hero__note">Условия зафиксированы администратором. Если что-то не так — напишите нам до подписания.</p>
-  </div>
+<section class="welcome">
+  <h1 class="g-h1"><?= $stay['resign_required'] ? 'Условия обновлены' : 'Добро пожаловать в Парк Север' ?></h1>
+  <p class="g-lead"><?= $stay['resign_required']
+      ? 'Мы поменяли условия проживания. Ваши данные уже заполнены — проверьте их и подпишите новую редакцию договора.'
+      : 'Пара минут — и заезд оформлен. На месте ничего заполнять не придётся: просто приезжайте отдыхать.' ?></p>
+  <?php require __DIR__ . '/_terms.php'; ?>
 </section>
 
 <form class="g-form" method="post" action="" autocomplete="on" data-first-error-step="<?= (int)$firstErrStep ?>" id="checkin-form">
@@ -26,111 +33,131 @@ $acc = acceptance_texts(true);
   <input type="hidden" name="client_screen" value="">
   <input type="hidden" name="client_opened" value="">
 
-  <nav class="steps" aria-label="Шаги">
-    <ol>
-      <li data-step-link="1"><span>1</span>Арендатор</li>
-      <li data-step-link="2"><span>2</span>Второй гость</li>
-      <li data-step-link="3"><span>3</span>Договор</li>
-      <li data-step-link="4"><span>4</span>Подпись</li>
-    </ol>
-  </nav>
+  <div class="progress" aria-live="polite">
+    <div class="progress__bars"><i></i><i></i><i></i><i></i><i></i></div>
+    <p class="progress__label" data-progress-label>Шаг 1 из 5</p>
+  </div>
 
-  <?php if (!empty($e['_form'])): ?><p class="g-alert"><?= h($e['_form']) ?></p><?php endif; ?>
-  <?php if ($e && empty($e['_form'])): ?><p class="g-alert">Проверьте отмеченные поля.</p><?php endif; ?>
+  <?php if (!empty($e['_form'])): ?><p class="g-alert"><?= h($e['_form']) ?></p>
+  <?php elseif ($e): ?><p class="g-alert">Проверьте, пожалуйста, отмеченные поля.</p><?php endif; ?>
 
-  <fieldset class="g-step" data-step="1">
-    <legend class="g-h2">Анкета Арендатора</legend>
-    <p class="g-p">Данные — как в паспорте. Они нужны для договора найма и пропуска на территорию.</p>
-    <div class="grid3">
+  <fieldset class="g-step" data-step="1" data-title="Знакомство">
+    <legend class="step-head">
+      <span class="step-head__ico"><?= icon('user') ?></span>
+      <span class="g-h2">Давайте познакомимся</span>
+      <span class="step-head__sub">Как в паспорте — эти данные войдут в договор.</span>
+    </legend>
+    <div class="grid2">
       <?= field('last_name', 'Фамилия', $v, $e, ['required' => true, 'autocomplete' => 'family-name']) ?>
       <?= field('first_name', 'Имя', $v, $e, ['required' => true, 'autocomplete' => 'given-name']) ?>
       <?= field('middle_name', 'Отчество', $v, $e, ['autocomplete' => 'additional-name']) ?>
-    </div>
-    <div class="grid3">
       <?= field('birth_date', 'Дата рождения', $v, $e, ['type' => 'date', 'required' => true, 'autocomplete' => 'bday', 'max' => date('Y-m-d', strtotime('-18 years'))]) ?>
-    </div>
-
-    <h3 class="g-h3">Паспорт</h3>
-    <div class="grid3">
-      <?= field('passport_series', 'Серия', $v, $e, ['required' => true, 'inputmode' => 'numeric', 'pattern' => '\d{2}\s?\d{2}', 'maxlength' => 5, 'placeholder' => '00 00', 'autocomplete' => 'off']) ?>
-      <?= field('passport_number', 'Номер', $v, $e, ['required' => true, 'inputmode' => 'numeric', 'pattern' => '\d{6}', 'maxlength' => 6, 'placeholder' => '000000', 'autocomplete' => 'off']) ?>
-      <?= field('passport_date', 'Дата выдачи', $v, $e, ['type' => 'date', 'required' => true, 'max' => date('Y-m-d')]) ?>
-    </div>
-    <?= field('passport_issuer', 'Кем выдан', $v, $e, ['required' => true, 'maxlength' => 200, 'autocomplete' => 'off']) ?>
-    <div class="grid3">
-      <?= field('passport_code', 'Код подразделения', $v, $e, ['required' => true, 'inputmode' => 'numeric', 'pattern' => '\d{3}-?\d{3}', 'maxlength' => 7, 'placeholder' => '000-000', 'autocomplete' => 'off']) ?>
-    </div>
-    <?= field('reg_address', 'Адрес регистрации (прописки)', $v, $e, ['required' => true, 'maxlength' => 300, 'autocomplete' => 'street-address']) ?>
-
-    <h3 class="g-h3">Контакты</h3>
-    <div class="grid2">
       <?= field('phone', 'Телефон', $v, $e, ['type' => 'tel', 'required' => true, 'autocomplete' => 'tel', 'placeholder' => '+7 900 000-00-00']) ?>
-      <?= field('email', 'Email', $v, $e, ['type' => 'email', 'required' => true, 'autocomplete' => 'email']) ?>
-    </div>
-
-    <h3 class="g-h3">Автомобиль</h3>
-    <p class="g-p g-p--sm">Для пропуска на территорию. Если приедете на такси — оставьте пустым.</p>
-    <div class="grid2">
-      <?= field('car_brand', 'Марка', $v, $e, ['maxlength' => 60, 'placeholder' => 'Volkswagen']) ?>
-      <?= field('car_plate', 'Госномер', $v, $e, ['maxlength' => 12, 'placeholder' => 'М246ХУ799', 'autocapitalize' => 'characters']) ?>
+      <?= field('email', 'Email', $v, $e, ['type' => 'email', 'required' => true, 'autocomplete' => 'email', 'placeholder' => 'name@mail.ru'], 'Для связи по поводу заезда') ?>
     </div>
   </fieldset>
 
-  <fieldset class="g-step" data-step="2">
-    <legend class="g-h2">Второй гость</legend>
-    <label class="check">
+  <fieldset class="g-step" data-step="2" data-title="Паспорт">
+    <legend class="step-head">
+      <span class="step-head__ico"><?= icon('identification-card') ?></span>
+      <span class="g-h2">Паспорт</span>
+      <span class="step-head__sub">Нужен для договора найма. Данные хранятся зашифрованными и видны только администратору.</span>
+    </legend>
+    <div class="passport">
+      <p class="passport__title">Паспорт гражданина РФ</p>
+      <div class="grid2">
+        <?= field('passport_series', 'Серия', $v, $e, ['required' => true, 'inputmode' => 'numeric', 'pattern' => '\d{2}\s?\d{2}', 'maxlength' => 5, 'placeholder' => '00 00', 'autocomplete' => 'off']) ?>
+        <?= field('passport_number', 'Номер', $v, $e, ['required' => true, 'inputmode' => 'numeric', 'pattern' => '\d{6}', 'maxlength' => 6, 'placeholder' => '000000', 'autocomplete' => 'off']) ?>
+        <?= field('passport_date', 'Дата выдачи', $v, $e, ['type' => 'date', 'required' => true, 'max' => date('Y-m-d')]) ?>
+        <?= field('passport_code', 'Код подразделения', $v, $e, ['required' => true, 'inputmode' => 'numeric', 'pattern' => '\d{3}-?\d{3}', 'maxlength' => 7, 'placeholder' => '000-000', 'autocomplete' => 'off']) ?>
+      </div>
+      <?= field('passport_issuer', 'Кем выдан', $v, $e, ['type' => 'textarea', 'required' => true, 'maxlength' => 200, 'rows' => 2, 'autocomplete' => 'off']) ?>
+      <?= field('reg_address', 'Адрес регистрации', $v, $e, ['type' => 'textarea', 'required' => true, 'maxlength' => 300, 'rows' => 2, 'autocomplete' => 'street-address'], 'Со страницы «Место жительства»') ?>
+    </div>
+  </fieldset>
+
+  <fieldset class="g-step" data-step="3" data-title="Поездка">
+    <legend class="step-head">
+      <span class="step-head__ico"><?= icon('car') ?></span>
+      <span class="g-h2">Как приедете?</span>
+      <span class="step-head__sub">Номер машины нужен для пропуска — шлагбаум откроется сам.</span>
+    </legend>
+    <div class="grid2">
+      <?= field('car_brand', 'Марка автомобиля', $v, $e, ['maxlength' => 60, 'placeholder' => 'Например, Volkswagen']) ?>
+      <?= field('car_plate', 'Госномер', $v, $e, ['maxlength' => 12, 'placeholder' => 'А123ВС777', 'autocapitalize' => 'characters']) ?>
+    </div>
+    <p class="note">Приедете на такси — оставьте поля пустыми.</p>
+
+    <label class="toggle">
       <input type="checkbox" name="has_guest2" value="1" <?= !empty($v['has_guest2']) ? 'checked' : '' ?> data-toggle="guest2">
-      <span>Со мной будет второй гость</span>
+      <span class="toggle__ico"><?= icon('users') ?></span>
+      <span class="toggle__text"><b>Со мной второй гость</b><span>Добавим его в договор — ему ничего заполнять не нужно</span></span>
+      <span class="toggle__switch"></span>
     </label>
-    <div class="guest2" id="guest2" <?= empty($v['has_guest2']) ? 'data-hidden' : '' ?>>
-      <div class="grid3">
+    <div class="guest2" id="guest2" <?= empty($v['has_guest2']) ? 'hidden' : '' ?>>
+      <div class="grid2">
         <?= field('g2_last_name', 'Фамилия', $v, $e, ['data-req' => '1']) ?>
         <?= field('g2_first_name', 'Имя', $v, $e, ['data-req' => '1']) ?>
         <?= field('g2_middle_name', 'Отчество', $v, $e) ?>
-      </div>
-      <div class="grid2">
         <?= field('g2_birth_date', 'Дата рождения', $v, $e, ['type' => 'date', 'data-req' => '1', 'max' => date('Y-m-d')]) ?>
-        <?= field('g2_doc', 'Серия и номер паспорта', $v, $e, ['data-req' => '1', 'maxlength' => 40, 'autocomplete' => 'off'], 'Для ребёнка — серия и номер свидетельства о рождении') ?>
       </div>
+      <?= field('g2_doc', 'Серия и номер паспорта', $v, $e, ['data-req' => '1', 'maxlength' => 40, 'autocomplete' => 'off'], 'Для ребёнка — серия и номер свидетельства о рождении') ?>
     </div>
-    <p class="g-p g-p--sm">Если едете один — просто нажмите «Далее».</p>
   </fieldset>
 
-  <fieldset class="g-step" data-step="3">
-    <legend class="g-h2">Договор найма</legend>
-    <p class="g-p">Прочитайте договор и приложения. Опись и согласие раскрываются по нажатию.</p>
-    <?php require __DIR__ . '/_doc.php'; ?>
+  <fieldset class="g-step" data-step="4" data-title="Правила фермы">
+    <legend class="step-head">
+      <span class="step-head__ico"><?= icon('leaf') ?></span>
+      <span class="g-h2">Пара правил фермы</span>
+      <span class="step-head__sub">Рядом с вами живут ретриверы и благородные олени. Чтобы всем было спокойно — вот о чём мы просим.</span>
+    </legend>
+    <?php require __DIR__ . '/_rules.php'; ?>
+    <p class="note">Это Приложение № 2 к договору найма.</p>
+    <?= $check('agree_rules', h($acc['agree_rules'])) ?>
   </fieldset>
 
-  <fieldset class="g-step" data-step="4">
-    <legend class="g-h2">Проверка и подпись</legend>
+  <fieldset class="g-step" data-step="5" data-title="Договор и подпись">
+    <legend class="step-head">
+      <span class="step-head__ico"><?= icon('signature') ?></span>
+      <span class="g-h2">Договор и подпись</span>
+      <span class="step-head__sub">Проверьте данные, откройте документы и подпишите одной кнопкой.</span>
+    </legend>
+
     <div class="review" data-review hidden></div>
 
-    <div class="accept">
-      <?php foreach (['agree_contract', 'agree_rules', 'agree_pd'] as $k): ?>
-        <label class="check<?= isset($e[$k]) ? ' check--err' : '' ?>">
-          <input type="checkbox" name="<?= $k ?>" value="1" required data-accept <?= !empty($v[$k]) ? 'checked' : '' ?>>
-          <span><?php
-            echo match ($k) {
-              'agree_contract' => 'Ознакомлен и безоговорочно принимаю условия <a href="#doc-contract" data-goto="3">Договора найма жилого дома</a> и <a href="#doc-inventory" data-goto="3">Опись имущества (Приложение № 1)</a>.',
-              'agree_rules' => 'Ознакомлен с <a href="#doc-rules" data-goto="3">правилами безопасности</a>: подтверждаю запрет на заход собак в дом и запрет на вход на пастбища к оленям.',
-              'agree_pd' => 'Даю <a href="#doc-consent" data-goto="3">согласие Оператору (' . h(LANDLORD['short']) . ') на обработку персональных данных</a> по 152-ФЗ в целях заключения и исполнения договора найма.',
-            };
-          ?></span>
-        </label>
-      <?php endforeach; ?>
-      <label class="check<?= isset($e['agree_guest2']) ? ' check--err' : '' ?>" data-guest2-only <?= empty($v['has_guest2']) ? 'hidden' : '' ?>>
-        <input type="checkbox" name="agree_guest2" value="1" data-accept <?= !empty($v['agree_guest2']) ? 'checked' : '' ?>>
-        <span><?= h($acc['agree_guest2']) ?></span>
-      </label>
+    <div class="docs-list">
+      <button type="button" class="doc-row" data-sheet="sheet-contract">
+        <span class="doc-row__ico"><?= icon('file-text') ?></span>
+        <span class="doc-row__t"><b>Договор найма жилого дома</b><span><?= count($doc['contract']) ?> разделов · ~5 минут</span></span>
+        <span class="doc-row__go">Читать</span>
+      </button>
+      <?php if ($doc['inventory']): ?>
+      <button type="button" class="doc-row" data-sheet="sheet-inventory">
+        <span class="doc-row__ico"><?= icon('list-checks') ?></span>
+        <span class="doc-row__t"><b>Опись имущества дома</b><span>Приложение № 1<?= $doc['defects'] ? ' · есть отметки о дефектах' : '' ?></span></span>
+        <span class="doc-row__go">Читать</span>
+      </button>
+      <?php endif; ?>
+      <button type="button" class="doc-row" data-sheet="sheet-consent">
+        <span class="doc-row__ico"><?= icon('shield-check') ?></span>
+        <span class="doc-row__t"><b>Согласие на обработку данных</b><span>152-ФЗ · отдельный документ</span></span>
+        <span class="doc-row__go">Читать</span>
+      </button>
+    </div>
+    <?php require __DIR__ . '/_doc.php'; ?>
+
+    <div class="agrees">
+      <?= $check('agree_contract', 'Ознакомлен и безоговорочно принимаю условия <a href="#sheet-contract" data-sheet="sheet-contract">Договора найма жилого дома</a> и <a href="#sheet-inventory" data-sheet="sheet-inventory">Опись имущества (Приложение № 1)</a>.') ?>
+      <?= $check('agree_pd', 'Даю <a href="#sheet-consent" data-sheet="sheet-consent">согласие Оператору (' . h(LANDLORD['short']) . ') на обработку персональных данных</a> по 152-ФЗ в целях заключения и исполнения договора найма.') ?>
+      <?= $check('agree_guest2', h($acc['agree_guest2']), false, ' data-guest2-only' . (empty($v['has_guest2']) ? ' hidden' : '')) ?>
     </div>
 
-    <button class="btn btn--navy btn--wide" type="submit" data-sign>Подписать договор найма и подтвердить регистрацию</button>
-    <p class="g-p g-p--sm sign-note">Нажимая кнопку, вы подписываете договор простой электронной подписью (ст. 434, 438 ГК РФ, 63-ФЗ). Мы сохраним дату и время, IP-адрес и данные устройства, а вы получите PDF-копию договора.</p>
+    <button class="btn btn--gold btn--wide btn--sign" type="submit" data-sign><?= icon('signature') ?>Подписать договор найма и подтвердить регистрацию</button>
+    <p class="note note--lock"><?= icon('lock') ?>Это простая электронная подпись (ст. 434, 438 ГК РФ, 63-ФЗ). Мы сохраним дату и время, IP-адрес и данные устройства, а вам — PDF-копию договора.</p>
   </fieldset>
 
   <div class="g-nav" data-nav hidden>
-    <button class="btn btn--ghost" type="button" data-prev>Назад</button>
-    <button class="btn btn--navy" type="button" data-next>Далее</button>
+    <button class="g-nav__back" type="button" data-prev>Назад</button>
+    <button class="btn btn--navy" type="button" data-next>Продолжить<?= icon('arrow-right') ?></button>
   </div>
 </form>
