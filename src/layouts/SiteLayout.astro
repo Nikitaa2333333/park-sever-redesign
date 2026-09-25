@@ -56,6 +56,14 @@ const textFace = [400,500,600,700].map((w) =>
     `@font-face{font-family:'Montserrat';font-style:normal;font-weight:${w};font-display:optional;src:url(${JSON.stringify(withBase(`/fonts/montserrat/montserrat-${w}-${s}.woff2`))}) format('woff2');unicode-range:${range};}`
   ).join('')
 ).join('');
+// ВРЕМЕННО, для сравнения шрифтов заказчицей: Lora (прежний наборный) подключена рядом с Montserrat.
+// Грузится только когда включена (браузер не качает неиспользуемый @font-face).
+// Переключатель виден лишь по ссылке ?fonts (см. скрипты ниже). Убрать вместе с public/fonts/lora после выбора.
+const loraFace = [400,500,600].map((w) =>
+  Object.entries(textSubsets).map(([s, range]) =>
+    `@font-face{font-family:'Lora';font-style:normal;font-weight:${w};font-display:swap;src:url(${JSON.stringify(withBase(`/fonts/lora/lora-${w}-${s}.woff2`))}) format('woff2');unicode-range:${range};}`
+  ).join('')
+).join('');
 ---
 <!doctype html>
 <html lang="ru">
@@ -65,7 +73,19 @@ const textFace = [400,500,600,700].map((w) =>
     <title>{title}</title>
     <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
     <!-- Заголовки: Monotype Corsiva (локально). Наборный/UI: Montserrat (тоже локально, self-hosted). -->
-    <style is:inline set:html={fontFace + textFace}></style>
+    <style is:inline set:html={fontFace + textFace + loraFace}></style>
+    <!-- Сравнение шрифтов (временно): ?fonts — показать переключатель, ?fonts=off — убрать.
+         Выбор применяется до отрисовки, чтобы страница не «прыгала» шрифтом. -->
+    <script is:inline>
+      (function () {
+        try {
+          var q = location.search;
+          if (/[?&]fonts=off\b/.test(q)) { localStorage.removeItem('ps-font-compare'); localStorage.removeItem('ps-font'); }
+          else if (/[?&]fonts\b/.test(q)) localStorage.setItem('ps-font-compare', '1');
+          if (localStorage.getItem('ps-font-compare') && localStorage.getItem('ps-font') === 'lora') document.documentElement.setAttribute('data-font', 'lora');
+        } catch (e) {}
+      })();
+    </script>
     <link rel="preload" href={withBase('/fonts/monotype-corsiva.woff2')} as="font" type="font/woff2" crossorigin />
     <!-- Предзагрузка критичных субсетов Montserrat: над сгибом текст кириллический, двух весов —
          500 (лид hero, body) и 600 (меню, overline, кнопка «Забронировать»). Латиница над
@@ -104,6 +124,43 @@ const textFace = [400,500,600,700].map((w) =>
         };
         if (document.readyState !== 'loading') run();
         else document.addEventListener('DOMContentLoaded', run);
+      })();
+    </script>
+    <!-- Переключатель шрифта для заказчицы (временно, только по ссылке ?fonts) -->
+    <script is:inline>
+      (function () {
+        var on = false;
+        try { on = !!localStorage.getItem('ps-font-compare'); } catch (e) {}
+        if (!on) return;
+        var root = document.documentElement;
+        var box = document.createElement('div');
+        box.className = 'font-switch';
+        box.setAttribute('role', 'group');
+        box.setAttribute('aria-label', 'Шрифт сайта');
+        [['montserrat', 'Montserrat'], ['lora', 'Lora']].forEach(function (f) {
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.textContent = f[1];
+          b.setAttribute('data-font-pick', f[0]);
+          b.className = 'font-switch__btn font-switch__btn--' + f[0];
+          box.appendChild(b);
+        });
+        var sync = function () {
+          var cur = root.getAttribute('data-font') === 'lora' ? 'lora' : 'montserrat';
+          box.querySelectorAll('button').forEach(function (b) {
+            b.setAttribute('aria-pressed', b.getAttribute('data-font-pick') === cur ? 'true' : 'false');
+          });
+        };
+        box.addEventListener('click', function (e) {
+          var b = e.target.closest('[data-font-pick]');
+          if (!b) return;
+          var f = b.getAttribute('data-font-pick');
+          if (f === 'lora') root.setAttribute('data-font', 'lora'); else root.removeAttribute('data-font');
+          try { localStorage.setItem('ps-font', f); } catch (err) {}
+          sync();
+        });
+        sync();
+        document.body.appendChild(box);
       })();
     </script>
     <script src={booking.scriptSrc} async is:inline></script>
