@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#ffffff">
+<!-- Демо-страница модуля онлайн-регистрации (checkin/). Статическая: данные никуда не отправляются. -->
+<title>Регистрация гостя · Парк Север</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/checkin.css">
+</head>
+<body class="g">
+<div class="demo-bar">Демо: данные никуда не отправляются. <button type="button" data-demo-reset>Начать заново</button></div>
+
+<header class="g-top"><div class="g-top__in">
+  <span class="g-logo">Парк Север</span>
+  <span class="g-top__note">Персональная ссылка</span>
+</div></header>
+<div class="g-main">
+  <main><section class="welcome">
+  <h1 class="g-h1">Добро пожаловать в Парк Север</h1>
+  <p class="g-lead">Пара минут — и заезд оформлен. На месте ничего заполнять не придётся: просто приезжайте отдыхать.</p>
+  <div class="ticket">
+  <div class="ticket__cover"><img src="assets/img/house-1.jpg" alt="">    <p class="ticket__house">Дом №1 «Nordic Gold»</p>
+  </div>
+  <div class="ticket__dates">
+    <div>
+      <span class="ticket__lbl">Заезд</span>
+      <b>16 октября</b>
+      <span>пт, с 17:00</span>
+    </div>
+    <div class="ticket__mid"><span>2 ночи</span></div>
+    <div>
+      <span class="ticket__lbl">Выезд</span>
+      <b>18 октября</b>
+      <span>вс, до 12:00</span>
+    </div>
+  </div>
+  <div class="ticket__foot">
+    <span>Стоимость <b>48 000 ₽</b></span>
+    <span>Депозит <b>5 000 ₽</b> · вернём после выезда</span>
+  </div>
+</div>
+</section>
+
+<form class="g-form" method="post" action="" autocomplete="on" data-first-error-step="0" id="checkin-form">
+  <input type="hidden" name="_ft" value="1790356112.e41d2e85999c9cfc0056a894a5ff97d65db0a10536a938a9e630b28342c23fbf">
+  <input type="hidden" name="client_tz" value="">
+  <input type="hidden" name="client_screen" value="">
+  <input type="hidden" name="client_opened" value="">
+
+  <div class="progress" aria-live="polite">
+    <div class="progress__bars"><i></i><i></i><i></i><i></i><i></i></div>
+    <p class="progress__label" data-progress-label>Шаг 1 из 5</p>
+  </div>
+
+  
+  <fieldset class="g-step" data-step="1" data-title="Знакомство">
+    <legend class="step-head">
+      <span class="g-h2">Давайте познакомимся</span>
+      <span class="step-head__sub">Как в паспорте — эти данные войдут в договор.</span>
+    </legend>
+    <div class="grid2">
+      <div class="fld"><label for="f-last_name">Фамилия</label><input id="f-last_name" name="last_name" type="text" value="" required autocomplete="family-name"><p class="fld__err" data-err-for="last_name"></p></div>      <div class="fld"><label for="f-first_name">Имя</label><input id="f-first_name" name="first_name" type="text" value="" required autocomplete="given-name"><p class="fld__err" data-err-for="first_name"></p></div>      <div class="fld"><label for="f-middle_name">Отчество <span class="fld__opt">необязательно</span></label><input id="f-middle_name" name="middle_name" type="text" value="" autocomplete="additional-name"><p class="fld__err" data-err-for="middle_name"></p></div>      <div class="fld"><label for="f-birth_date">Дата рождения</label><input id="f-birth_date" name="birth_date" type="date" value="" required autocomplete="bday" max="2008-09-25"><p class="fld__err" data-err-for="birth_date"></p></div>      <div class="fld"><label for="f-phone">Телефон</label><input id="f-phone" name="phone" type="tel" value="" required autocomplete="tel" placeholder="+7 900 000-00-00"><p class="fld__err" data-err-for="phone"></p></div>      <div class="fld"><label for="f-email">Email</label><input id="f-email" name="email" type="email" value="" required autocomplete="email" placeholder="name@mail.ru"><p class="fld__hint">Для связи по поводу заезда</p><p class="fld__err" data-err-for="email"></p></div>    </div>
+  </fieldset>
+
+  <fieldset class="g-step" data-step="2" data-title="Паспорт">
+    <legend class="step-head">
+      <span class="g-h2">Паспорт</span>
+      <span class="step-head__sub">Нужен для договора найма. Данные хранятся зашифрованными и видны только администратору.</span>
+    </legend>
+    <div class="passport">
+      <p class="passport__title">Паспорт гражданина РФ</p>
+      <div class="grid2">
+        <div class="fld"><label for="f-passport_series">Серия</label><input id="f-passport_series" name="passport_series" type="text" value="" required inputmode="numeric" pattern="\d{2}\s?\d{2}" maxlength="5" placeholder="00 00" autocomplete="off"><p class="fld__err" data-err-for="passport_series"></p></div>        <div class="fld"><label for="f-passport_number">Номер</label><input id="f-passport_number" name="passport_number" type="text" value="" required inputmode="numeric" pattern="\d{6}" maxlength="6" placeholder="000000" autocomplete="off"><p class="fld__err" data-err-for="passport_number"></p></div>        <div class="fld"><label for="f-passport_date">Дата выдачи</label><input id="f-passport_date" name="passport_date" type="date" value="" required max="2026-09-25"><p class="fld__err" data-err-for="passport_date"></p></div>        <div class="fld"><label for="f-passport_code">Код подразделения</label><input id="f-passport_code" name="passport_code" type="text" value="" required inputmode="numeric" pattern="\d{3}-?\d{3}" maxlength="7" placeholder="000-000" autocomplete="off"><p class="fld__err" data-err-for="passport_code"></p></div>      </div>
+      <div class="fld"><label for="f-passport_issuer">Кем выдан</label><textarea id="f-passport_issuer" name="passport_issuer" required maxlength="200" rows="2" autocomplete="off"></textarea><p class="fld__err" data-err-for="passport_issuer"></p></div>      <div class="fld"><label for="f-reg_address">Адрес регистрации</label><textarea id="f-reg_address" name="reg_address" required maxlength="300" rows="2" autocomplete="street-address"></textarea><p class="fld__hint">Со страницы «Место жительства»</p><p class="fld__err" data-err-for="reg_address"></p></div>    </div>
+  </fieldset>
+
+  <fieldset class="g-step" data-step="3" data-title="Поездка">
+    <legend class="step-head">
+      <span class="g-h2">Как приедете?</span>
+      <span class="step-head__sub">Номер машины нужен для пропуска — шлагбаум откроется сам.</span>
+    </legend>
+    <div class="grid2">
+      <div class="fld"><label for="f-car_brand">Марка автомобиля <span class="fld__opt">необязательно</span></label><input id="f-car_brand" name="car_brand" type="text" value="" maxlength="60" placeholder="Например, Volkswagen"><p class="fld__err" data-err-for="car_brand"></p></div>      <div class="fld"><label for="f-car_plate">Госномер <span class="fld__opt">необязательно</span></label><input id="f-car_plate" name="car_plate" type="text" value="" maxlength="12" placeholder="А123ВС777" autocapitalize="characters"><p class="fld__err" data-err-for="car_plate"></p></div>    </div>
+    <p class="note">Приедете на такси — оставьте поля пустыми.</p>
+
+    <label class="toggle">
+      <input type="checkbox" name="has_guest2" value="1"  data-toggle="guest2">
+      <span class="toggle__text"><b>Со мной второй гость</b><span>Добавим его в договор — ему ничего заполнять не нужно</span></span>
+      <span class="toggle__switch"></span>
+    </label>
+    <div class="guest2" id="guest2" hidden>
+      <div class="grid2">
+        <div class="fld"><label for="f-g2_last_name">Фамилия</label><input id="f-g2_last_name" name="g2_last_name" type="text" value="" required data-req="1"><p class="fld__err" data-err-for="g2_last_name"></p></div>        <div class="fld"><label for="f-g2_first_name">Имя</label><input id="f-g2_first_name" name="g2_first_name" type="text" value="" required data-req="1"><p class="fld__err" data-err-for="g2_first_name"></p></div>        <div class="fld"><label for="f-g2_middle_name">Отчество <span class="fld__opt">необязательно</span></label><input id="f-g2_middle_name" name="g2_middle_name" type="text" value=""><p class="fld__err" data-err-for="g2_middle_name"></p></div>        <div class="fld"><label for="f-g2_birth_date">Дата рождения</label><input id="f-g2_birth_date" name="g2_birth_date" type="date" value="" required data-req="1" max="2026-09-25"><p class="fld__err" data-err-for="g2_birth_date"></p></div>      </div>
+      <div class="fld"><label for="f-g2_doc">Серия и номер паспорта</label><input id="f-g2_doc" name="g2_doc" type="text" value="" required data-req="1" maxlength="40" autocomplete="off"><p class="fld__hint">Для ребёнка — серия и номер свидетельства о рождении</p><p class="fld__err" data-err-for="g2_doc"></p></div>    </div>
+  </fieldset>
+
+  <fieldset class="g-step" data-step="4" data-title="Правила фермы">
+    <legend class="step-head">
+      <span class="g-h2">Пара правил фермы</span>
+      <span class="step-head__sub">Рядом с вами живут ретриверы и благородные олени. Чтобы всем было спокойно — вот о чём мы просим.</span>
+    </legend>
+    <div class="rules">
+      <article class="rule">
+      <div class="rule__body">
+        <p class="rule__head"><svg class="ico" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M239.71,125l-16.42-88a16,16,0,0,0-19.61-12.58l-.31.09L150.85,40h-45.7L52.63,24.56l-.31-.09A16,16,0,0,0,32.71,37.05L16.29,125a15.77,15.77,0,0,0,9.12,17.52A16.26,16.26,0,0,0,32.12,144,15.48,15.48,0,0,0,40,141.84V184a40,40,0,0,0,40,40h96a40,40,0,0,0,40-40V141.85a15.5,15.5,0,0,0,7.87,2.16,16.31,16.31,0,0,0,6.72-1.47A15.77,15.77,0,0,0,239.71,125ZM176,208H136V195.31l13.66-13.65a8,8,0,0,0-11.32-11.32L128,180.69l-10.34-10.35a8,8,0,0,0-11.32,11.32L120,195.31V208H80a24,24,0,0,1-24-24V123.11L107.93,56h40.14L200,123.11V184A24,24,0,0,1,176,208Zm-72-68a12,12,0,1,1-12-12A12,12,0,0,1,104,140Zm72,0a12,12,0,1,1-12-12A12,12,0,0,1,176,140Z"/></svg><span>Собаки — только на улице</span></p>
+        <p class="rule__text">Собаки-ретриверы (Гаечка, Рыжуля, Бэлла) встречают гостей на открытом воздухе. ГОСТЯМ КАТЕГОРИЧЕСКИ ЗАПРЕЩЕНО ВПУСКАТЬ СОБАК ВНУТРЬ ДОМА в целях гигиены дома, сохранности мебели и здоровья животных.</p>
+      </div>
+    </article>
+      <article class="rule">
+      <div class="rule__body">
+        <p class="rule__head"><svg class="ico" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M200,128a71.69,71.69,0,0,1-15.78,44.91L83.09,71.78A71.95,71.95,0,0,1,200,128ZM56,128a71.95,71.95,0,0,0,116.91,56.22L71.78,83.09A71.69,71.69,0,0,0,56,128Zm180,0A108,108,0,1,1,128,20,108.12,108.12,0,0,1,236,128Zm-20,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg><span>К оленям — только с администратором</span></p>
+        <p class="rule__text">КФХ «Благородный Север» является племенным хозяйством. В целях безопасности людей и животных КАТЕГОРИЧЕСКИ ЗАПРЕЩЁН самостоятельный проход за ограждения, открытие калиток и заход на пастбища к оленям. Экскурсии проводятся только с администратором.</p>
+      </div>
+    </article>
+      <article class="rule">
+      <div class="rule__body">
+        <p class="rule__head"><svg class="ico" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M200,40H48a40,40,0,0,0-16,76.65V200a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V116.65A40,40,0,0,0,200,40Zm-56,64a8,8,0,0,0,0,16v80H48V120a8,8,0,0,0,0-16,24,24,0,0,1,0-48h96a24,24,0,0,1,0,48Z"/></svg><span>Не кормим животных</span></p>
+        <p class="rule__text">Запрещено кормить собак и оленей привезёнными продуктами и хлебом без разрешения Администрации.</p>
+      </div>
+    </article>
+      <article class="rule">
+      <div class="rule__body">
+        <p class="rule__head"><svg class="ico" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M173.79,51.48a221.25,221.25,0,0,0-41.67-34.34,8,8,0,0,0-8.24,0A221.25,221.25,0,0,0,82.21,51.48C54.59,80.48,40,112.47,40,144a88,88,0,0,0,176,0C216,112.47,201.41,80.48,173.79,51.48ZM96,184c0-27.67,22.53-47.28,32-54.3,9.48,7,32,26.63,32,54.3a32,32,0,0,1-64,0Z"/></svg><span>Огонь — только в мангальной зоне</span></p>
+        <p class="rule__text">Курение в доме (включая кальяны и вейпы) строго запрещено. Открытый огонь разрешён только в мангальной зоне.</p>
+      </div>
+    </article>
+  </div>
+    <p class="note">Это Приложение № 2 к договору найма.</p>
+    <label class="agree"><input type="checkbox" name="agree_rules" value="1" required data-accept><span class="agree__text">Ознакомлен с правилами безопасности: подтверждаю запрет на заход собак в дом и запрет на вход на пастбища к оленям.</span></label>  </fieldset>
+
+  <fieldset class="g-step" data-step="5" data-title="Договор и подпись">
+    <legend class="step-head">
+      <span class="g-h2">Договор и подпись</span>
+      <span class="step-head__sub">Проверьте данные, откройте документы и подпишите одной кнопкой.</span>
+    </legend>
+
+    <div class="review" data-review hidden></div>
+
+    <div class="docs-list">
+      <button type="button" class="doc-row" data-sheet="sheet-contract">
+        <span class="doc-row__t"><b>Договор найма жилого дома</b><span>9 разделов · ~5 минут</span></span>
+        <span class="doc-row__go">Читать</span>
+      </button>
+            <button type="button" class="doc-row" data-sheet="sheet-inventory">
+        <span class="doc-row__t"><b>Опись имущества дома</b><span>Приложение № 1 · есть отметки о дефектах</span></span>
+        <span class="doc-row__go">Читать</span>
+      </button>
+            <button type="button" class="doc-row" data-sheet="sheet-consent">
+        <span class="doc-row__t"><b>Согласие на обработку данных</b><span>152-ФЗ · отдельный документ</span></span>
+        <span class="doc-row__go">Читать</span>
+      </button>
+    </div>
+    <section class="sheet" id="sheet-contract" role="dialog" aria-modal="true" aria-label="Договор краткосрочного найма жилого дома фермера"><div class="sheet__panel"><header class="sheet__head"><h3>Договор краткосрочного найма жилого дома фермера</h3><button type="button" class="sheet__close" data-sheet-close aria-label="Закрыть">×</button></header><div class="sheet__body">  <p class="doc-meta">№ ПС-2026-0001 · редакция 2026-09-25.draft-1</p>
+      <h4>1. Предмет договора</h4>
+    <p>1.1. Индивидуальный предприниматель Дерюгин Павел Сергеевич (ИНН 773170493306), далее — «Арендодатель», предоставляет лицу, заполнившему анкету и подписавшему настоящий договор (далее — «Арендатор»), во временное владение и пользование за плату для проживания жилой дом фермера — Дом №1 «Nordic Gold» (далее — «Дом»), расположенный на территории загородного комплекса «Парк Север» по адресу: Московская область, Дмитровский городской округ, вблизи дер. Василёво.</p><p>1.2. Деятельность Арендодателя осуществляется в рамках сельского туризма (Федеральный закон от 14.10.2024 № 346-ФЗ). Настоящий договор является договором краткосрочного найма жилого дома и не является договором оказания гостиничных услуг.</p><p>1.3. В Доме вместе с Арендатором вправе проживать только лица, указанные в анкете (не более 2 человек). Передача Дома третьим лицам, в том числе в поднаём, не допускается.</p>      <h4>2. Срок найма</h4>
+    <p>2.1. Заезд: 16.10.2026 с 17:00. Выезд: 18.10.2026 до 12:00. Срок найма — 2 суток. Время московское.</p><p>2.2. Продление срока найма оформляется дополнительным соглашением, которое Арендатор подписывает по той же персональной ссылке. Продление возможно при отсутствии бронирования Дома другими лицами на эти даты.</p><p>2.3. По окончании срока найма Арендатор освобождает Дом, сдаёт его представителю Арендодателя и возвращает ключи.</p>      <h4>3. Плата за наём и расчёты</h4>
+    <p>3.1. Плата за наём Дома на весь срок составляет 48 000 ₽. Плата вносится в порядке и в сроки, согласованные при бронировании; остаток платы вносится не позднее момента заезда.</p><p>3.2. При отказе Арендатора от найма менее чем за 24 часа до заезда внесённая предоплата не возвращается. При опоздании к заезду более чем на 24 часа без предупреждения бронирование может быть снято.</p><p>3.3. Дополнительные услуги (питание, оформление, прокат и др.) в плату за наём не входят и оплачиваются отдельно по согласованию сторон.</p>      <h4>4. Обеспечительный депозит</h4>
+    <p>4.1. При заезде Арендатор вносит возвратный обеспечительный платёж (депозит) в размере 5 000 ₽ (ст. 381.1 ГК РФ).</p><p>4.2. Депозит возвращается Арендатору в полном объёме после выезда и осмотра Дома, если имуществу не причинён ущерб и Правила (Приложение № 2) не нарушены.</p><p>4.3. При повреждении или утрате имущества сумма компенсации по Описи (Приложение № 1) удерживается из депозита. Если ущерб превышает сумму депозита, Арендатор возмещает разницу.</p>      <h4>5. Права и обязанности сторон</h4>
+    <p>5.1. Арендодатель обязуется: передать Дом чистым, в состоянии, соответствующем Описи (Приложение № 1); обеспечить проезд Арендатора и его автомобиля на территорию загородного комплекса; консультировать Арендатора по пользованию Домом и инфраструктурой.</p><p>5.2. Арендатор обязуется: бережно относиться к Дому и имуществу; соблюдать Правила безопасности фермы (Приложение № 2), правила пожарной безопасности и тишину; не впускать в Дом животных; своевременно вносить плату; сообщать Арендодателю о любых повреждениях.</p><p>5.3. При заезде Арендатор осматривает Дом. О недостатках, не указанных в Описи, Арендатор сообщает Арендодателю в течение 1 (одного) часа после заезда — иначе Дом и имущество считаются принятыми в исправном состоянии. Дефекты, перечисленные в Описи, зафиксированы до заезда, претензии по ним к Арендатору не предъявляются.</p>      <h4>6. Ответственность сторон</h4>
+    <p>6.1. Арендатор несёт ответственность за ущерб, причинённый Дому и имуществу им самим, проживающими с ним лицами и приглашёнными гостями.</p><p>6.2. При грубом или повторном нарушении Правил безопасности фермы (Приложение № 2), в том числе при заходе за ограждения пастбищ, Арендодатель вправе расторгнуть договор в одностороннем порядке.</p><p>6.3. Арендодатель не отвечает за вред, причинённый Арендатору вследствие нарушения им Правил безопасности фермы, в том числе при самостоятельном заходе на пастбища.</p>      <h4>7. Электронная форма договора и простая электронная подпись</h4>
+    <p>7.1. Настоящий договор является офертой Арендодателя (ст. 435 ГК РФ), направленной Арендатору через персональную ссылку. Заполнение Арендатором анкеты, проставление отметок о согласии и нажатие кнопки «Подписать договор найма» являются акцептом оферты (п. 3 ст. 438 ГК РФ). Договор заключён в письменной форме путём обмена электронными документами (п. 2 ст. 434 ГК РФ).</p><p>7.2. Стороны договорились использовать простую электронную подпись (ст. 5, ч. 2 ст. 6, ст. 9 Федерального закона № 63-ФЗ «Об электронной подписи»). Ключом простой электронной подписи является уникальная персональная ссылка, направленная Арендодателем на номер телефона (в мессенджер) Арендатора. Подписанием признаётся нажатие кнопки «Подписать договор найма и подтвердить регистрацию» после заполнения анкеты.</p><p>7.3. Лицо, подписавшее документ, определяется по персональной ссылке и паспортным данным, введённым Арендатором. В момент подписания сервер Арендодателя фиксирует дату и время с точностью до секунды, IP-адрес и технические данные устройства, версию и контрольную сумму (SHA-256) текста договора и формирует неизменяемую PDF-копию договора.</p><p>7.4. Документ, подписанный простой электронной подписью в указанном порядке, признаётся равнозначным документу на бумажном носителе, подписанному собственноручной подписью. Арендатор обязуется не передавать персональную ссылку третьим лицам.</p>      <h4>8. Персональные данные</h4>
+    <p>8.1. Персональные данные Арендатора обрабатываются Арендодателем в целях заключения и исполнения настоящего договора (п. 5 ч. 1 ст. 6 Федерального закона № 152-ФЗ) и на основании отдельного согласия Арендатора. Данные хранятся на серверах, расположенных на территории Российской Федерации.</p>      <h4>9. Заключительные положения</h4>
+    <p>9.1. Споры разрешаются путём переговоров; срок ответа на претензию — 10 (десять) календарных дней. При недостижении согласия спор разрешается в суде в соответствии с законодательством Российской Федерации.</p><p>9.2. Неотъемлемые части договора: Приложение № 1 «Опись имущества Дома», Приложение № 2 «Правила безопасности фермы».</p><p>9.3. Реквизиты Арендодателя: Индивидуальный предприниматель Дерюгин Павел Сергеевич, ИНН 773170493306, адрес: Московская область, Дмитровский городской округ, вблизи дер. Василёво, e-mail: park-sever@inbox.ru.</p>  </div><footer class="sheet__foot"><button type="button" class="btn btn--navy btn--wide" data-sheet-close>Прочитал(а)</button></footer></div></section><section class="sheet" id="sheet-inventory" role="dialog" aria-modal="true" aria-label="Опись имущества дома"><div class="sheet__panel"><header class="sheet__head"><h3>Опись имущества дома</h3><button type="button" class="sheet__close" data-sheet-close aria-label="Закрыть">×</button></header><div class="sheet__body">    <p class="doc-meta">Приложение № 1 к договору № ПС-2026-0001</p>
+          <h4>Остекление</h4>
+      <ul class="inv">
+                  <li><span>Панорамные стеклопакеты гостиной</span><span class="inv__v">по фактической стоимости восстановления</span></li>
+                  <li><span>Стеклопакеты кухни</span><span class="inv__v">по фактической стоимости восстановления</span></li>
+                  <li><span>Стеклопакеты спальни</span><span class="inv__v">по фактической стоимости восстановления</span></li>
+              </ul>
+          <h4>Мебель и слэбы</h4>
+      <ul class="inv">
+                  <li><span>Стол-слэб (массив дерева) · 1 шт.</span><span class="inv__v">по фактической стоимости восстановления</span></li>
+                  <li><span>Кровать с матрасом · 1 шт.</span><span class="inv__v">по фактической стоимости восстановления</span></li>
+                  <li><span>Диван · 1 шт.</span><span class="inv__v">по фактической стоимости восстановления</span></li>
+                  <li><span>Стулья</span><span class="inv__v">по фактической стоимости восстановления</span></li>
+              </ul>
+          <h4>Техника</h4>
+      <ul class="inv">
+                  <li><span>Варочная панель · 1 шт.</span><span class="inv__v">по фактической стоимости восстановления</span></li>
+                  <li><span>Холодильник · 1 шт.</span><span class="inv__v">по фактической стоимости восстановления</span></li>
+                  <li><span>Кофемашина · 1 шт.</span><span class="inv__v">по фактической стоимости восстановления</span></li>
+                  <li><span>Телевизор / проектор · 1 шт.</span><span class="inv__v">по фактической стоимости восстановления</span></li>
+              </ul>
+          <h4>Текстиль и посуда</h4>
+      <ul class="inv">
+                  <li><span>Комплект постельного белья · 1 шт.</span><span class="inv__v">по фактической стоимости восстановления</span></li>
+                  <li><span>Полотенца, халаты</span><span class="inv__v">по фактической стоимости восстановления</span></li>
+                  <li><span>Посуда и бокалы</span><span class="inv__v">по фактической стоимости восстановления</span></li>
+              </ul>
+        <h4>Дефекты, зафиксированные до вашего заезда</h4>
+          <ul class="dots"><li>Трещины на двух стеклопакетах кухни.</li></ul>
+      <p><b>Претензии по этим дефектам к вам не предъявляются.</b></p>
+    </div><footer class="sheet__foot"><button type="button" class="btn btn--navy btn--wide" data-sheet-close>Прочитал(а)</button></footer></div></section><section class="sheet" id="sheet-consent" role="dialog" aria-modal="true" aria-label="Согласие на обработку персональных данных"><div class="sheet__panel"><header class="sheet__head"><h3>Согласие на обработку персональных данных</h3><button type="button" class="sheet__close" data-sheet-close aria-label="Закрыть">×</button></header><div class="sheet__body"><p>Я, заполняя анкету, свободно, своей волей и в своём интересе даю согласие Оператору — Индивидуальный предприниматель Дерюгин Павел Сергеевич (ИНН 773170493306, адрес: Московская область, Дмитровский городской округ, вблизи дер. Василёво) — на обработку моих персональных данных на следующих условиях.</p><p>Цель обработки: заключение и исполнение договора краткосрочного найма жилого дома, оформление пропуска автомобиля на территорию, связь со мной по вопросам проживания.</p><p>Перечень данных: фамилия, имя, отчество; дата рождения; серия и номер паспорта, орган и дата выдачи, код подразделения; адрес регистрации; номер телефона; адрес электронной почты; марка и государственный номер автомобиля; технические данные подписания (IP-адрес, дата и время, данные браузера и устройства).</p><p>Действия с данными: сбор, запись, систематизация, накопление, хранение, уточнение, использование, блокирование, удаление, уничтожение — с использованием средств автоматизации и без них. Данные не передаются третьим лицам, кроме случаев, предусмотренных законом.</p><p>Хранение: данные хранятся в зашифрованном виде на серверах в Российской Федерации в течение срока действия договора и 5 (пяти) лет после его окончания (срок хранения первичных документов), после чего уничтожаются.</p><p>Согласие действует до достижения цели обработки и может быть отозвано письменным заявлением на park-sever@inbox.ru. Отзыв согласия не влияет на обработку, необходимую для исполнения уже заключённого договора и требований закона.</p></div><footer class="sheet__foot"><button type="button" class="btn btn--navy btn--wide" data-sheet-close>Прочитал(а)</button></footer></div></section>
+    <div class="agrees">
+      <label class="agree"><input type="checkbox" name="agree_contract" value="1" required data-accept><span class="agree__text">Ознакомлен и безоговорочно принимаю условия <a href="#sheet-contract" data-sheet="sheet-contract">Договора найма жилого дома</a> и <a href="#sheet-inventory" data-sheet="sheet-inventory">Опись имущества (Приложение № 1)</a>.</span></label>      <label class="agree"><input type="checkbox" name="agree_pd" value="1" required data-accept><span class="agree__text">Даю <a href="#sheet-consent" data-sheet="sheet-consent">согласие Оператору (ИП Дерюгин П.С.) на обработку персональных данных</a> по 152-ФЗ в целях заключения и исполнения договора найма.</span></label>      <label class="agree" data-guest2-only hidden><input type="checkbox" name="agree_guest2" value="1" data-accept><span class="agree__text">Подтверждаю, что Гость № 2 ознакомлен с условиями договора и Правилами и согласен на передачу и обработку своих персональных данных Оператору.</span></label>    </div>
+
+    <button class="btn btn--gold btn--wide btn--sign" type="submit" data-sign>Подписать договор найма</button>
+    <p class="note">Нажимая кнопку, вы подтверждаете регистрацию. Это простая электронная подпись (ст. 434, 438 ГК РФ, 63-ФЗ). Мы сохраним дату и время, IP-адрес и данные устройства, а вам — PDF-копию договора.</p>
+  </fieldset>
+
+  <div class="g-nav" data-nav hidden>
+    <button class="g-nav__back" type="button" data-prev>Назад</button>
+    <button class="btn btn--navy" type="button" data-next>Продолжить</button>
+  </div>
+</form>
+</main>
+  <footer class="g-foot">
+    <p>Индивидуальный предприниматель Дерюгин Павел Сергеевич · ИНН 773170493306</p>
+    <p>Данные передаются по защищённому соединению и хранятся в зашифрованном виде на серверах в России.</p>
+  </footer>
+</div>
+
+
+<template id="demo-done"><section class="welcome welcome--done">
+  <p class="done-mark">Договор подписан</p>
+  <h1 class="g-h1">Спасибо, Дмитрий!</h1>
+  <p class="g-lead">Регистрация пройдена, договор подписан. Ждём вас в Парке Север к 17:00! Гаечка, Рыжуля и Бэлла готовы встречать 🐾</p>
+  <div class="ticket">
+  <div class="ticket__cover"><img src="assets/img/house-1.jpg" alt="">    <p class="ticket__house">Дом №1 «Nordic Gold»</p>
+  </div>
+  <div class="ticket__dates">
+    <div>
+      <span class="ticket__lbl">Заезд</span>
+      <b>16 октября</b>
+      <span>пт, с 17:00</span>
+    </div>
+    <div class="ticket__mid"><span>2 ночи</span></div>
+    <div>
+      <span class="ticket__lbl">Выезд</span>
+      <b>18 октября</b>
+      <span>вс, до 12:00</span>
+    </div>
+  </div>
+  <div class="ticket__foot">
+    <span>Стоимость <b>48 000 ₽</b></span>
+    <span>Депозит <b>5 000 ₽</b> · вернём после выезда</span>
+  </div>
+</div>
+</section>
+<section class="g-block">
+  <h2 class="g-h2">Ваши документы</h2>
+  <p class="g-p">Копия подписана простой электронной подписью и имеет ту же силу, что и бумажный договор. Сохраните её.</p>
+  <div class="docs-list">
+          <a class="doc-row" href="#" data-demo-pdf>
+        <span class="doc-row__t"><b>Договор найма № ПС-2026-0001</b><span>Подписан 25.09.2026 20:08:32 (МСК, UTC+3)</span></span>
+        <span class="doc-row__go">Скачать PDF</span>
+      </a>
+      </div>
+  <p class="note">Нашли ошибку в данных? Напишите нам — поправим, и вы переподпишете договор по этой же ссылке.</p>
+</section>
+</template>
+<script src="assets/checkin.js" defer></script>
+<script src="assets/demo.js" defer></script>
+</body>
+</html>
