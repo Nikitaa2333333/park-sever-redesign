@@ -1,7 +1,7 @@
 /* ============================================================
    Design System «Север» — тёплый редакционный премиум
    Канон обновлён 2026-06-23 под принципы заказчика (verstka/CLAUDE.md, Главная.docx).
-   Шрифты (2): Monotype Corsiva (заголовки + .hero-accent — заказной курсив) + Lora (наборный/UI, сплошной).
+   Шрифты (2): Monotype Corsiva (заголовки + .hero-accent — заказной курсив) + Montserrat (наборный/UI, сплошной).
    Палитра: White canvas · Parchment cream · Ink текст ·
    Акценты: Navy (структура) + Золото/Медь (заголовки нарядных блоков, номера).
    Тёплые сцены: bark (тёмно-коричневый) · green · copper · navy.
@@ -11,7 +11,7 @@
 
 /* Заказной шрифт заголовков — Monotype Corsiva (локально, @font-face объявлен
    в SiteLayout.astro, чтобы url() получал base-префикс для GitHub Pages).
-   Наборный/UI — Lora (Google Fonts). */
+   Наборный/UI — Montserrat (self-hosted, @font-face в SiteLayout.astro; до 2026-09-25 была Lora). */
 
 :root{
   /* поверхности */
@@ -50,8 +50,8 @@
   --r-ui:4px;
 
   --font-display:"Monotype Corsiva","Segoe Script",cursive;  /* заголовки — заказной скрипт */
-  --font-head:"Lora",Georgia,"Times New Roman",serif;        /* UI: кнопки, меню, eyebrow, числа */
-  --font-body:"Lora",Georgia,"Times New Roman",serif;        /* наборный текст */
+  --font-head:"Montserrat",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;  /* UI: кнопки, меню, eyebrow, числа */
+  --font-body:"Montserrat",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;  /* наборный текст */
 
   --wrap:1200px;
   --gap-sec:80px;
@@ -112,7 +112,7 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 .hero-title,.h1,.h2,.h3{ font-family:var(--font-display); font-weight:500; letter-spacing:0; }
 .hero-title{ font-size:clamp(44px,7vw,84px); line-height:1.05; color:var(--ink); margin:0; }
 .hero .hero-title{ font-size:clamp(64px,11vw,143px); line-height:0.9; }   /* плотный межстрочный крупной Corsiva (канон .9) — «Парк/Север» в две строки у знака */
-/* надпись-оверлайн над титулом героя (Figma: Lora SemiBold 16, белая, без рамки) */
+/* надпись-оверлайн над титулом героя (Figma: SemiBold 16, белая, без рамки) */
 .hero__overline{ font-family:var(--font-head); font-weight:600; font-size:16px;
   color:#fff; margin:0 0 8px; }
 .lead{ font-weight:500; font-size:19px; line-height:1.55; color:var(--ink); max-width:60ch; letter-spacing:-0.01em; }
@@ -457,7 +457,7 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 /* ── блок «Истории Парка» на главной: ВК + отзывы Яндекс ── */
 .stories-split{ display:grid; grid-template-columns:1fr 1fr; gap:32px; align-items:start; }
 @media(max-width:860px){ .stories-split{ grid-template-columns:1fr; gap:28px; } }
-/* подзаголовки колонок — печатный Lora жирным, без линии-подчёркивания (заказчик 2026-07-09) */
+/* подзаголовки колонок — наборный шрифт жирным, без линии-подчёркивания (заказчик 2026-07-09) */
 .stories-col h3{
   font-family:var(--font-head);
   font-weight:700;
@@ -1710,7 +1710,7 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
 /* ============================================================
    Страница «Искусство отдыха» (/art-of-rest) — лонгрид-этапы.
    Композиция по мокапам заказчицы, оформление — строго канон:
-   Corsiva + Lora, палитра-токены, прямые углы, без теней/opacity,
+   Corsiva + Montserrat, палитра-токены, прямые углы, без теней/opacity,
    левая линия 32px, ритм сцен: светлые — база, тёмные — точечно.
    ============================================================ */
 
