@@ -70,7 +70,9 @@ button{ font:inherit }
 .progress__bars{ display:flex; gap:6px }
 .progress__bars i{ flex:1; height:4px; background:var(--fog) }
 .progress__bars i.is-on{ background:var(--navy) }
-.progress__label{ margin:9px 0 0; font-size:14px; font-weight:600 }
+.progress__row{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-top:9px }
+.progress__label{ margin:0; font-size:14px; font-weight:600 }
+.progress__back{ background:none; border:0; padding:0; font:600 14px var(--font-body); color:var(--ink); text-decoration:underline; text-underline-offset:3px; cursor:pointer }
 html:not(.js) .progress{ display:none }
 
 .g-step{ border:0; margin:0; padding:18px 0 8px; min-width:0 }
@@ -193,15 +195,28 @@ body.sheet-lock{ overflow:hidden }
 .btn--ghost:hover{ background:var(--navy); color:#fff }
 .btn--gold{ background:var(--gold-l); border-color:var(--gold-l); color:var(--ink) }
 .btn--gold:hover{ background:#c9a36a; border-color:#c9a36a }
-.btn:disabled{ background:var(--fog); border-color:var(--fog); color:var(--ink); cursor:not-allowed }
+/* неактивная кнопка: приглушена СПЛОШНЫМ цветом (канон: без opacity) */
+.btn--navy:disabled, .btn--navy[aria-disabled="true"]{ background:#8795a4; border-color:#8795a4; color:#fff; cursor:default }
+.btn--gold:disabled, .btn--gold[aria-disabled="true"]{ background:#e8d8bd; border-color:#e8d8bd; color:#6f6a64; cursor:default }
 .btn--wide{ width:100% }
 .btn--sm{ min-height:38px; padding:8px 14px; font-size:14px }
 .btn--sign{ min-height:58px; font-size:17px; padding:14px 20px; white-space:nowrap }
 
-.g-nav{ position:sticky; bottom:0; z-index:4; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 0 calc(12px + env(safe-area-inset-bottom)); background:#fff; border-top:1px solid var(--fog); margin-top:8px }
-.g-nav .btn{ margin-left:auto; min-width:200px }
-@media (max-width:420px){ .g-nav .btn{ min-width:0; flex:1 } }
-.g-nav__back{ background:none; border:0; padding:10px 4px; font:600 16px var(--font-body); color:var(--ink); text-decoration:underline; text-underline-offset:3px; cursor:pointer }
+/* Кнопка шага прибита к низу экрана. Приём с сайта клиники / wedwibse (StickyCta):
+   без рамки и без размытия — контент под полосой растворяется в белый по мягкой
+   кривой (без «ступенек»), кнопка стоит уже на сплошном фоне. */
+.g-nav{ position:fixed; left:0; right:0; bottom:0; z-index:6; pointer-events:none;
+  padding:64px var(--gut) calc(14px + env(safe-area-inset-bottom));
+  background:linear-gradient(to bottom,
+    rgba(255,255,255,0) 0,
+    rgba(255,255,255,.013) 5.1px, rgba(255,255,255,.049) 9.8px, rgba(255,255,255,.104) 14.3px,
+    rgba(255,255,255,.175) 18.4px, rgba(255,255,255,.259) 22.4px, rgba(255,255,255,.352) 26.2px,
+    rgba(255,255,255,.45) 29.9px, rgba(255,255,255,.55) 33.7px, rgba(255,255,255,.648) 37.4px,
+    rgba(255,255,255,.741) 41.2px, rgba(255,255,255,.825) 45.1px, rgba(255,255,255,.896) 49.3px,
+    rgba(255,255,255,.951) 53.7px, rgba(255,255,255,.987) 58.4px, #fff 64px) }
+.g-nav__in{ max-width:640px; margin:0 auto; pointer-events:auto }
+.g-nav .btn{ min-height:56px; font-size:17px }
+.g-form{ padding-bottom:120px }
 
 .g-foot{ padding:26px 0 30px; font-size:13px; border-top:1px solid var(--fog); margin-top:16px }
 .g-foot p{ margin:0 0 4px }

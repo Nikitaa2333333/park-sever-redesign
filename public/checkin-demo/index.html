@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#ffffff">
-<!-- Демо-страница модуля онлайн-регистрации (checkin/). Статическая: данные никуда не отправляются. -->
+<!-- Демо-страница модуля онлайн-регистрации (checkin/). Статическая: данные никуда не отправляются.
+     Собирается скриптом из живого модуля — руками не править. -->
 <title>Регистрация гостя · Парк Север</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
@@ -13,7 +14,6 @@
 </head>
 <body class="g">
 <div class="demo-bar">Демо: данные никуда не отправляются. <button type="button" data-demo-reset>Начать заново</button></div>
-
 <header class="g-top"><div class="g-top__in">
   <span class="g-logo">Парк Север</span>
   <span class="g-top__note">Персональная ссылка</span>
@@ -46,14 +46,17 @@
 </section>
 
 <form class="g-form" method="post" action="" autocomplete="on" data-first-error-step="0" id="checkin-form">
-  <input type="hidden" name="_ft" value="1790356112.e41d2e85999c9cfc0056a894a5ff97d65db0a10536a938a9e630b28342c23fbf">
+  <input type="hidden" name="_ft" value="1790363439.549d04665f286043d6c1162d2d2eaebc43a82c362c0d7c3f8f210ddcd41b769a">
   <input type="hidden" name="client_tz" value="">
   <input type="hidden" name="client_screen" value="">
   <input type="hidden" name="client_opened" value="">
 
   <div class="progress" aria-live="polite">
     <div class="progress__bars"><i></i><i></i><i></i><i></i><i></i></div>
-    <p class="progress__label" data-progress-label>Шаг 1 из 5</p>
+    <div class="progress__row">
+      <p class="progress__label" data-progress-label>Шаг 1 из 5</p>
+      <button class="progress__back" type="button" data-prev hidden>Назад</button>
+    </div>
   </div>
 
   
@@ -203,8 +206,7 @@
   </fieldset>
 
   <div class="g-nav" data-nav hidden>
-    <button class="g-nav__back" type="button" data-prev>Назад</button>
-    <button class="btn btn--navy" type="button" data-next>Продолжить</button>
+    <div class="g-nav__in"><button class="btn btn--navy btn--wide" type="button" data-next aria-disabled="true">Продолжить</button></div>
   </div>
 </form>
 </main>
@@ -213,8 +215,6 @@
     <p>Данные передаются по защищённому соединению и хранятся в зашифрованном виде на серверах в России.</p>
   </footer>
 </div>
-
-
 <template id="demo-done"><section class="welcome welcome--done">
   <p class="done-mark">Договор подписан</p>
   <h1 class="g-h1">Спасибо, Дмитрий!</h1>
@@ -246,7 +246,7 @@
   <p class="g-p">Копия подписана простой электронной подписью и имеет ту же силу, что и бумажный договор. Сохраните её.</p>
   <div class="docs-list">
           <a class="doc-row" href="#" data-demo-pdf>
-        <span class="doc-row__t"><b>Договор найма № ПС-2026-0001</b><span>Подписан 25.09.2026 20:08:32 (МСК, UTC+3)</span></span>
+        <span class="doc-row__t"><b>Договор найма № ПС-2026-0001</b><span>Подписан 25.09.2026 22:10:39 (МСК, UTC+3)</span></span>
         <span class="doc-row__go">Скачать PDF</span>
       </a>
       </div>

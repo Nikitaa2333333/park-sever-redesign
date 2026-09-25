@@ -35,7 +35,10 @@ $check = function (string $name, string $html, bool $required = true, string $ex
 
   <div class="progress" aria-live="polite">
     <div class="progress__bars"><i></i><i></i><i></i><i></i><i></i></div>
-    <p class="progress__label" data-progress-label>Шаг 1 из 5</p>
+    <div class="progress__row">
+      <p class="progress__label" data-progress-label>Шаг 1 из 5</p>
+      <button class="progress__back" type="button" data-prev hidden>Назад</button>
+    </div>
   </div>
 
   <?php if (!empty($e['_form'])): ?><p class="g-alert"><?= h($e['_form']) ?></p>
@@ -148,7 +151,6 @@ $check = function (string $name, string $html, bool $required = true, string $ex
   </fieldset>
 
   <div class="g-nav" data-nav hidden>
-    <button class="g-nav__back" type="button" data-prev>Назад</button>
-    <button class="btn btn--navy" type="button" data-next>Продолжить</button>
+    <div class="g-nav__in"><button class="btn btn--navy btn--wide" type="button" data-next aria-disabled="true">Продолжить</button></div>
   </div>
 </form>

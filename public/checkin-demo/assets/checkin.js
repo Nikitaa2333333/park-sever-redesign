@@ -68,7 +68,6 @@
   var prev = form.querySelector('[data-prev]');
   var next = form.querySelector('[data-next]');
   var current = 1;
-  nav.hidden = false;
   form.setAttribute('novalidate', '');
 
   // ── второй гость ──
@@ -84,7 +83,6 @@
     syncSign(form);
   }
   g2box.addEventListener('change', syncGuest2);
-  syncGuest2();
 
   // ── маски ──
   function mask(name, fn) {
@@ -97,26 +95,34 @@
   mask('car_plate', function (v) { return v.toUpperCase().replace(/\s/g, ''); });
 
   // ── проверка шага ──
-  function showErr(input, msg) {
+  // Пустое обязательное поле — только подсветка, без подписи «Заполните поле».
+  // Текст показываем лишь когда поле заполнено, но неверно (формат, дата).
+  function showErr(input, bad, msg) {
     var f = input.closest('.fld') || input.closest('.agree');
     if (!f) return;
-    f.classList.toggle(f.classList.contains('agree') ? 'agree--err' : 'fld--err', !!msg);
+    f.classList.toggle(f.classList.contains('agree') ? 'agree--err' : 'fld--err', !!bad);
     var p = f.querySelector('.fld__err');
-    if (p) p.textContent = msg || '';
+    if (p) p.textContent = bad ? (msg || '') : '';
+  }
+  function problem(i) {
+    if (i.checkValidity()) return null;
+    if (i.validity.valueMissing) return '';
+    if (i.validity.patternMismatch) return i.placeholder ? 'Формат: ' + i.placeholder : 'Проверьте формат';
+    if (i.validity.rangeOverflow) return i.name === 'birth_date' ? 'Арендатору должно быть 18 лет' : 'Проверьте дату';
+    if (i.validity.typeMismatch) return i.type === 'email' ? 'Проверьте email' : 'Проверьте формат';
+    return i.validationMessage;
+  }
+  function fields(n) {
+    return Array.prototype.filter.call(steps[n - 1].querySelectorAll('input, textarea'), function (i) {
+      return i.type !== 'hidden' && !i.closest('[hidden]') && i.name !== 'has_guest2';
+    });
   }
   function validateStep(n, silent) {
     var first = null;
-    steps[n - 1].querySelectorAll('input, textarea').forEach(function (i) {
-      if (i.type === 'hidden' || i.closest('[hidden]') || i.name === 'has_guest2') return;
-      var msg = '';
-      if (!i.checkValidity()) {
-        msg = i.validity.valueMissing ? (i.type === 'checkbox' ? 'Нужна отметка' : 'Заполните поле')
-          : i.validity.patternMismatch ? (i.placeholder ? 'Формат: ' + i.placeholder : 'Проверьте формат')
-          : i.validity.rangeOverflow ? 'Проверьте дату'
-          : i.validity.typeMismatch ? 'Проверьте формат' : i.validationMessage;
-      }
-      if (!silent) showErr(i, msg);
-      if (msg && !first) first = i;
+    fields(n).forEach(function (i) {
+      var pr = problem(i);
+      if (!silent) showErr(i, pr !== null, pr);
+      if (pr !== null && !first) first = i;
     });
     if (first && !silent) {
       (first.closest('.agree') || first).scrollIntoView({ block: 'center' });
@@ -124,13 +130,26 @@
     }
     return !first;
   }
+  // «Продолжить» активна, только когда все поля шага заполнены верно
+  function syncNext() {
+    next.setAttribute('aria-disabled', validateStep(current, true) ? 'false' : 'true');
+  }
   form.addEventListener('input', function (e) {
-    if (e.target.closest('.fld--err') && e.target.checkValidity()) showErr(e.target, '');
+    if (e.target.closest('.fld--err') && e.target.checkValidity()) showErr(e.target, false);
+    syncNext();
     saveDraft();
   });
   form.addEventListener('change', function (e) {
-    if (e.target.type === 'checkbox' && e.target.checked) showErr(e.target, '');
+    if (e.target.type === 'checkbox' && e.target.checked) showErr(e.target, false);
+    syncNext();
   });
+  // неверный формат подсказываем, когда человек ушёл с поля, а не на каждой букве
+  form.addEventListener('blur', function (e) {
+    var i = e.target;
+    if (!i.matches || !i.matches('input, textarea') || i.type === 'checkbox' || !i.value) return;
+    var pr = problem(i);
+    showErr(i, pr !== null && pr !== '', pr);
+  }, true);
 
   // ── шаги ──
   function go(n, scroll) {
@@ -138,15 +157,16 @@
     steps.forEach(function (s, i) { s.hidden = i !== n - 1; });
     bars.forEach(function (b, i) { b.classList.toggle('is-on', i < n); });
     label.textContent = 'Шаг ' + n + ' из ' + steps.length + ' · ' + steps[n - 1].getAttribute('data-title');
-    prev.style.visibility = n === 1 ? 'hidden' : 'visible';
-    next.hidden = n === steps.length;
+    prev.hidden = n === 1;
+    nav.hidden = n === steps.length; // на последнем шаге — своя кнопка «Подписать»
+    syncNext();
     if (n === steps.length) buildReview();
     if (scroll !== false) {
       var top = form.getBoundingClientRect().top + window.pageYOffset;
       if (window.pageYOffset > top || n > 1) window.scrollTo(0, top);
     }
   }
-  next.addEventListener('click', function () { if (validateStep(current)) go(current + 1); });
+  next.addEventListener('click', function () { if (validateStep(current)) go(current + 1); }); // неактивная — подсветит, что не так
   prev.addEventListener('click', function () { go(current - 1); });
   form.addEventListener('submit', function (e) {
     for (var s = 1; s <= steps.length; s++) {
@@ -215,6 +235,7 @@
     } catch (e) {}
   })();
 
+  syncGuest2();
   var errStep = +form.getAttribute('data-first-error-step');
   go(errStep || 1, !!errStep);
 })();

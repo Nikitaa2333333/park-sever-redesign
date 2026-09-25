@@ -426,6 +426,7 @@ function field(string $name, string $label, array $v, array $errors, array $attr
     $a = '';
     foreach ($attrs as $k => $val) $a .= ' ' . $k . '="' . h((string)$val) . '"';
     $err = $errors[$name] ?? null;
+    $errText = $err === 'Заполните поле' ? '' : (string)$err; // пустое поле подсвечиваем без подписи
     $id = 'f-' . $name;
     $value = (string)($v[$name] ?? '');
     $html = '<div class="fld' . ($err ? ' fld--err' : '') . '">'
@@ -436,6 +437,6 @@ function field(string $name, string $label, array $v, array $errors, array $attr
         $html .= '<input id="' . $id . '" name="' . $name . '" type="' . $type . '" value="' . h($value) . '"' . ($req ? ' required' : '') . $a . '>';
     }
     if ($hint) $html .= '<p class="fld__hint">' . h($hint) . '</p>';
-    $html .= '<p class="fld__err" data-err-for="' . $name . '">' . h($err ?? '') . '</p></div>';
+    $html .= '<p class="fld__err" data-err-for="' . $name . '">' . h($errText) . '</p></div>';
     return $html;
 }
