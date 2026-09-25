@@ -291,5 +291,21 @@ details.a-card[open] > summary{ margin-bottom:14px }
 .a-narrow{ max-width:760px }
 
 /* только для демо-страницы */
+/* ВРЕМЕННО: сравнение шрифтов (ссылка ?fonts). Файлы Lora — общие с сайтом: /fonts/lora/ */
+@font-face{font-family:"Lora";font-weight:400;font-display:swap;src:url(/fonts/lora/lora-400-cyrillic.woff2) format("woff2");unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:"Lora";font-weight:400;font-display:swap;src:url(/fonts/lora/lora-400-latin.woff2) format("woff2");unicode-range:U+0000-00FF,U+2000-206F,U+20AC,U+2122,U+2212}
+@font-face{font-family:"Lora";font-weight:400;font-display:swap;src:url(/fonts/lora/lora-400-latin-ext.woff2) format("woff2");unicode-range:U+0100-02BA,U+20A0-20AB,U+20AD-20C0}
+@font-face{font-family:"Lora";font-weight:500;font-display:swap;src:url(/fonts/lora/lora-500-cyrillic.woff2) format("woff2");unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:"Lora";font-weight:500;font-display:swap;src:url(/fonts/lora/lora-500-latin.woff2) format("woff2");unicode-range:U+0000-00FF,U+2000-206F,U+20AC,U+2122,U+2212}
+@font-face{font-family:"Lora";font-weight:500;font-display:swap;src:url(/fonts/lora/lora-500-latin-ext.woff2) format("woff2");unicode-range:U+0100-02BA,U+20A0-20AB,U+20AD-20C0}
+@font-face{font-family:"Lora";font-weight:600 700;font-display:swap;src:url(/fonts/lora/lora-600-cyrillic.woff2) format("woff2");unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:"Lora";font-weight:600 700;font-display:swap;src:url(/fonts/lora/lora-600-latin.woff2) format("woff2");unicode-range:U+0000-00FF,U+2000-206F,U+20AC,U+2122,U+2212}
+@font-face{font-family:"Lora";font-weight:600 700;font-display:swap;src:url(/fonts/lora/lora-600-latin-ext.woff2) format("woff2");unicode-range:U+0100-02BA,U+20A0-20AB,U+20AD-20C0}
+html[data-font="lora"]{ --font-body:"Lora",Georgia,"Times New Roman",serif }
+.font-switch{ position:fixed; top:72px; right:16px; z-index:60; display:flex; background:var(--navy); border:1px solid var(--navy) }
+.font-switch__btn{ background:var(--navy); color:#fff; border:0; padding:10px 14px; font-size:14px; font-weight:600; line-height:1; cursor:pointer }
+.font-switch__btn--montserrat{ font-family:"Montserrat",system-ui,sans-serif }
+.font-switch__btn--lora{ font-family:"Lora",Georgia,serif }
+.font-switch__btn[aria-pressed="true"]{ background:var(--gold-l); color:var(--ink) }
 .demo-bar{ background:var(--sand); padding:8px var(--gut); font-size:13px; font-weight:600; display:flex; gap:12px; align-items:center; justify-content:center; flex-wrap:wrap }
 .demo-bar button{ background:none; border:0; padding:0; font:600 13px var(--font-body); color:var(--ink); text-decoration:underline; text-underline-offset:3px; cursor:pointer }
