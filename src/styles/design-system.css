@@ -2241,3 +2241,16 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   .atm-marquee{ margin-left:-20px; margin-right:-20px; }
   .atm-hero__video{ margin:0 -20px; }
 }
+
+/* ── ВРЕМЕННО: сравнение шрифтов для заказчицы (ссылка ?fonts, см. SiteLayout.astro) ──
+   Lora — прежний наборный шрифт. Удалить блок вместе с public/fonts/lora после выбора. */
+html[data-font="lora"]{
+  --font-head:"Lora",Georgia,"Times New Roman",serif;
+  --font-body:"Lora",Georgia,"Times New Roman",serif;
+}
+.font-switch{ position:fixed; top:72px; right:16px; z-index:160; display:flex; background:var(--navy); border:1px solid var(--navy) }
+.font-switch__btn{ background:var(--navy); color:#fff; border:0; padding:10px 14px; font-size:14px; font-weight:600; line-height:1; cursor:pointer }
+.font-switch__btn--montserrat{ font-family:"Montserrat",system-ui,sans-serif }
+.font-switch__btn--lora{ font-family:"Lora",Georgia,serif }
+.font-switch__btn[aria-pressed="true"]{ background:var(--gold-l); color:var(--ink) }
+.font-switch__btn:focus-visible{ outline:2px solid var(--gold-l); outline-offset:2px }
