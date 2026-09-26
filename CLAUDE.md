@@ -19,7 +19,7 @@
 
 **Шрифты (2):**
 - **Monotype Corsiva** — заголовки и акценты (заказной курсивный скрипт). Локально, `--font-display`.
-- **Montserrat** — весь наборный текст и UI (кнопки, меню, eyebrow, числа). `--font-head` / `--font-body`. Self-hosted в `public/fonts/montserrat/` (до 2026-09-25 была Lora).
+- **Lora** — весь наборный текст и UI (кнопки, меню, eyebrow, числа). `--font-head` / `--font-body`. Self-hosted в `public/fonts/lora/` (2026-09-25 пробовали Montserrat — заказчик вернул Lora).
 
 **Цвет:**
 - Поверхности: холст `--canvas #fff`, парчмент `--cream #f3f1eb`, тёмно-коричневая сцена `--bark #2E2218`, песочная `--sand`, зелёная `--green`.
