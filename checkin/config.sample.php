@@ -1,8 +1,11 @@
 <?php
-// Скопируйте в config.php и заполните. config.php в git НЕ коммитится.
-// Секреты генерируются командами (см. README.md):
+// Образец настроек. config.php в git НЕ коммитится.
+// Быстрее всего создать его командой (ключи и пароль подставятся сами):
+//   php checkin/cli.php init мойПароль
+// Вручную: скопировать этот файл в config.php и заполнить секреты командами
 //   php checkin/cli.php key        → encryption_key / app_secret
 //   php checkin/cli.php password   → admin_password_hash
+// Подробно — checkin/README.md.
 return [
     // URL-префикс, под которым модуль открыт на сайте: https://park-sever.ru/checkin/...
     'base_path' => '/checkin',
