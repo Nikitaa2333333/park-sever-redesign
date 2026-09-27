@@ -46,6 +46,12 @@ function guest_route(string $token, string $action): void
     $needsContract = in_array($stay['status'], ['created', 'sent'], true) || $stay['resign_required'];
     $ext = pending_extension((int)$stay['id']);
 
+    if ($action === 'draft') {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !$needsContract) not_found('Страница не найдена');
+        guest_save_draft($stay);
+        return;
+    }
+
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($needsContract) guest_sign_contract($stay);
         elseif ($ext) guest_sign_extension($stay, $ext);
@@ -58,7 +64,7 @@ function guest_route(string $token, string $action): void
             // условия изменились — анкету заполнять заново не нужно, только проверить и переподписать
             $prefill = json_decode(decrypt_str($prev['payload_enc']), true)['fields'] ?? [];
         }
-        guest_show_form($stay, $prefill, []);
+        guest_show_form($stay, array_merge($prefill, draft_load((int)$stay['id'])), []);
         return;
     }
     if ($ext) {
@@ -89,7 +95,66 @@ function guest_show_form(array $stay, array $values, array $errors): void
         'v' => $values,
         'errors' => $errors,
         'formToken' => form_token('contract|' . $stay['token']),
+        'draftToken' => form_token('draft|' . $stay['token']),
+        'draftAt' => draft_updated_at((int)$stay['id']),
     ])]);
+}
+
+// ── черновик ──────────────────────────────────────────────────────────
+// Гость может заполнить анкету частями (паспорт сейчас, машину потом) и переслать
+// ту же ссылку второму гостю — тот увидит уже внесённое и допишет своё.
+// Клиент присылает только изменённые поля, сервер вливает их в общий черновик:
+// двое, заполняющие разные поля одновременно, не затирают друг друга.
+
+function draft_load(int $stayId): array
+{
+    $st = db()->prepare('SELECT payload_enc FROM drafts WHERE stay_id = ?');
+    $st->execute([$stayId]);
+    $enc = $st->fetchColumn();
+    return $enc ? (json_decode(decrypt_str($enc), true) ?: []) : [];
+}
+
+function draft_updated_at(int $stayId): ?string
+{
+    $st = db()->prepare('SELECT updated_at FROM drafts WHERE stay_id = ?');
+    $st->execute([$stayId]);
+    return $st->fetchColumn() ?: null;
+}
+
+function guest_save_draft(array $stay): void
+{
+    header('Content-Type: application/json; charset=utf-8');
+    // вкладка может провисеть открытой несколько дней — токен черновика живёт месяц
+    if (!form_token_valid('draft|' . $stay['token'], (string)($_POST['_dt'] ?? ''), 86400 * 30)) {
+        http_response_code(409);
+        echo json_encode(['ok' => false, 'error' => 'stale']);
+        return;
+    }
+    $allowed = array_flip(array_merge(array_keys(TENANT_FIELDS), array_keys(GUEST2_FIELDS), ['has_guest2']));
+    $in = is_array($_POST['d'] ?? null) ? $_POST['d'] : [];
+    $changes = [];
+    foreach ($in as $k => $val) {
+        if (isset($allowed[$k]) && is_string($val)) $changes[$k] = mb_substr($val, 0, 300);
+    }
+
+    $pdo = db();
+    $pdo->exec('BEGIN IMMEDIATE');
+    try {
+        $st = $pdo->prepare('SELECT payload_enc FROM drafts WHERE stay_id = ?');
+        $st->execute([$stay['id']]);
+        $enc = $st->fetchColumn();
+        $data = array_merge($enc ? (json_decode(decrypt_str($enc), true) ?: []) : [], $changes);
+        $now = now_local();
+        $pdo->prepare('INSERT OR REPLACE INTO drafts (stay_id, payload_enc, updated_at) VALUES (?, ?, ?)')
+            ->execute([$stay['id'], encrypt_str(json_encode($data, JSON_UNESCAPED_UNICODE)), $now]);
+        $pdo->exec('COMMIT');
+    } catch (Throwable $ex) {
+        $pdo->exec('ROLLBACK');
+        throw $ex;
+    }
+    // в журнал — только первое сохранение, иначе автосохранение засорит цепочку
+    if (!$enc) audit((int)$stay['id'], 'guest', 'draft_saved');
+    echo json_encode(['ok' => true, 'at' => date('H:i', strtotime($now))]);
 }
 
 /** @return array{0: array, 1: array} [значения, ошибки] */
@@ -237,6 +302,7 @@ function guest_sign_contract(array $stay): void
         $short = tenant_short($fields);
         $pdo->prepare("UPDATE stays SET status = 'signed', resign_required = 0, signed_at = ?, tenant_short = ?, updated_at = ? WHERE id = ?")
             ->execute([now_local(), $short, now_local(), $stay['id']]);
+        $pdo->prepare('DELETE FROM drafts WHERE stay_id = ?')->execute([$stay['id']]);
         $pdo->exec('COMMIT');
     } catch (Throwable $ex) {
         $pdo->exec('ROLLBACK');

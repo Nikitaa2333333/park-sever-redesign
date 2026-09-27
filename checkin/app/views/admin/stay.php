@@ -2,8 +2,6 @@
 /** @var array $stay @var array $sigs @var ?array $guest @var array $extensions @var array $audit @var string $link @var array $errors @var array $v */
 $terms = stay_terms($stay);
 $msg = share_message($stay, $link);
-$phone = preg_replace('/\D/', '', $stay['guest_phone']);
-if (strlen($phone) === 11 && $phone[0] === '8') $phone = '7' . substr($phone, 1);
 $pending = array_values(array_filter($extensions, fn($e) => $e['status'] === 'pending'))[0] ?? null;
 $signed = (bool)$sigs;
 $eventNames = [
@@ -11,7 +9,7 @@ $eventNames = [
     'sign_validation_failed' => 'Ошибки в анкете', 'sign_rejected' => 'Отправка отклонена', 'contract_signed' => 'Договор подписан',
     'stay_edited' => 'Условия изменены', 'status_changed' => 'Статус изменён', 'extension_created' => 'Продление сформировано',
     'extension_cancelled' => 'Продление отменено', 'extension_signed' => 'Продление подписано', 'extension_sign_rejected' => 'Продление отклонено',
-    'pdf_downloaded' => 'PDF скачан',
+    'pdf_downloaded' => 'PDF скачан', 'draft_saved' => 'Гость начал заполнять (черновик)',
 ];
 ?>
 <h1 class="a-h1">Заезд <?= h(contract_number($stay)) ?></h1>
@@ -21,20 +19,17 @@ $eventNames = [
 <div>
   <section class="a-card">
     <h2>Ссылка для гостя</h2>
+    <label class="a-label" for="guest-link">Ссылка</label>
     <div class="a-link">
       <input type="text" readonly value="<?= h($link) ?>" id="guest-link">
       <button class="btn btn--navy btn--sm" type="button" data-copy="#guest-link" data-mark-sent="copy">Скопировать</button>
     </div>
-    <div class="a-share">
-      <a class="btn btn--ghost btn--sm" target="_blank" rel="noopener" data-mark-sent="whatsapp"
-         href="https://wa.me/<?= h($phone) ?>?text=<?= rawurlencode($msg) ?>">WhatsApp</a>
-      <a class="btn btn--ghost btn--sm" target="_blank" rel="noopener" data-mark-sent="telegram"
-         href="https://t.me/share/url?url=<?= rawurlencode($link) ?>&amp;text=<?= rawurlencode(str_replace(': ' . $link, '', $msg)) ?>">Telegram</a>
-      <a class="btn btn--ghost btn--sm" target="_blank" rel="noopener" data-mark-sent="vk"
-         href="https://vk.com/share.php?url=<?= rawurlencode($link) ?>">ВКонтакте</a>
-      <button class="btn btn--ghost btn--sm" type="button" data-copy-text="<?= h($msg) ?>" data-mark-sent="max">Текст для MAX</button>
+    <label class="a-label" for="guest-msg">Текст сообщения со ссылкой</label>
+    <div class="a-link">
+      <textarea readonly rows="4" id="guest-msg"><?= h($msg) ?></textarea>
+      <button class="btn btn--navy btn--sm" type="button" data-copy="#guest-msg" data-mark-sent="text">Скопировать</button>
     </div>
-    <p class="a-small">Ссылка — ключ простой электронной подписи гостя. Отправляйте её только на подтверждённый номер гостя. Нажатие любой кнопки отмечает ссылку отправленной.</p>
+    <p class="a-small">Ссылка — ключ простой электронной подписи гостя. Отправляйте её только на подтверждённый номер гостя. Копирование отмечает ссылку отправленной.</p>
   </section>
 
   <section class="a-card">
@@ -48,6 +43,7 @@ $eventNames = [
       <div><dt>Создан</dt><dd><?= h(fmt_dt($stay['created_at'])) ?></dd></div>
       <div><dt>Отправлен</dt><dd><?= $stay['sent_at'] ? h(fmt_dt($stay['sent_at'])) : '—' ?></dd></div>
       <div><dt>Открыт гостем</dt><dd><?= $stay['opened_at'] ? h(fmt_dt($stay['opened_at'])) : '—' ?></dd></div>
+      <?php if ($draftAt && !$signed): ?><div><dt>Черновик</dt><dd>сохранён <?= h(fmt_dt($draftAt)) ?></dd></div><?php endif; ?>
       <div><dt>Подписан</dt><dd><?= $stay['signed_at'] ? h(fmt_dt($stay['signed_at'])) : '—' ?></dd></div>
     </dl>
     <div class="a-actions">

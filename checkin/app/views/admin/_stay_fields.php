@@ -18,6 +18,6 @@
 </div>
 <div class="grid2">
   <?= field('guest_label', 'Кто бронировал (пометка для себя)', $v, $errors, ['placeholder' => 'Дмитрий, из ВК']) ?>
-  <?= field('guest_phone', 'Телефон гостя', $v, $errors, ['type' => 'tel', 'placeholder' => '+7…'], 'Для кнопки «Отправить в WhatsApp»') ?>
+  <?= field('guest_phone', 'Телефон гостя', $v, $errors, ['type' => 'tel', 'placeholder' => '+7…']) ?>
 </div>
 <?= field('admin_note', 'Заметка (гость не видит)', $v, $errors, ['type' => 'textarea']) ?>

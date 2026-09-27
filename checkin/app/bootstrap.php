@@ -121,6 +121,13 @@ function migrate(PDO $pdo): void
         prev_hash TEXT NOT NULL,
         hash      TEXT NOT NULL
     );
+    -- черновик анкеты: один на заезд, общий для всех, кто открыл ссылку (гость и второй гость);
+    -- зашифрован, удаляется после подписи
+    CREATE TABLE IF NOT EXISTS drafts (
+        stay_id     INTEGER PRIMARY KEY REFERENCES stays(id),
+        payload_enc TEXT NOT NULL,
+        updated_at  TEXT NOT NULL
+    );
     CREATE TABLE IF NOT EXISTS login_attempts (
         ip TEXT NOT NULL, at INTEGER NOT NULL
     );
