@@ -196,6 +196,11 @@ function admin_stay(array $stay, array $errors = [], ?array $editValues = null):
         'stay' => $stay, 'sigs' => $sigs, 'guest' => $guestData, 'extensions' => $st->fetchAll(),
         'audit' => $au->fetchAll(), 'link' => public_link($stay['token']), 'errors' => $errors,
         'v' => $editValues ?? $stay, 'flash' => flash(),
+        'draftAt' => (function () use ($stay) {
+            $st = db()->prepare('SELECT updated_at FROM drafts WHERE stay_id = ?');
+            $st->execute([$stay['id']]);
+            return $st->fetchColumn() ?: null;
+        })(),
     ]);
 }
 
@@ -240,7 +245,7 @@ function admin_stay_post(array $stay, string $sub, array $parts): void
             break;
 
         case 'mark-sent':
-            // Вызывается из кабинета при нажатии «Отправить в WhatsApp/Telegram/…» или «Скопировать»
+            // Вызывается из кабинета при нажатии «Скопировать» (ссылку или текст сообщения)
             $channel = mb_substr((string)($_POST['channel'] ?? ''), 0, 20);
             if ($stay['status'] === 'created') {
                 $pdo->prepare("UPDATE stays SET status = 'sent', sent_at = ?, updated_at = ? WHERE id = ?")->execute([now_local(), now_local(), $id]);
@@ -276,5 +281,5 @@ function admin_stay_post(array $stay, string $sub, array $parts): void
 
 function share_message(array $stay, string $link): string
 {
-    return "Здравствуйте! Это Парк Север. Чтобы мы подготовили дом и пропуск на въезд, заполните, пожалуйста, анкету и подпишите договор найма по персональной ссылке (не пересылайте её другим): $link";
+    return "Здравствуйте! Это Парк Север. Чтобы мы подготовили дом и пропуск на въезд, заполните, пожалуйста, анкету и подпишите договор найма по персональной ссылке. Заполнить можно частями, а ссылку переслать второму гостю — посторонним её не передавайте: $link";
 }

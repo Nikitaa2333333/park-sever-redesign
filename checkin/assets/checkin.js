@@ -3,7 +3,6 @@
 (function () {
   var d = document;
   d.documentElement.classList.add('js');
-  var draftKey = 'ps-checkin:' + location.pathname;
 
   // Параметры устройства — уходят в журнал подписи вместе с IP и User-Agent
   d.querySelectorAll('input[name=client_tz]').forEach(function (i) {
@@ -54,7 +53,6 @@
       if (e.defaultPrevented) return;
       var btn = form.querySelector('[data-sign]');
       if (btn) { btn.disabled = true; btn.lastChild.textContent = 'Подписываем…'; }
-      try { sessionStorage.removeItem(draftKey); } catch (err) {}
     });
   });
 
@@ -137,11 +135,12 @@
   form.addEventListener('input', function (e) {
     if (e.target.closest('.fld--err') && e.target.checkValidity()) showErr(e.target, false);
     syncNext();
-    saveDraft();
+    markDirty(e.target);
   });
   form.addEventListener('change', function (e) {
     if (e.target.type === 'checkbox' && e.target.checked) showErr(e.target, false);
     syncNext();
+    markDirty(e.target);
   });
   // неверный формат подсказываем, когда человек ушёл с поля, а не на каждой букве
   form.addEventListener('blur', function (e) {
@@ -166,7 +165,7 @@
       if (window.pageYOffset > top || n > 1) window.scrollTo(0, top);
     }
   }
-  next.addEventListener('click', function () { if (validateStep(current)) go(current + 1); }); // неактивная — подсветит, что не так
+  next.addEventListener('click', function () { if (validateStep(current)) { saveDraft(); go(current + 1); } }); // неактивная — подсветит, что не так
   prev.addEventListener('click', function () { go(current - 1); });
   form.addEventListener('submit', function (e) {
     for (var s = 1; s <= steps.length; s++) {
@@ -210,32 +209,78 @@
     box.hidden = false;
   }
 
-  // ── черновик: только в этой вкладке (sessionStorage), стирается после подписи ──
-  function saveDraft() {
-    var data = {};
-    form.querySelectorAll('input[type=text], input[type=tel], input[type=email], input[type=date], textarea').forEach(function (i) {
-      if (i.name && i.name.indexOf('client_') !== 0) data[i.name] = i.value;
-    });
-    data.has_guest2 = g2box.checked;
-    try { sessionStorage.setItem(draftKey, JSON.stringify(data)); } catch (e) {}
+  // ── черновик на сервере: общий для всех, кто открыл ссылку, стирается после подписи ──
+  // Уходят только изменённые поля — если анкету параллельно дописывает второй гость,
+  // его поля не затираются. Галочки согласий в черновик не попадают: их ставит тот, кто подписывает.
+  var draftBox = form.querySelector('[data-draft]');
+  var draftStatus = form.querySelector('[data-draft-status]');
+  var draftUrl = location.pathname.replace(/\/$/, '') + '/draft';
+  var dirty = {};
+  var draftTimer = null;
+  draftBox.hidden = false;
+
+  function markDirty(i) {
+    if (!i.name || i.name.indexOf('client_') === 0 || i.name === '_ft' || i.matches('[data-accept]')) return;
+    dirty[i.name] = true;
+    clearTimeout(draftTimer);
+    draftTimer = setTimeout(saveDraft, 1500);
   }
-  (function restoreDraft() {
-    if (form.querySelector('[name=last_name]').value) return; // сервер уже вернул значения
-    var raw = null;
-    try { raw = sessionStorage.getItem(draftKey); } catch (e) {}
-    if (!raw) return;
-    try {
-      var data = JSON.parse(raw);
-      Object.keys(data).forEach(function (k) {
-        var i = form.querySelector('[name=' + k + ']');
-        if (!i) return;
-        if (i.type === 'checkbox') i.checked = !!data[k]; else i.value = data[k];
+  function setStatus(t) { draftStatus.textContent = t; }
+  function saveDraft(done) {
+    clearTimeout(draftTimer);
+    var names = Object.keys(dirty);
+    if (!names.length) { if (done) done(true); return; }
+    dirty = {};
+    var body = new URLSearchParams({ _dt: form.getAttribute('data-draft-token') });
+    names.forEach(function (n) {
+      var i = form.querySelector('[name=' + n + ']');
+      if (i) body.append('d[' + n + ']', i.type === 'checkbox' ? (i.checked ? '1' : '') : i.value);
+    });
+    fetch(draftUrl, { method: 'POST', body: body, credentials: 'same-origin', keepalive: true })
+      .then(function (r) { return r.json().then(function (j) { return { status: r.status, j: j }; }); })
+      .then(function (res) {
+        if (res.j.ok) { setStatus('Черновик сохранён в ' + res.j.at); if (done) done(true); return; }
+        names.forEach(function (n) { dirty[n] = true; });
+        setStatus(res.status === 409 ? 'Страница устарела — обновите её, чтобы сохранить черновик.' : 'Не удалось сохранить. Проверьте интернет.');
+        if (done) done(false);
+      })
+      .catch(function () {
+        names.forEach(function (n) { dirty[n] = true; });
+        setStatus('Не удалось сохранить. Проверьте интернет.');
+        if (done) done(false);
       });
-      syncGuest2();
-    } catch (e) {}
-  })();
+  }
+  // ушёл из вкладки / свернул браузер — досохраняем
+  d.addEventListener('visibilitychange', function () { if (d.visibilityState === 'hidden') saveDraft(); });
+
+  form.querySelector('[data-draft-save]').addEventListener('click', function () {
+    setStatus('Сохраняем…');
+    saveDraft(function (ok) { if (ok && !Object.keys(dirty).length && draftStatus.textContent === 'Сохраняем…') setStatus('Черновик сохранён'); });
+  });
+  form.querySelector('[data-draft-share]').addEventListener('click', function () {
+    saveDraft(function () {
+      var url = location.href.split('#')[0];
+      var text = 'Заполни, пожалуйста, свои данные для заезда в Парк Север — анкета уже начата:';
+      if (navigator.share) {
+        navigator.share({ title: 'Регистрация — Парк Север', text: text, url: url }).catch(function () {});
+      } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(text + ' ' + url).then(function () {
+          setStatus('Ссылка скопирована — отправьте её второму гостю в мессенджере.');
+        }, function () { prompt('Скопируйте ссылку:', url); });
+      } else {
+        prompt('Скопируйте ссылку:', url);
+      }
+    });
+  });
 
   syncGuest2();
   var errStep = +form.getAttribute('data-first-error-step');
-  go(errStep || 1, !!errStep);
+  if (!errStep && form.getAttribute('data-resume')) {
+    // вернулись к черновику — открываем первый незаполненный шаг
+    var s = 1;
+    while (s < steps.length && validateStep(s, true)) s++;
+    go(s, false);
+  } else {
+    go(errStep || 1, !!errStep);
+  }
 })();

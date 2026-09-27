@@ -1,5 +1,5 @@
 <?php
-/** @var array $stay @var array $terms @var array $doc @var array $v @var array $errors @var string $formToken */
+/** @var array $stay @var array $terms @var array $doc @var array $v @var array $errors @var string $formToken @var string $draftToken @var ?string $draftAt */
 $e = $errors;
 $stepOf = [
     'last_name' => 1, 'first_name' => 1, 'middle_name' => 1, 'birth_date' => 1, 'phone' => 1, 'email' => 1,
@@ -27,7 +27,7 @@ $check = function (string $name, string $html, bool $required = true, string $ex
   <?php require __DIR__ . '/_terms.php'; ?>
 </section>
 
-<form class="g-form" method="post" action="" autocomplete="on" data-first-error-step="<?= (int)$firstErrStep ?>" id="checkin-form">
+<form class="g-form" method="post" action="" autocomplete="on" data-first-error-step="<?= (int)$firstErrStep ?>" data-resume="<?= $draftAt ? '1' : '' ?>" data-draft-token="<?= h($draftToken) ?>" id="checkin-form">
   <input type="hidden" name="_ft" value="<?= h($formToken) ?>">
   <input type="hidden" name="client_tz" value="">
   <input type="hidden" name="client_screen" value="">
@@ -90,7 +90,7 @@ $check = function (string $name, string $html, bool $required = true, string $ex
 
     <label class="toggle">
       <input type="checkbox" name="has_guest2" value="1" <?= !empty($v['has_guest2']) ? 'checked' : '' ?> data-toggle="guest2">
-      <span class="toggle__text"><b>Со мной второй гость</b><span>Добавим его в договор — ему ничего заполнять не нужно</span></span>
+      <span class="toggle__text"><b>Со мной второй гость</b><span>Добавим его в договор. Данные можно внести самому или переслать ссылку второму гостю — ниже есть кнопка</span></span>
       <span class="toggle__switch"></span>
     </label>
     <div class="guest2" id="guest2" <?= empty($v['has_guest2']) ? 'hidden' : '' ?>>
@@ -149,6 +149,16 @@ $check = function (string $name, string $html, bool $required = true, string $ex
     <button class="btn btn--gold btn--wide btn--sign" type="submit" data-sign>Подписать договор найма</button>
     <p class="note">Нажимая кнопку, вы подтверждаете регистрацию. Это простая электронная подпись (ст. 434, 438 ГК РФ, 63-ФЗ). Мы сохраним дату и время, IP-адрес и данные устройства, а вам — PDF-копию договора.</p>
   </fieldset>
+
+  <div class="draft" data-draft hidden>
+    <p class="draft__t">Не всё под рукой?</p>
+    <p class="draft__x">Сохраните черновик и вернитесь по этой же ссылке, когда будет удобно. Ссылку можно переслать второму гостю — он увидит уже внесённое и допишет своё. Пересылайте только тому, кто едет с вами.</p>
+    <div class="draft__btns">
+      <button class="btn btn--ghost btn--sm" type="button" data-draft-save>Сохранить черновик</button>
+      <button class="btn btn--ghost btn--sm" type="button" data-draft-share>Переслать ссылку</button>
+    </div>
+    <p class="draft__status" data-draft-status aria-live="polite"><?= $draftAt ? 'Черновик сохранён ' . h(fmt_dt($draftAt)) : '' ?></p>
+  </div>
 
   <div class="g-nav" data-nav hidden>
     <div class="g-nav__in"><button class="btn btn--navy btn--wide" type="button" data-next aria-disabled="true">Продолжить</button></div>
