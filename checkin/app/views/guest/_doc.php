@@ -24,7 +24,7 @@ if ($doc['inventory']) {
       <h4><?= h($g['group']) ?></h4>
       <ul class="inv">
         <?php foreach ($g['items'] as $it): ?>
-          <li><span><?= h($it['name']) ?><?= $it['qty'] !== '—' ? ' · ' . h($it['qty']) . ' шт.' : '' ?></span><span class="inv__v"><?= h(inventory_value($it['value'])) ?></span></li>
+          <li><span><?= h($it['name']) ?><?= $it['qty'] !== '—' ? ' · ' . h($it['qty']) . ' шт.' : '' ?><?php if (!empty($it['note'])): ?><span class="inv__note"><?= h($it['note']) ?></span><?php endif; ?></span><span class="inv__v"><?= h(inventory_value($it['value'])) ?></span></li>
         <?php endforeach; ?>
       </ul>
     <?php endforeach; ?>

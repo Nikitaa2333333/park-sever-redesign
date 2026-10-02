@@ -9,7 +9,7 @@ $eventNames = [
     'sign_validation_failed' => 'Ошибки в анкете', 'sign_rejected' => 'Отправка отклонена', 'contract_signed' => 'Договор подписан',
     'stay_edited' => 'Условия изменены', 'status_changed' => 'Статус изменён', 'extension_created' => 'Продление сформировано',
     'extension_cancelled' => 'Продление отменено', 'extension_signed' => 'Продление подписано', 'extension_sign_rejected' => 'Продление отклонено',
-    'pdf_downloaded' => 'PDF скачан', 'draft_saved' => 'Гость начал заполнять (черновик)',
+    'pdf_downloaded' => 'PDF скачан', 'draft_saved' => 'Гость начал заполнять (черновик)', 'menu_saved' => 'Гость сохранил меню и допы',
 ];
 ?>
 <h1 class="a-h1">Заезд <?= h(contract_number($stay)) ?></h1>
@@ -33,6 +33,32 @@ $eventNames = [
   </section>
 
   <section class="a-card">
+    <h2>Меню и допы</h2>
+    <?php if (($stay['tariff'] ?? '') === ''): ?>
+      <p>Тариф не выбран — страница меню гостю не открыта. Выберите тариф в «Условиях» ниже.</p>
+    <?php else: ?>
+      <p>Тариф: <b><?= h(tariff_label($stay['tariff'])) ?></b></p>
+      <?php if (trim((string)$stay['prepaid_extras']) !== ''): ?><p>Уже оформлено: <?= nl2br(h($stay['prepaid_extras'])) ?></p><?php endif; ?>
+      <label class="a-label" for="menu-link">Ссылка на меню для гостя</label>
+      <div class="a-link">
+        <input type="text" readonly value="<?= h($link . '/menu') ?>" id="menu-link">
+        <button class="btn btn--navy btn--sm" type="button" data-copy="#menu-link">Скопировать</button>
+      </div>
+      <?php if (!$menu): ?>
+        <p class="a-small">Гость ещё ничего не выбрал. После подписи договора кнопка «Выбрать меню и допы» появится у него на экране «Спасибо».</p>
+      <?php else: ?>
+        <?php if ($menu['tariff'] !== $stay['tariff']): ?><p class="a-small">Выбор сделан по прежнему тарифу «<?= h(tariff_label($menu['tariff'])) ?>» — гостю нужно выбрать заново.</p><?php endif; ?>
+        <p class="a-small">Сохранено <?= h(fmt_dt($menu['updated_at'])) ?> · к оплате дополнительно <?= h(fmt_rub((int)$menu['total'])) ?></p>
+        <dl class="a-kv">
+          <?php foreach (menu_summary($menu['data'], $menu['tariff']) as [$title, $lines]): ?>
+            <div><dt><?= h($title) ?></dt><dd><?= implode('<br>', array_map('h', $lines)) ?></dd></div>
+          <?php endforeach; ?>
+        </dl>
+      <?php endif; ?>
+    <?php endif; ?>
+  </section>
+
+  <section class="a-card">
     <h2>Статус</h2>
     <p>
       <span class="badge badge--<?= h($stay['status']) ?>"><?= h(STATUS_LABELS[$stay['status']]) ?></span>
@@ -50,10 +76,7 @@ $eventNames = [
       <?php
       $btns = [];
       if ($stay['status'] === 'created') $btns['sent'] = 'Отметить: ссылка отправлена';
-      if ($stay['status'] === 'signed') $btns['living'] = 'Гость заселился';
-      if ($stay['status'] === 'living') $btns['checked_out'] = 'Выезд оформлен';
-      if ($stay['status'] === 'checked_out') $btns['living'] = 'Вернуть: проживает';
-      if (!in_array($stay['status'], ['cancelled', 'checked_out'], true)) $btns['cancelled'] = 'Отменить заезд';
+      if ($stay['status'] !== 'cancelled') $btns['cancelled'] = 'Отменить заезд';
       if ($stay['status'] === 'cancelled') $btns[$signed ? 'signed' : 'sent'] = 'Восстановить';
       foreach ($btns as $to => $label): ?>
         <form method="post" action="<?= h(url('admin/stay/' . $stay['id'] . '/status')) ?>">
@@ -123,7 +146,7 @@ $eventNames = [
         <input type="hidden" name="_csrf" value="<?= h($csrf) ?>"><input type="hidden" name="ext" value="<?= (int)$pending['id'] ?>">
         <button class="btn btn--ghost btn--sm">Отменить продление</button>
       </form>
-    <?php elseif ($signed && !$stay['resign_required'] && in_array($stay['status'], ['signed', 'living'], true)): ?>
+    <?php elseif ($signed && !$stay['resign_required'] && $stay['status'] === 'signed'): ?>
       <form method="post" action="<?= h(url('admin/stay/' . $stay['id'] . '/extend')) ?>">
         <input type="hidden" name="_csrf" value="<?= h($csrf) ?>">
         <div class="grid2">

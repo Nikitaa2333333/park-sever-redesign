@@ -284,3 +284,40 @@
     go(errStep || 1, !!errStep);
   }
 })();
+
+// «Меню и допы»: лимит «до N позиций», сброс радиокнопок и живой итог по платным позициям
+(function () {
+  var d = document;
+  var form = d.getElementById('menu-form');
+  if (!form) return;
+  var totalEl = form.querySelector('[data-menu-total]');
+  var unknownEl = form.querySelector('[data-menu-unknown]');
+  function rub(n) { return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' ₽'; }
+  function syncLimits() {
+    form.querySelectorAll('.m-pick').forEach(function (p) {
+      var max = +p.getAttribute('data-max');
+      var boxes = p.querySelectorAll('input[type=checkbox]');
+      if (max < 2 || !boxes.length) return;
+      var on = p.querySelectorAll('input[type=checkbox]:checked').length;
+      boxes.forEach(function (b) { b.disabled = !b.checked && on >= max; });
+    });
+  }
+  function syncTotal() {
+    var sum = 0, unknown = false;
+    form.querySelectorAll('input:checked').forEach(function (i) {
+      if (i.hasAttribute('data-price')) sum += +i.getAttribute('data-price');
+      if (i.hasAttribute('data-price-unknown')) unknown = true;
+    });
+    totalEl.textContent = rub(sum);
+    unknownEl.hidden = !unknown;
+  }
+  form.addEventListener('change', function () { syncLimits(); syncTotal(); });
+  form.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-clear]');
+    if (!b) return;
+    b.closest('.m-pick').querySelectorAll('input[type=radio]').forEach(function (r) { r.checked = false; });
+    syncTotal();
+  });
+  syncLimits();
+  syncTotal();
+})();
