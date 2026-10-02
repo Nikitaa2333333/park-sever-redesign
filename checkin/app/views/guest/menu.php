@@ -25,6 +25,7 @@ $terms = stay_terms($stay);
   <section class="m-sec" id="m-<?= h($sid) ?>">
     <h2 class="m-h"><?= h($s['title']) ?></h2>
     <?php if (!empty($s['intro'])): ?><p class="m-x"><?= h($s['intro']) ?></p><?php endif; ?>
+    <?php if (!empty($s['more'])): ?><p class="m-more"><a href="<?= h(menu_catalog()['site'] . $s['more']) ?>" target="_blank" rel="noopener">Подробнее и фото на сайте</a></p><?php endif; ?>
     <?php if (!empty($errors[$sid])): ?><p class="g-alert"><?= h($errors[$sid]) ?></p><?php endif; ?>
 
     <?php if (!empty($s['included'])): ?>

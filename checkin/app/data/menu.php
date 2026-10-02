@@ -11,7 +11,8 @@
 //       'picks'    => [...]  группы выбора: 'max' — сколько можно выбрать
 //                            (1 — радиокнопки; N — до N галочек; 0 — без ограничения;
 //                             ['nights' => [ночей => штук], 'default' => штук] — по длине заезда);
-//       'fields'   => [...]  поля гостя: text / textarea / check.
+//       'fields'   => [...]  поля гостя: text / textarea / check;
+//       'more'     => '/путь'  страница сайта, где раздел описан подробно с фото (ссылка «Подробнее»).
 //   Опция: 'id', 'name', 'price' (руб. или null), 'desc', 'gastro' => true — входит
 //   в тариф «Гастрономия без забот» (в этом тарифе показывается без цены и без выбора).
 //
@@ -19,6 +20,9 @@
 //   собираются из этого файла.
 
 return [
+    // сайт, на страницы которого ведут ссылки «Подробнее» ('more' у разделов)
+    'site' => 'https://park-sever.ru',
+
     'tariffs' => [
         'none' => 'Без еды',
         'gastro' => 'Гастрономия без забот',
@@ -28,7 +32,7 @@ return [
     'sections' => [
         // ── тариф «Гастрономия без забот» ──
         [
-            'id' => 'g_grill', 'title' => 'Гриль-меню', 'tariffs' => ['gastro'],
+            'id' => 'g_grill', 'title' => 'Гриль-меню', 'more' => '/services/#grill', 'tariffs' => ['gastro'],
             'intro' => 'На выбор при бронировании на 2 ночи — 3 позиции, на 1 ночь — 1 позиция.',
             'picks' => [[
                 'id' => 'items', 'max' => ['nights' => [1 => 1, 2 => 3], 'default' => 3],
@@ -47,7 +51,7 @@ return [
             'fields' => [['id' => 'comment', 'type' => 'textarea', 'label' => 'Комментарий']],
         ],
         [
-            'id' => 'g_sauce', 'title' => 'Соусы к горячему', 'tariffs' => ['gastro'],
+            'id' => 'g_sauce', 'title' => 'Соусы к горячему', 'more' => '/services/#grill', 'tariffs' => ['gastro'],
             'picks' => [[
                 'id' => 'items', 'max' => 3, 'label' => 'На выбор до 3 шт.',
                 'options' => [
@@ -60,11 +64,11 @@ return [
             ]],
         ],
         [
-            'id' => 'g_default', 'title' => 'По умолчанию к гриль-меню', 'tariffs' => ['gastro'],
+            'id' => 'g_default', 'title' => 'По умолчанию к гриль-меню', 'more' => '/services/#grill', 'tariffs' => ['gastro'],
             'included' => ['Овощи свежие (помидоры, огурцы, красный лук, пучок зелени)', 'Лаваш'],
         ],
         [
-            'id' => 'g_soup', 'title' => 'Суп', 'tariffs' => ['gastro'],
+            'id' => 'g_soup', 'title' => 'Суп', 'more' => '/services/#soups', 'tariffs' => ['gastro'],
             'picks' => [[
                 'id' => 'items', 'max' => 1, 'label' => 'Доступна 1 позиция',
                 'options' => [
@@ -75,7 +79,7 @@ return [
             ]],
         ],
         [
-            'id' => 'g_table', 'title' => 'Закусочный стол', 'tariffs' => ['gastro'],
+            'id' => 'g_table', 'title' => 'Закусочный стол', 'more' => '/services/#serving', 'tariffs' => ['gastro'],
             'intro' => 'Идёт по умолчанию, по запросу позиции можно поменять.',
             'included' => [
                 'Сырное ассорти: с белой плесенью, с голубой плесенью, маасдам, моцарелла',
@@ -92,7 +96,7 @@ return [
 
         // ── тариф «Без еды» ──
         [
-            'id' => 'n_grill', 'title' => 'Гриль-меню', 'tariffs' => ['none'],
+            'id' => 'n_grill', 'title' => 'Гриль-меню', 'more' => '/services/#grill', 'tariffs' => ['none'],
             'picks' => [[
                 'id' => 'items', 'max' => 0,
                 'options' => [
@@ -106,7 +110,7 @@ return [
             'fields' => [['id' => 'comment', 'type' => 'textarea', 'label' => 'Комментарий']],
         ],
         [
-            'id' => 'n_soup', 'title' => 'Домашний суп к вашему приезду', 'tariffs' => ['none'],
+            'id' => 'n_soup', 'title' => 'Домашний суп к вашему приезду', 'more' => '/services/#soups', 'tariffs' => ['none'],
             'picks' => [[
                 'id' => 'items', 'max' => 1, 'label' => 'Доступна 1 позиция',
                 'options' => [
@@ -119,7 +123,7 @@ return [
 
         // ── для всех тарифов ──
         [
-            'id' => 'snacks', 'title' => 'Дополнительное меню: закуски',
+            'id' => 'snacks', 'title' => 'Дополнительное меню: закуски', 'more' => '/services/#serving',
             'picks' => [[
                 'id' => 'items', 'max' => 0,
                 'options' => [
@@ -153,7 +157,7 @@ return [
             ],
         ],
         [
-            'id' => 'sign', 'title' => 'Вывеска на окно',
+            'id' => 'sign', 'title' => 'Вывеска на окно', 'more' => '/atmosphere/#prepared',
             'intro' => 'Без доплат.',
             'picks' => [[
                 'id' => 'items', 'max' => 1, 'label' => 'Доступна 1 позиция',
@@ -166,7 +170,7 @@ return [
             ]],
         ],
         [
-            'id' => 'package', 'title' => 'Пакетное предложение',
+            'id' => 'package', 'title' => 'Пакетное предложение', 'more' => '/atmosphere/',
             'picks' => [[
                 'id' => 'items', 'max' => 1, 'label' => 'Доступна 1 позиция',
                 'options' => [
@@ -177,7 +181,7 @@ return [
             ]],
         ],
         [
-            'id' => 'serving', 'title' => 'Сервировка',
+            'id' => 'serving', 'title' => 'Сервировка', 'more' => '/services/#serving',
             'picks' => [[
                 'id' => 'items', 'max' => 1, 'label' => 'Пакетное предложение, доступна 1 позиция',
                 'options' => [
@@ -189,7 +193,7 @@ return [
             'fields' => [['id' => 'comment', 'type' => 'textarea', 'label' => 'Комментарий', 'placeholder' => 'Например, уточнить цвет']],
         ],
         [
-            'id' => 'cake', 'title' => 'Торт',
+            'id' => 'cake', 'title' => 'Торт', 'more' => '/services/#cake',
             'picks' => [
                 ['id' => 'size', 'max' => 1, 'label' => 'Доступна 1 позиция', 'options' => [
                     ['id' => 'bento400', 'name' => 'Бенто-торт, 400 г', 'price' => 3000],
@@ -205,7 +209,7 @@ return [
             'photo' => true,
         ],
         [
-            'id' => 'balloons', 'title' => 'Оформление шарами',
+            'id' => 'balloons', 'title' => 'Оформление шарами', 'more' => '/services/#balloons',
             'picks' => [[
                 'id' => 'items', 'max' => 0,
                 'options' => [
@@ -232,7 +236,7 @@ return [
             'photo' => true,
         ],
         [
-            'id' => 'custom', 'title' => 'Индивидуальная подготовка праздника',
+            'id' => 'custom', 'title' => 'Индивидуальная подготовка праздника', 'more' => '/services/#custom',
             'intro' => 'Каждая история заслуживает своей атмосферы. Мы можем сделать эксклюзивно:',
             'included' => [
                 'индивидуальную газету к вашему вечеру',
