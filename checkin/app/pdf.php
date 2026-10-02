@@ -100,7 +100,7 @@ function build_contract_pdf(array $doc, array $terms, array $f, array $acceptanc
             $h2($g['group']);
             foreach ($g['items'] as $it) {
                 $pdf->SetFont('Serif', '', 9.5);
-                $pdf->MultiCell(0, 4.8, '•  ' . $it['name'] . ($it['qty'] !== '—' ? ' — ' . $it['qty'] . ' шт.' : '') . '. Компенсация ущерба: ' . inventory_value($it['value']) . '.');
+                $pdf->MultiCell(0, 4.8, '•  ' . $it['name'] . ($it['qty'] !== '—' ? ' — ' . $it['qty'] . ' шт.' : '') . '. Стоимость: ' . inventory_value($it['value']) . '.' . (!empty($it['note']) ? ' ' . $it['note'] : ''));
             }
         }
         $h2('Дефекты, зафиксированные до заезда');

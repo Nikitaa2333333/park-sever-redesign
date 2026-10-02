@@ -71,7 +71,7 @@ function migrate(PDO $pdo): void
         guest_label   TEXT NOT NULL DEFAULT '', -- пометка администратора (кто бронировал)
         guest_phone   TEXT NOT NULL DEFAULT '',
         admin_note    TEXT NOT NULL DEFAULT '',
-        status        TEXT NOT NULL DEFAULT 'created', -- created|sent|signed|living|checked_out|cancelled
+        status        TEXT NOT NULL DEFAULT 'created', -- created|sent|signed|cancelled
         resign_required INTEGER NOT NULL DEFAULT 0,
         tenant_short  TEXT NOT NULL DEFAULT '', -- «Мирошников Д.С.» после подписи (для журнала)
         created_at    TEXT NOT NULL,
@@ -134,7 +134,21 @@ function migrate(PDO $pdo): void
     CREATE INDEX IF NOT EXISTS idx_audit_stay ON audit(stay_id);
     CREATE INDEX IF NOT EXISTS idx_sig_stay ON signatures(stay_id);
     CREATE INDEX IF NOT EXISTS idx_ext_stay ON extensions(stay_id);
+    -- статусы «Гость проживает» / «Выезд оформлен» сняты (заказчик, 01.10.2026)
+    UPDATE stays SET status = 'signed' WHERE status IN ('living','checked_out');
+    -- выбор гостя в «Меню и допы» (зашифрован: в комментариях бывают аллергии)
+    CREATE TABLE IF NOT EXISTS menu_orders (
+        stay_id     INTEGER PRIMARY KEY REFERENCES stays(id),
+        tariff      TEXT NOT NULL,
+        payload_enc TEXT NOT NULL,
+        total       INTEGER NOT NULL DEFAULT 0,
+        updated_at  TEXT NOT NULL
+    );
     SQL);
+    // новые колонки заезда: тариф и уже оформленные допы (01.10.2026)
+    $cols = array_column($pdo->query('PRAGMA table_info(stays)')->fetchAll(), 'name');
+    if (!in_array('tariff', $cols, true)) $pdo->exec("ALTER TABLE stays ADD COLUMN tariff TEXT NOT NULL DEFAULT ''");
+    if (!in_array('prepaid_extras', $cols, true)) $pdo->exec("ALTER TABLE stays ADD COLUMN prepaid_extras TEXT NOT NULL DEFAULT ''");
 }
 
 function now_local(): string { return date('Y-m-d H:i:s'); }
@@ -345,8 +359,6 @@ const STATUS_LABELS = [
     'created' => 'Ссылка создана',
     'sent' => 'Ссылка отправлена',
     'signed' => 'Договор подписан',
-    'living' => 'Гость проживает',
-    'checked_out' => 'Выезд оформлен',
     'cancelled' => 'Отменено',
 ];
 

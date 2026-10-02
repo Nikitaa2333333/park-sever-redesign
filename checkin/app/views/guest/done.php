@@ -5,6 +5,13 @@
   <p class="g-lead">Регистрация пройдена, договор подписан. Ждём вас в Парке Север к <?= h(fmt_time($stay['checkin_at'])) ?>! Гаечка, Рыжуля и Бэлла готовы встречать 🐾</p>
   <?php require __DIR__ . '/_terms.php'; ?>
 </section>
+<?php if (($stay['tariff'] ?? '') !== ''): ?>
+<section class="g-block">
+  <h2 class="g-h2">Меню и допы</h2>
+  <p class="g-p">Выберите, что приготовить и подготовить к вашему приезду.</p>
+  <a class="btn btn--navy btn--wide" href="<?= h(url($stay['token'] . '/menu')) ?>">Выбрать меню и допы</a>
+</section>
+<?php endif; ?>
 <section class="g-block">
   <h2 class="g-h2">Ваши документы</h2>
   <p class="g-p">Копия подписана простой электронной подписью и имеет ту же силу, что и бумажный договор. Сохраните её.</p>

@@ -109,24 +109,49 @@ function admin_login(): void
 
 function admin_list(): void
 {
-    $filter = (string)($_GET['status'] ?? 'active');
-    $q = trim((string)($_GET['q'] ?? ''));
-    $where = match ($filter) {
-        'active' => "status NOT IN ('checked_out','cancelled')",
-        'all' => '1=1',
-        default => array_key_exists($filter, STATUS_LABELS) ? 'status = :status' : '1=1',
-    };
-    $sql = "SELECT * FROM stays WHERE $where";
+    // Фильтры: статус, дом, период заезда, поиск. «Актуальные» (по умолчанию) —
+    // не отменённые и ещё не выехавшие, ближайший заезд сверху.
+    $f = [
+        'status' => (string)($_GET['status'] ?? 'active'),
+        'house' => (string)($_GET['house'] ?? ''),
+        'from' => valid_ymd((string)($_GET['from'] ?? '')),
+        'to' => valid_ymd((string)($_GET['to'] ?? '')),
+        'q' => trim((string)($_GET['q'] ?? '')),
+    ];
+    $where = [];
     $params = [];
-    if (str_contains($where, ':status')) $params['status'] = $filter;
-    if ($q !== '') {
-        $sql .= ' AND (guest_label LIKE :q OR tenant_short LIKE :q OR guest_phone LIKE :q)';
-        $params['q'] = '%' . $q . '%';
+    if ($f['status'] === 'active') {
+        $where[] = "status <> 'cancelled' AND checkout_at >= :today";
+        $params['today'] = date('Y-m-d');
+    } elseif (array_key_exists($f['status'], STATUS_LABELS)) {
+        $where[] = 'status = :status';
+        $params['status'] = $f['status'];
+    } else {
+        $f['status'] = 'all';
     }
-    $sql .= ' ORDER BY checkin_at ' . ($filter === 'active' ? 'ASC' : 'DESC') . ' LIMIT 500';
+    if (array_key_exists($f['house'], houses())) {
+        $where[] = 'house_id = :house';
+        $params['house'] = $f['house'];
+    } else {
+        $f['house'] = '';
+    }
+    if ($f['from']) { $where[] = 'checkin_at >= :from'; $params['from'] = $f['from']; }
+    if ($f['to']) { $where[] = 'checkin_at < :to'; $params['to'] = date('Y-m-d', strtotime($f['to'] . ' +1 day')); }
+    if ($f['q'] !== '') {
+        $where[] = '(guest_label LIKE :q OR tenant_short LIKE :q OR guest_phone LIKE :q)';
+        $params['q'] = '%' . $f['q'] . '%';
+    }
+    $sql = 'SELECT * FROM stays' . ($where ? ' WHERE ' . implode(' AND ', $where) : '')
+        . ' ORDER BY checkin_at ' . ($f['status'] === 'all' && !$f['from'] && !$f['to'] ? 'DESC' : 'ASC') . ' LIMIT 500';
     $st = db()->prepare($sql);
     $st->execute($params);
-    admin_page('Журнал заездов', 'list', ['stays' => $st->fetchAll(), 'filter' => $filter, 'q' => $q, 'flash' => flash()]);
+    admin_page('Журнал заездов', 'list', ['stays' => $st->fetchAll(), 'f' => $f, 'flash' => flash()]);
+}
+
+function valid_ymd(string $s): string
+{
+    $d = DateTimeImmutable::createFromFormat('!Y-m-d', $s);
+    return ($d && $d->format('Y-m-d') === $s) ? $s : '';
 }
 
 /** @return array{0: array, 1: array} */
@@ -141,7 +166,11 @@ function stay_form_input(array $in): array
         'guest_label' => trim((string)($in['guest_label'] ?? '')),
         'guest_phone' => trim((string)($in['guest_phone'] ?? '')),
         'admin_note' => trim((string)($in['admin_note'] ?? '')),
+        'tariff' => (string)($in['tariff'] ?? ''),
+        'prepaid_extras' => mb_substr(trim((string)($in['prepaid_extras'] ?? '')), 0, 2000),
     ];
+    require_once __DIR__ . '/menu.php';
+    if ($v['tariff'] !== '' && tariff_label($v['tariff']) === '') $v['tariff'] = '';
     $e = [];
     if (!isset(houses()[$v['house_id']])) $e['house_id'] = 'Выберите дом';
     foreach (['checkin_at', 'checkout_at'] as $k) {
@@ -160,17 +189,17 @@ function admin_new(): void
         'house_id' => array_key_first(houses()),
         'checkin_at' => date('Y-m-d', strtotime('+1 day')) . ' 17:00',
         'checkout_at' => date('Y-m-d', strtotime('+2 day')) . ' 12:00',
-        'price' => '', 'deposit' => 5000, 'guest_label' => '', 'guest_phone' => '', 'admin_note' => '',
+        'price' => '', 'deposit' => 5000, 'guest_label' => '', 'guest_phone' => '', 'admin_note' => '', 'tariff' => '', 'prepaid_extras' => '',
     ];
     $errors = [];
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         [$v, $errors] = stay_form_input($_POST);
         if (!$errors) {
             $now = now_local();
-            db()->prepare('INSERT INTO stays (token, house_id, checkin_at, checkout_at, price, deposit, guest_label, guest_phone, admin_note, created_at, updated_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')->execute([
+            db()->prepare('INSERT INTO stays (token, house_id, checkin_at, checkout_at, price, deposit, guest_label, guest_phone, admin_note, tariff, prepaid_extras, created_at, updated_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')->execute([
                 new_token(), $v['house_id'], $v['checkin_at'], $v['checkout_at'], $v['price'], $v['deposit'],
-                $v['guest_label'], $v['guest_phone'], $v['admin_note'], $now, $now,
+                $v['guest_label'], $v['guest_phone'], $v['admin_note'], $v['tariff'], $v['prepaid_extras'], $now, $now,
             ]);
             $id = (int)db()->lastInsertId();
             audit($id, 'admin', 'stay_created', array_diff_key($v, ['admin_note' => 1]));
@@ -196,6 +225,7 @@ function admin_stay(array $stay, array $errors = [], ?array $editValues = null):
         'stay' => $stay, 'sigs' => $sigs, 'guest' => $guestData, 'extensions' => $st->fetchAll(),
         'audit' => $au->fetchAll(), 'link' => public_link($stay['token']), 'errors' => $errors,
         'v' => $editValues ?? $stay, 'flash' => flash(),
+        'menu' => (function () use ($stay) { require_once __DIR__ . '/menu.php'; return menu_load((int)$stay['id']); })(),
         'draftAt' => (function () use ($stay) {
             $st = db()->prepare('SELECT updated_at FROM drafts WHERE stay_id = ?');
             $st->execute([$stay['id']]);
@@ -215,13 +245,13 @@ function admin_stay_post(array $stay, string $sub, array $parts): void
             $termsChanged = $v['house_id'] !== $stay['house_id'] || $v['checkin_at'] !== $stay['checkin_at']
                 || $v['checkout_at'] !== $stay['checkout_at'] || $v['price'] !== (int)$stay['price'] || $v['deposit'] !== (int)$stay['deposit'];
             $wasSigned = latest_contract_signature($id) !== null;
-            $pdo->prepare('UPDATE stays SET house_id = ?, checkin_at = ?, checkout_at = ?, price = ?, deposit = ?, guest_label = ?, guest_phone = ?, admin_note = ?, updated_at = ? WHERE id = ?')
-                ->execute([$v['house_id'], $v['checkin_at'], $v['checkout_at'], $v['price'], $v['deposit'], $v['guest_label'], $v['guest_phone'], $v['admin_note'], now_local(), $id]);
+            $pdo->prepare('UPDATE stays SET house_id = ?, checkin_at = ?, checkout_at = ?, price = ?, deposit = ?, guest_label = ?, guest_phone = ?, admin_note = ?, tariff = ?, prepaid_extras = ?, updated_at = ? WHERE id = ?')
+                ->execute([$v['house_id'], $v['checkin_at'], $v['checkout_at'], $v['price'], $v['deposit'], $v['guest_label'], $v['guest_phone'], $v['admin_note'], $v['tariff'], $v['prepaid_extras'], now_local(), $id]);
             if ($termsChanged) {
                 $pdo->prepare("UPDATE extensions SET status = 'cancelled' WHERE stay_id = ? AND status = 'pending'")->execute([$id]);
                 if ($wasSigned) {
                     // Подписанный договор не переписывается: гость переподписывает новую редакцию по той же ссылке
-                    $pdo->prepare("UPDATE stays SET resign_required = 1, status = CASE WHEN status IN ('signed','living') THEN 'sent' ELSE status END WHERE id = ?")->execute([$id]);
+                    $pdo->prepare("UPDATE stays SET resign_required = 1, status = CASE WHEN status = 'signed' THEN 'sent' ELSE status END WHERE id = ?")->execute([$id]);
                 }
             }
             audit($id, 'admin', 'stay_edited', ['terms_changed' => $termsChanged, 'new' => array_diff_key($v, ['admin_note' => 1])]);
@@ -232,12 +262,8 @@ function admin_stay_post(array $stay, string $sub, array $parts): void
 
         case 'status':
             $to = (string)($_POST['to'] ?? '');
-            $allowed = ['sent', 'living', 'checked_out', 'cancelled', 'signed'];
+            $allowed = ['sent', 'cancelled', 'signed'];
             if (!in_array($to, $allowed, true)) break;
-            if (in_array($to, ['living', 'checked_out'], true) && !latest_contract_signature($id)) {
-                flash('Сначала гость должен подписать договор.');
-                break;
-            }
             $pdo->prepare('UPDATE stays SET status = ?, updated_at = ?' . ($to === 'sent' && !$stay['sent_at'] ? ', sent_at = ?' : '') . ' WHERE id = ?')
                 ->execute($to === 'sent' && !$stay['sent_at'] ? [$to, now_local(), now_local(), $id] : [$to, now_local(), $id]);
             audit($id, 'admin', 'status_changed', ['from' => $stay['status'], 'to' => $to]);

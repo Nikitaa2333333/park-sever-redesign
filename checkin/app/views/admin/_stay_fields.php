@@ -20,4 +20,16 @@
   <?= field('guest_label', 'Кто бронировал (пометка для себя)', $v, $errors, ['placeholder' => 'Дмитрий, из ВК']) ?>
   <?= field('guest_phone', 'Телефон гостя', $v, $errors, ['type' => 'tel', 'placeholder' => '+7…']) ?>
 </div>
+<?php require_once __DIR__ . '/../../menu.php'; ?>
+<div class="fld">
+  <label for="f-tariff">Тариф <span class="fld__opt">необязательно</span></label>
+  <select id="f-tariff" name="tariff">
+    <option value="">Не выбран — меню гостю не открыто</option>
+    <?php foreach (menu_catalog()['tariffs'] as $tid => $tl): ?>
+      <option value="<?= h($tid) ?>" <?= ($v['tariff'] ?? '') === $tid ? 'selected' : '' ?>><?= h($tl) ?></option>
+    <?php endforeach; ?>
+  </select>
+  <p class="fld__hint">С тарифом гость получит страницу «Меню и допы» по своей ссылке</p>
+</div>
+<?= field('prepaid_extras', 'Уже оформленные допы (гость видит)', $v, $errors, ['type' => 'textarea', 'placeholder' => 'Например: торт бенто 800 г, шары «Сердце»']) ?>
 <?= field('admin_note', 'Заметка (гость не видит)', $v, $errors, ['type' => 'textarea']) ?>

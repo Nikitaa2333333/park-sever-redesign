@@ -37,6 +37,7 @@ function guest_route(string $token, string $action): void
     if (!link_active($stay)) not_found('Срок действия ссылки истёк или бронирование отменено. Если это ошибка — напишите нам.');
 
     if ($action === 'pdf') { guest_pdf($stay); return; }
+    if ($action === 'menu') { require_once __DIR__ . '/menu.php'; guest_menu($stay); return; }
 
     if (!$stay['opened_at']) {
         db()->prepare('UPDATE stays SET opened_at = ? WHERE id = ?')->execute([now_local(), $stay['id']]);
