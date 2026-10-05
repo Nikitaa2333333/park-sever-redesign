@@ -149,6 +149,8 @@ function migrate(PDO $pdo): void
     $cols = array_column($pdo->query('PRAGMA table_info(stays)')->fetchAll(), 'name');
     if (!in_array('tariff', $cols, true)) $pdo->exec("ALTER TABLE stays ADD COLUMN tariff TEXT NOT NULL DEFAULT ''");
     if (!in_array('prepaid_extras', $cols, true)) $pdo->exec("ALTER TABLE stays ADD COLUMN prepaid_extras TEXT NOT NULL DEFAULT ''");
+    // «Скрыть цены» в меню: хэш кода гостя, пусто — цены видны (03.10.2026)
+    if (!in_array('price_lock', $cols, true)) $pdo->exec("ALTER TABLE stays ADD COLUMN price_lock TEXT NOT NULL DEFAULT ''");
 }
 
 function now_local(): string { return date('Y-m-d H:i:s'); }

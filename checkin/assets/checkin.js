@@ -302,7 +302,15 @@
       boxes.forEach(function (b) { b.disabled = !b.checked && on >= max; });
     });
   }
+  function syncCounts() {
+    form.querySelectorAll('[data-grp]').forEach(function (g) {
+      var n = g.querySelectorAll('.m-pick input:checked').length;
+      g.querySelector('[data-grp-count]').textContent = n ? 'выбрано: ' + n : '';
+    });
+  }
   function syncTotal() {
+    syncCounts();
+    if (!totalEl) return; // цены скрыты кодом — итога на странице нет
     var sum = 0, unknown = false;
     form.querySelectorAll('input:checked').forEach(function (i) {
       if (i.hasAttribute('data-price')) sum += +i.getAttribute('data-price');
