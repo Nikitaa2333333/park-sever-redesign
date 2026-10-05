@@ -9,7 +9,7 @@ $eventNames = [
     'sign_validation_failed' => 'Ошибки в анкете', 'sign_rejected' => 'Отправка отклонена', 'contract_signed' => 'Договор подписан',
     'stay_edited' => 'Условия изменены', 'status_changed' => 'Статус изменён', 'extension_created' => 'Продление сформировано',
     'extension_cancelled' => 'Продление отменено', 'extension_signed' => 'Продление подписано', 'extension_sign_rejected' => 'Продление отклонено',
-    'pdf_downloaded' => 'PDF скачан', 'draft_saved' => 'Гость начал заполнять (черновик)', 'menu_saved' => 'Гость сохранил меню и допы',
+    'pdf_downloaded' => 'PDF скачан', 'draft_saved' => 'Гость начал заполнять (черновик)', 'menu_saved' => 'Гость сохранил меню и допы', 'menu_prices_hidden' => 'Цены в меню скрыты кодом', 'menu_prices_shown' => 'Цены в меню снова видны',
 ];
 ?>
 <h1 class="a-h1">Заезд <?= h(contract_number($stay)) ?></h1>
@@ -24,6 +24,15 @@ $eventNames = [
       <input type="text" readonly value="<?= h($link) ?>" id="guest-link">
       <button class="btn btn--navy btn--sm" type="button" data-copy="#guest-link" data-mark-sent="copy">Скопировать</button>
     </div>
+    <?php if (($stay['tariff'] ?? '') !== ''): ?>
+    <label class="a-label" for="menu-link-top">Ссылка на меню и допы · тариф «<?= h(tariff_label($stay['tariff'])) ?>»</label>
+    <div class="a-link">
+      <input type="text" readonly value="<?= h($link . '/menu') ?>" id="menu-link-top">
+      <button class="btn btn--navy btn--sm" type="button" data-copy="#menu-link-top">Скопировать</button>
+    </div>
+    <?php else: ?>
+    <p class="a-small">Ссылка на меню и допы появится, когда выберете тариф в «Условиях».</p>
+    <?php endif; ?>
     <label class="a-label" for="guest-msg">Текст сообщения со ссылкой</label>
     <div class="a-link">
       <textarea readonly rows="4" id="guest-msg"><?= h($msg) ?></textarea>
@@ -39,11 +48,13 @@ $eventNames = [
     <?php else: ?>
       <p>Тариф: <b><?= h(tariff_label($stay['tariff'])) ?></b></p>
       <?php if (trim((string)$stay['prepaid_extras']) !== ''): ?><p>Уже оформлено: <?= nl2br(h($stay['prepaid_extras'])) ?></p><?php endif; ?>
-      <label class="a-label" for="menu-link">Ссылка на меню для гостя</label>
-      <div class="a-link">
-        <input type="text" readonly value="<?= h($link . '/menu') ?>" id="menu-link">
-        <button class="btn btn--navy btn--sm" type="button" data-copy="#menu-link">Скопировать</button>
-      </div>
+      <?php if ((string)$stay['price_lock'] !== ''): ?>
+        <p class="a-small">Гость скрыл цены кодом (подарок) — по ссылке ценники не видны.</p>
+        <form method="post" action="<?= h(url('admin/stay/' . $stay['id'] . '/menu-unlock')) ?>">
+          <input type="hidden" name="_csrf" value="<?= h($csrf) ?>">
+          <button class="btn btn--ghost btn--sm" data-confirm="Вернуть гостю цены без кода?">Сбросить: показать цены</button>
+        </form>
+      <?php endif; ?>
       <?php if (!$menu): ?>
         <p class="a-small">Гость ещё ничего не выбрал. После подписи договора кнопка «Выбрать меню и допы» появится у него на экране «Спасибо».</p>
       <?php else: ?>

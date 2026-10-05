@@ -270,6 +270,13 @@ function admin_stay_post(array $stay, string $sub, array $parts): void
             flash('Статус: ' . STATUS_LABELS[$to]);
             break;
 
+        case 'menu-unlock':
+            // гость забыл код, которым скрыл цены в меню
+            $pdo->prepare("UPDATE stays SET price_lock = '' WHERE id = ?")->execute([$id]);
+            audit($id, 'admin', 'menu_prices_shown');
+            flash('Цены в меню гостя снова видны.');
+            break;
+
         case 'mark-sent':
             // Вызывается из кабинета при нажатии «Скопировать» (ссылку или текст сообщения)
             $channel = mb_substr((string)($_POST['channel'] ?? ''), 0, 20);

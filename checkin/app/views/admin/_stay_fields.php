@@ -26,7 +26,7 @@
   <select id="f-tariff" name="tariff">
     <option value="">Не выбран — меню гостю не открыто</option>
     <?php foreach (menu_catalog()['tariffs'] as $tid => $tl): ?>
-      <option value="<?= h($tid) ?>" <?= ($v['tariff'] ?? '') === $tid ? 'selected' : '' ?>><?= h($tl) ?></option>
+      <option value="<?= h($tid) ?>" <?= ($v['tariff'] ?? '') === $tid ? 'selected' : '' ?>><?= h($tl['label']) ?></option>
     <?php endforeach; ?>
   </select>
   <p class="fld__hint">С тарифом гость получит страницу «Меню и допы» по своей ссылке</p>

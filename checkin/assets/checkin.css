@@ -296,8 +296,26 @@ details.a-card[open] > summary{ margin-bottom:14px }
 
 /* «Меню и допы» (скелет): разделы одной колонкой, опции — строки с галочкой и ценой справа */
 .m-form{ padding-bottom:190px }
-.m-sec{ padding:26px 0 6px }
-.m-h{ font-family:var(--font-display); font-weight:400; font-size:clamp(30px,5vw,36px); line-height:1; margin:0 0 10px }
+.m-sec{ padding:4px 0 14px }
+.m-h{ font-size:18px; font-weight:600; line-height:1.35; margin:6px 0 8px }
+/* блоки меню сворачиваются: заголовок блока — Corsiva, раскрытие нативным <details> */
+.m-grp{ margin:0 0 10px }
+.m-grp[open]{ margin-bottom:18px }
+.m-grp__s{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; padding:16px 16px; background:var(--cream); cursor:pointer; list-style:none }
+.m-grp__s::-webkit-details-marker{ display:none }
+.m-grp__t{ font-family:var(--font-display); font-size:clamp(28px,5vw,34px); line-height:1 }
+.m-grp__t::after{ content:"+"; display:inline-block; margin-left:12px; font-family:var(--font-body); font-size:22px; font-weight:500 }
+.m-grp[open] .m-grp__t::after{ content:"−" }
+.m-grp__n{ flex:0 0 auto; font-size:14px; font-weight:600 }
+.m-grp__s:focus-visible{ outline:2px solid var(--gold-l); outline-offset:2px }
+/* «Скрыть цены» — справа вверху */
+.m-lock{ display:flex; flex-direction:column; align-items:flex-end; margin:0 0 6px }
+.m-lock summary{ font-size:14px; font-weight:600; text-decoration:underline; text-underline-offset:3px; cursor:pointer; list-style:none }
+.m-lock summary::-webkit-details-marker{ display:none }
+.m-lock__f{ margin:10px 0 0; padding:14px 16px; background:var(--cream); max-width:420px }
+.m-lock__f p{ margin:0 0 10px; font-size:14px; line-height:1.5 }
+.m-lock__row{ display:flex }
+.m-lock__row input{ flex:1; min-width:0; min-height:38px; padding:6px 10px; border:1px solid var(--navy); border-right:0; border-radius:0; font:500 15px var(--font-body); color:var(--ink); background:#fff }
 .m-x{ margin:0 0 12px; font-size:15px; line-height:1.5 }
 .m-incl{ margin:0 0 14px }
 .m-pick{ margin:0 0 12px }

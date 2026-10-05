@@ -15,8 +15,10 @@
       <span><?= h(fmt_wd($terms['checkout_at'])) ?>, до <?= h(fmt_time($terms['checkout_at'])) ?></span>
     </div>
   </div>
+  <?php if (empty($hidePrices)): // в меню со скрытыми ценами (подарок) стоимость дома тоже не показываем ?>
   <div class="ticket__foot">
     <span>Стоимость <b><?= h(fmt_rub($terms['price'])) ?></b></span>
     <span>Депозит <b><?= h(fmt_rub($terms['deposit'])) ?></b> · вернём после выезда</span>
   </div>
+  <?php endif; ?>
 </div>

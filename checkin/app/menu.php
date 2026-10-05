@@ -14,16 +14,37 @@ function menu_catalog(): array
     return $m ??= require __DIR__ . '/data/menu.php';
 }
 
+function tariff_cfg(string $tariff): ?array
+{
+    return menu_catalog()['tariffs'][$tariff] ?? null;
+}
+
 function tariff_label(string $tariff): string
 {
-    return menu_catalog()['tariffs'][$tariff] ?? '';
+    return tariff_cfg($tariff)['label'] ?? '';
 }
 
 /** Разделы, видимые в тарифе. */
 function menu_sections(string $tariff): array
 {
+    $food = (bool)(tariff_cfg($tariff)['food'] ?? false);
     return array_values(array_filter(menu_catalog()['sections'],
-        fn($s) => !isset($s['tariffs']) || in_array($tariff, $s['tariffs'], true)));
+        fn($s) => !isset($s['food']) || $s['food'] === $food));
+}
+
+/** Раздел входит в стоимость тарифа: выбор есть, цены нет. */
+function section_free(array $s, string $tariff): bool
+{
+    return in_array($s['id'], tariff_cfg($tariff)['free'] ?? [], true);
+}
+
+/** Разделы тарифа по блокам: [id блока => [название, [разделы]]], пустые блоки пропущены. */
+function menu_groups(string $tariff): array
+{
+    $out = [];
+    foreach (menu_catalog()['groups'] as $gid => $title) $out[$gid] = [$title, []];
+    foreach (menu_sections($tariff) as $s) $out[$s['group'] ?? 'custom'][1][] = $s;
+    return array_filter($out, fn($g) => $g[1]);
 }
 
 /** Сколько позиций можно выбрать в группе (0 — без ограничения). */
@@ -37,7 +58,7 @@ function pick_max(array $pick, int $nights): int
 /** Опция входит в тариф — показывается без цены и без выбора. */
 function option_in_tariff(array $opt, string $tariff): bool
 {
-    return $tariff === 'gastro' && !empty($opt['gastro']);
+    return !empty($opt['gastro']) && !empty(tariff_cfg($tariff)['food']);
 }
 
 /**
@@ -77,6 +98,7 @@ function menu_total(array $data, string $tariff): array
     $sum = 0;
     $unknown = false;
     foreach (menu_sections($tariff) as $s) {
+        if (section_free($s, $tariff)) continue;
         foreach ($s['picks'] ?? [] as $p) {
             $chosen = $data[$s['id']]['picks'][$p['id']] ?? [];
             foreach ($p['options'] as $o) {
@@ -109,7 +131,7 @@ function menu_summary(array $data, string $tariff): array
             $chosen = $data[$s['id']]['picks'][$p['id']] ?? [];
             foreach ($p['options'] as $o) {
                 if (!in_array($o['id'], $chosen, true)) continue;
-                $price = array_key_exists('price', $o) ? ($o['price'] === null ? ' — цена уточняется' : ($o['price'] ? ' — ' . fmt_rub((int)$o['price']) : '')) : '';
+                $price = section_free($s, $tariff) ? ' — входит в тариф' : (array_key_exists('price', $o) ? ($o['price'] === null ? ' — цена уточняется' : ($o['price'] ? ' — ' . fmt_rub((int)$o['price']) : '')) : '');
                 $lines[] = (!empty($p['label']) && ($p['id'] !== 'items') ? $p['label'] . ': ' : '') . $o['name'] . $price;
             }
         }
@@ -137,6 +159,15 @@ function guest_menu(array $stay): void
     $errors = [];
     $flash = null;
 
+    $do = (string)($_POST['_do'] ?? 'save');
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && in_array($do, ['lock', 'unlock'], true)) {
+        menu_price_lock($stay, $do);
+        return;
+    }
+    if (isset($_GET['locked'])) $flash = 'Цены скрыты. Теперь ссылку можно переслать — ценников по ней не видно. Вернуть цены — тем же кодом.';
+    if (isset($_GET['unlocked'])) $flash = 'Цены снова видны.';
+    if (isset($_GET['badcode'])) $errors['_form'] = 'Код не подошёл.';
+
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!form_token_valid('menu|' . $stay['token'], (string)($_POST['_ft'] ?? ''), 86400 * 30)) {
             $errors['_form'] = 'Страница устарела. Проверьте выбор и нажмите «Сохранить» ещё раз.';
@@ -158,6 +189,29 @@ function guest_menu(array $stay): void
     echo render('guest/layout', ['title' => 'Меню и допы', 'body' => render('guest/menu', [
         'stay' => $stay, 'tariff' => $tariff, 'nights' => $nights, 'data' => $data, 'errors' => $errors,
         'flash' => $flash, 'savedAt' => $saved['updated_at'] ?? null,
+        'hidePrices' => (string)$stay['price_lock'] !== '',
         'formToken' => form_token('menu|' . $stay['token']),
     ])]);
+}
+
+/**
+ * «Скрыть цены» — подарок: гость прячет ценники кодом и пересылает ссылку, второй
+ * человек выбирает допы без цен; вернуть цены можно только тем же кодом.
+ * Состояние хранится у заезда — по пересланной ссылке цены тоже скрыты.
+ */
+function menu_price_lock(array $stay, string $do): void
+{
+    $back = $stay['token'] . '/menu';
+    if (!form_token_valid('menu|' . $stay['token'], (string)($_POST['_ft'] ?? ''), 86400 * 30)) redirect($back);
+    $code = trim((string)($_POST['code'] ?? ''));
+    if ($do === 'lock') {
+        if (mb_strlen($code) < 4) redirect($back . '?badcode=1');
+        db()->prepare('UPDATE stays SET price_lock = ? WHERE id = ?')->execute([password_hash($code, PASSWORD_DEFAULT), $stay['id']]);
+        audit((int)$stay['id'], 'guest', 'menu_prices_hidden');
+        redirect($back . '?locked=1');
+    }
+    if ((string)$stay['price_lock'] === '' || !password_verify($code, (string)$stay['price_lock'])) redirect($back . '?badcode=1');
+    db()->prepare("UPDATE stays SET price_lock = '' WHERE id = ?")->execute([$stay['id']]);
+    audit((int)$stay['id'], 'guest', 'menu_prices_shown');
+    redirect($back . '?unlocked=1');
 }

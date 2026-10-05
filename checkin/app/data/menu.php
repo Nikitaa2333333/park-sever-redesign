@@ -4,8 +4,10 @@
 //
 // Устройство:
 //   'tariffs'  — тарифы, которые администратор выбирает в карточке заезда.
+//   'groups'   — сворачивающиеся блоки экрана гостя.
 //   'sections' — разделы экрана. У раздела:
-//       'tariffs'  => [...]  в каких тарифах показывать (нет ключа — во всех);
+//       'group'    => блок из 'groups';
+//       'food'     => true/false  только в тарифах с едой / только без еды (нет ключа — во всех);
 //       'intro' / 'after'    текст до/после выбора;
 //       'included' => [...]  что идёт по умолчанию (только показ);
 //       'picks'    => [...]  группы выбора: 'max' — сколько можно выбрать
@@ -14,7 +16,7 @@
 //       'fields'   => [...]  поля гостя: text / textarea / check;
 //       'more'     => '/путь'  страница сайта, где раздел описан подробно с фото (ссылка «Подробнее»).
 //   Опция: 'id', 'name', 'price' (руб. или null), 'desc', 'gastro' => true — входит
-//   в тариф «Гастрономия без забот» (в этом тарифе показывается без цены и без выбора).
+//   в тарифы с едой (там показывается без цены и без выбора).
 //
 // ⚠ Любую позицию/цену правим здесь — экран гостя, сохранение и карточка в кабинете
 //   собираются из этого файла.
@@ -23,16 +25,31 @@ return [
     // сайт, на страницы которого ведут ссылки «Подробнее» ('more' у разделов)
     'site' => 'https://park-sever.ru',
 
+    // Тарифы: 'food' — тариф с едой (показываются разделы «включено по тарифу», позиции
+    // со звёздочкой 'gastro' идут без доплаты); 'free' — разделы, которые в этом тарифе
+    // входят в стоимость (выбор есть, цены нет).
+    // ⚠ Набор тарифов — пример под письмо заказчицы 03.10.2026, она ещё уточняет.
     'tariffs' => [
-        'none' => 'Без еды',
-        'gastro' => 'Гастрономия без забот',
-        // 'holiday' => 'Праздничный', — заказчица ещё не сделала
+        'none' => ['label' => 'Без еды', 'food' => false, 'free' => []],
+        'gastro' => ['label' => 'Гастрономия без забот', 'food' => true, 'free' => []],
+        'gastro_party' => ['label' => 'Гастрономия + подготовка к празднику', 'food' => true, 'free' => ['cake', 'balloons']],
+    ],
+
+    // Блоки экрана гостя — сворачиваются, порядок как в письме заказчицы 03.10.2026
+    'groups' => [
+        'tariff' => 'Включено по тарифу',
+        'extra' => 'Дополнительное меню и закуски',
+        'holiday' => 'Пакетное предложение к праздникам',
+        'cake' => 'Торт на заказ',
+        'balloons' => 'Оформление шарами',
+        'flowers' => 'Букеты',
+        'custom' => 'Индивидуальная подготовка',
     ],
 
     'sections' => [
         // ── тариф «Гастрономия без забот» ──
         [
-            'id' => 'g_grill', 'title' => 'Гриль-меню', 'more' => '/services/#grill', 'tariffs' => ['gastro'],
+            'id' => 'g_grill', 'title' => 'Гриль-меню', 'more' => '/services/#grill', 'food' => true, 'group' => 'tariff',
             'intro' => 'На выбор при бронировании на 2 ночи — 3 позиции, на 1 ночь — 1 позиция.',
             'picks' => [[
                 'id' => 'items', 'max' => ['nights' => [1 => 1, 2 => 3], 'default' => 3],
@@ -51,7 +68,7 @@ return [
             'fields' => [['id' => 'comment', 'type' => 'textarea', 'label' => 'Комментарий']],
         ],
         [
-            'id' => 'g_sauce', 'title' => 'Соусы к горячему', 'more' => '/services/#grill', 'tariffs' => ['gastro'],
+            'id' => 'g_sauce', 'title' => 'Соусы к горячему', 'more' => '/services/#grill', 'food' => true, 'group' => 'tariff',
             'picks' => [[
                 'id' => 'items', 'max' => 3, 'label' => 'На выбор до 3 шт.',
                 'options' => [
@@ -64,11 +81,11 @@ return [
             ]],
         ],
         [
-            'id' => 'g_default', 'title' => 'По умолчанию к гриль-меню', 'more' => '/services/#grill', 'tariffs' => ['gastro'],
+            'id' => 'g_default', 'title' => 'По умолчанию к гриль-меню', 'more' => '/services/#grill', 'food' => true, 'group' => 'tariff',
             'included' => ['Овощи свежие (помидоры, огурцы, красный лук, пучок зелени)', 'Лаваш'],
         ],
         [
-            'id' => 'g_soup', 'title' => 'Суп', 'more' => '/services/#soups', 'tariffs' => ['gastro'],
+            'id' => 'g_soup', 'title' => 'Суп', 'more' => '/services/#soups', 'food' => true, 'group' => 'tariff',
             'picks' => [[
                 'id' => 'items', 'max' => 1, 'label' => 'Доступна 1 позиция',
                 'options' => [
@@ -79,7 +96,7 @@ return [
             ]],
         ],
         [
-            'id' => 'g_table', 'title' => 'Закусочный стол', 'more' => '/services/#serving', 'tariffs' => ['gastro'],
+            'id' => 'g_table', 'title' => 'Закусочный стол', 'more' => '/services/#serving', 'food' => true, 'group' => 'tariff',
             'intro' => 'Идёт по умолчанию, по запросу позиции можно поменять.',
             'included' => [
                 'Сырное ассорти: с белой плесенью, с голубой плесенью, маасдам, моцарелла',
@@ -96,7 +113,7 @@ return [
 
         // ── тариф «Без еды» ──
         [
-            'id' => 'n_grill', 'title' => 'Гриль-меню', 'more' => '/services/#grill', 'tariffs' => ['none'],
+            'id' => 'n_grill', 'title' => 'Гриль-меню', 'more' => '/services/#grill', 'food' => false, 'group' => 'extra',
             'picks' => [[
                 'id' => 'items', 'max' => 0,
                 'options' => [
@@ -110,7 +127,7 @@ return [
             'fields' => [['id' => 'comment', 'type' => 'textarea', 'label' => 'Комментарий']],
         ],
         [
-            'id' => 'n_soup', 'title' => 'Домашний суп к вашему приезду', 'more' => '/services/#soups', 'tariffs' => ['none'],
+            'id' => 'n_soup', 'title' => 'Домашний суп к вашему приезду', 'more' => '/services/#soups', 'food' => false, 'group' => 'extra',
             'picks' => [[
                 'id' => 'items', 'max' => 1, 'label' => 'Доступна 1 позиция',
                 'options' => [
@@ -123,7 +140,7 @@ return [
 
         // ── для всех тарифов ──
         [
-            'id' => 'snacks', 'title' => 'Дополнительное меню: закуски', 'more' => '/services/#serving',
+            'id' => 'snacks', 'title' => 'Дополнительное меню: закуски', 'more' => '/services/#serving', 'group' => 'extra',
             'picks' => [[
                 'id' => 'items', 'max' => 0,
                 'options' => [
@@ -141,7 +158,7 @@ return [
             ]],
         ],
         [
-            'id' => 'tea', 'title' => 'К чаю',
+            'id' => 'tea', 'title' => 'К чаю', 'group' => 'extra',
             'picks' => [
                 ['id' => 'set', 'max' => 0, 'options' => [
                     ['id' => 'tea', 'name' => 'Набор к чаю', 'price' => 2500, 'desc' => '9 фруктово-ягодных кубиков и на выбор из списка ниже.'],
@@ -157,7 +174,7 @@ return [
             ],
         ],
         [
-            'id' => 'sign', 'title' => 'Вывеска на окно', 'more' => '/atmosphere/#prepared',
+            'id' => 'sign', 'title' => 'Вывеска на окно', 'more' => '/atmosphere/#prepared', 'group' => 'tariff',
             'intro' => 'Без доплат.',
             'picks' => [[
                 'id' => 'items', 'max' => 1, 'label' => 'Доступна 1 позиция',
@@ -170,7 +187,7 @@ return [
             ]],
         ],
         [
-            'id' => 'package', 'title' => 'Пакетное предложение', 'more' => '/atmosphere/',
+            'id' => 'package', 'title' => 'Пакетное предложение', 'more' => '/atmosphere/', 'group' => 'holiday',
             'picks' => [[
                 'id' => 'items', 'max' => 1, 'label' => 'Доступна 1 позиция',
                 'options' => [
@@ -181,7 +198,7 @@ return [
             ]],
         ],
         [
-            'id' => 'serving', 'title' => 'Сервировка', 'more' => '/services/#serving',
+            'id' => 'serving', 'title' => 'Сервировка', 'more' => '/services/#serving', 'group' => 'holiday',
             'picks' => [[
                 'id' => 'items', 'max' => 1, 'label' => 'Пакетное предложение, доступна 1 позиция',
                 'options' => [
@@ -193,7 +210,7 @@ return [
             'fields' => [['id' => 'comment', 'type' => 'textarea', 'label' => 'Комментарий', 'placeholder' => 'Например, уточнить цвет']],
         ],
         [
-            'id' => 'cake', 'title' => 'Торт', 'more' => '/services/#cake',
+            'id' => 'cake', 'title' => 'Торт', 'more' => '/services/#cake', 'group' => 'cake',
             'picks' => [
                 ['id' => 'size', 'max' => 1, 'label' => 'Доступна 1 позиция', 'options' => [
                     ['id' => 'bento400', 'name' => 'Бенто-торт, 400 г', 'price' => 3000],
@@ -209,7 +226,7 @@ return [
             'photo' => true,
         ],
         [
-            'id' => 'balloons', 'title' => 'Оформление шарами', 'more' => '/services/#balloons',
+            'id' => 'balloons', 'title' => 'Оформление шарами', 'more' => '/services/#balloons', 'group' => 'balloons',
             'picks' => [[
                 'id' => 'items', 'max' => 0,
                 'options' => [
@@ -223,7 +240,7 @@ return [
             'photo' => true,
         ],
         [
-            'id' => 'roses', 'title' => 'Букеты роз',
+            'id' => 'roses', 'title' => 'Букеты роз', 'group' => 'flowers',
             'picks' => [[
                 'id' => 'items', 'max' => 1,
                 'options' => [
@@ -236,7 +253,7 @@ return [
             'photo' => true,
         ],
         [
-            'id' => 'custom', 'title' => 'Индивидуальная подготовка праздника', 'more' => '/services/#custom',
+            'id' => 'custom', 'title' => 'Индивидуальная подготовка праздника', 'more' => '/services/#custom', 'group' => 'custom',
             'intro' => 'Каждая история заслуживает своей атмосферы. Мы можем сделать эксклюзивно:',
             'included' => [
                 'индивидуальную газету к вашему вечеру',
@@ -248,7 +265,7 @@ return [
             'fields' => [['id' => 'comment', 'type' => 'textarea', 'label' => 'Что хотелось бы']],
         ],
         [
-            'id' => 'wishes', 'title' => 'Особые пожелания',
+            'id' => 'wishes', 'title' => 'Особые пожелания', 'group' => 'custom',
             'fields' => [['id' => 'comment', 'type' => 'textarea', 'label' => 'Пожелания',
                 'placeholder' => 'Аллергии, дата дня рождения или предложения руки и сердца, любимые цветы, просьба спрятать подарок, любимый цвет сервировки, просьба не выпускать собак']],
         ],
