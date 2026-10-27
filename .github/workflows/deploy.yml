@@ -45,7 +45,7 @@ jobs:
       # rsync вместо scp: передаёт ТОЛЬКО изменённые файлы (деплой — секунды, не минуты),
       # ничего не удаляет заранее — сайт не стоит полупустым во время заливки;
       # --delete подчищает на хостинге файлы, которых больше нет в dist.
-      # /checkin/ (модуль онлайн-регистрации, PHP) заливается отдельно — исключаем,
+      # /checkin/ (модуль онлайн-регистрации, PHP) заливается отдельным шагом ниже — исключаем,
       # иначе --delete снесёт его с хостинга при каждом деплое сайта
       - name: Setup SSH
         run: |
@@ -61,3 +61,15 @@ jobs:
             -e "ssh -p 22 -i ~/.ssh/deploy_key" \
             dist/ \
             "${{ secrets.HOSTING_USER }}@server66.hosting.reg.ru:/var/www/${{ secrets.HOSTING_USER }}/data/www/park-sever.ru/"
+
+      # Модуль онлайн-регистрации и «Меню и допы» (PHP, папка checkin/).
+      # Без --delete и без config.php и data/ — настройки, ключ шифрования, база и PDF
+      # на сервере не трогаются. Миграция базы выполняется сама при первом запросе.
+      - name: Deploy checkin module (PHP) via rsync
+        run: |
+          rsync -az --checksum \
+            --exclude '/config.php' \
+            --exclude '/data/' \
+            -e "ssh -p 22 -i ~/.ssh/deploy_key" \
+            checkin/ \
+            "${{ secrets.HOSTING_USER }}@server66.hosting.reg.ru:/var/www/${{ secrets.HOSTING_USER }}/data/www/park-sever.ru/checkin/"
