@@ -43,8 +43,8 @@ const socialLabels: Record<string, string> = {
 };
 const navMenu = [
   { t: 'Главная', href: withBase('/') },
-  { t: 'Дома', href: withBase('/accommodation/house-1') },
-  { t: 'Искусство отдыха', href: withBase('/art-of-rest') },
+  { t: 'Дома', href: withBase('/accommodation/house-1/') },
+  { t: 'Искусство отдыха', href: withBase('/art-of-rest/') },
   { t: 'Атмосфера для двоих', href: withBase('/atmosphere/') },
   { t: 'Наш мир', href: withBase('/our-world/') },
   { t: 'Истории', href: withBase('/stories/') },
@@ -82,7 +82,7 @@ const expert = {
 // абзац с термином-справкой: {термин} в JSON → пунктирное подчёркивание + всплывающая карточка
 const parts = (p: string) => p.split(/\{([^}]+)\}/);
 ---
-<SiteLayout title="Искусство отдыха — Парк Север">
+<SiteLayout title="Искусство отдыха — Парк Север" description="Почему мы так устаём, что происходит с организмом на отдыхе и как забрать это состояние с собой. Наука отдыха — этап за этапом, от сборов до возвращения домой.">
   <!-- NAV -->
   <nav class="nav">
     <div class="wrap">
@@ -204,7 +204,7 @@ const parts = (p: string) => p.split(/\{([^}]+)\}/);
         <div>
           <h3 class="aor-h3">{s1.what.title}</h3>
           {s1.what.paragraphs.map((p: string) => <p class="aor-p">{p}</p>)}
-          <a class="btn btn--navy" style="margin-top:28px;" href={withBase('/accommodation/house-1')}>{s1.what.cta}</a>
+          <a class="btn btn--navy" style="margin-top:28px;" href={withBase('/accommodation/house-1/')}>{s1.what.cta}</a>
           <p class="aor-note">{s1.what.houseNote}</p>
         </div>
         <div>
@@ -680,7 +680,7 @@ const parts = (p: string) => p.split(/\{([^}]+)\}/);
         </div>
         <div class="foot__col">
           <h4>Документы</h4>
-          <a href={withBase('/legal-information')}>Правовая информация</a>
+          <a href={withBase('/legal-information/')}>Правовая информация</a>
           <a href={withBase('/files/Договор-оферта.pdf')} target="_blank" rel="noopener noreferrer">Договор-оферта (PDF)</a>
           <a href={withBase('/files/Правила-проживания.pdf')} target="_blank" rel="noopener noreferrer">Правила проживания (PDF)</a>
           <a href={withBase('/files/Политика-конфиденциальности.pdf')} target="_blank" rel="noopener noreferrer">Политика конфиденциальности (PDF)</a>

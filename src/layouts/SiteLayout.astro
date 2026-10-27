@@ -1,7 +1,11 @@
 ---
 import { site, withBase } from '../lib/content';
 import '../styles/design-system.css';
-const { title } = Astro.props;
+const { title, description = '', image = '/images/og.jpg', noindex = false, jsonld = null } = Astro.props;
+// Канонический адрес — без www и с завершающим слэшем, как отдаёт хостинг (SEO: один URL на страницу)
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+// Превью ссылки в мессенджерах и соцсетях (Telegram, VK, WhatsApp) — Open Graph
+const ogImage = new URL(image, Astro.site).href;
 const booking = site.integrations.booking;
 // Инициализация виджета брони: НЕ ждём window.load (он зависает на догрузке hero-видео).
 // Стартуем по DOMContentLoaded и опрашиваем готовность znmsWidget (скрипт грузится async).
@@ -63,6 +67,19 @@ const textFace = [400,500,600].map((w) =>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
+    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
+    {description && <meta name="description" content={description} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Парк Север" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:title" content={title} />
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    {jsonld && <script type="application/ld+json" set:html={JSON.stringify(jsonld)} />}
     <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
     <!-- Заголовки: Monotype Corsiva (локально). Наборный/UI: Lora (тоже локально, self-hosted). -->
     <style is:inline set:html={fontFace + textFace}></style>

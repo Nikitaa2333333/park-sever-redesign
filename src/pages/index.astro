@@ -21,6 +21,28 @@ const posterOf = async (p: string | undefined, width: number) => {
 };
 
 const page = getPage('home');
+// SEO главной: описание для выдачи и карточка организации для Яндекса/Google (schema.org)
+const seoDescription = 'Парк Север — private smart lodge: один-единственный дом на 12,4 га леса в 80 км от МКАД. Отдых вдвоём в абсолютной тишине, без соседей. Бронирование онлайн.';
+const seoOrg = {
+  '@context': 'https://schema.org',
+  '@type': 'LodgingBusiness',
+  name: 'Парк Север',
+  url: 'https://park-sever.ru/',
+  image: 'https://park-sever.ru/images/og.jpg',
+  description: seoDescription,
+  telephone: '+7 929 606-00-45',
+  email: 'park-sever@inbox.ru',
+  address: {
+    '@type': 'PostalAddress',
+    addressCountry: 'RU',
+    addressRegion: 'Московская область',
+    addressLocality: 'деревня Василёво',
+    streetAddress: 'Дмитровский муниципальный округ',
+  },
+  geo: { '@type': 'GeoCoordinates', latitude: 56.45657, longitude: 37.81493 },
+  sameAs: ['https://vk.com/park_sever', 'https://t.me/park_sever', 'https://youtube.com/@ParkSever', 'https://rutube.ru/channel/34216981/', 'https://yandex.ru/maps/org/park_sever/145451177721/'],
+};
+
 const byId: Record<string, any> = Object.fromEntries(page.sections.map((s: any) => [s.id, s]));
 
 const blocksOf = (s: any, type: string) => (s?.blocks ?? []).filter((b: any) => b.type === type && !b.disabled);
@@ -180,13 +202,13 @@ const socialLabels: Record<string, string> = {
 const navMenu = [
   { t: 'Главная', href: '/' },
   { t: 'Дома', href: '/accommodation/house-1' },
-  { t: 'Искусство отдыха', href: withBase('/art-of-rest') },
+  { t: 'Искусство отдыха', href: withBase('/art-of-rest/') },
   { t: 'Атмосфера для двоих', href: withBase('/atmosphere/') },
   { t: 'Наш мир', href: withBase('/our-world/') },
   { t: 'Истории', href: withBase('/stories/') },
 ];
 ---
-<SiteLayout title={page.seo.title}>
+<SiteLayout title={page.seo.title} description={seoDescription} jsonld={seoOrg}>
   {heroPreload && (
     <link
       slot="head"
@@ -370,7 +392,7 @@ const navMenu = [
         ))}
       </div>
       <div class="art-cta">
-        <a class="btn btn--navy" href={withBase('/art-of-rest')}>Узнать как работает отдых</a>
+        <a class="btn btn--navy" href={withBase('/art-of-rest/')}>Узнать как работает отдых</a>
       </div>
     </div>
   </section>
@@ -658,7 +680,7 @@ const navMenu = [
         </div>
         <div class="foot__col">
           <h4>Документы</h4>
-          <a href={withBase('/legal-information')}>Правовая информация</a>
+          <a href={withBase('/legal-information/')}>Правовая информация</a>
           <a href={withBase('/files/Договор-оферта.pdf')} target="_blank" rel="noopener noreferrer">Договор-оферта (PDF)</a>
           <a href={withBase('/files/Правила-проживания.pdf')} target="_blank" rel="noopener noreferrer">Правила проживания (PDF)</a>
           <a href={withBase('/files/Политика-конфиденциальности.pdf')} target="_blank" rel="noopener noreferrer">Политика конфиденциальности (PDF)</a>
