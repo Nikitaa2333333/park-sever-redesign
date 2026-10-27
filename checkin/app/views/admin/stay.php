@@ -10,6 +10,7 @@ $eventNames = [
     'stay_edited' => 'Условия изменены', 'status_changed' => 'Статус изменён', 'extension_created' => 'Продление сформировано',
     'extension_cancelled' => 'Продление отменено', 'extension_signed' => 'Продление подписано', 'extension_sign_rejected' => 'Продление отклонено',
     'pdf_downloaded' => 'PDF скачан', 'draft_saved' => 'Гость начал заполнять (черновик)', 'menu_saved' => 'Гость сохранил меню и допы', 'menu_prices_hidden' => 'Цены в меню скрыты кодом', 'menu_prices_shown' => 'Цены в меню снова видны',
+    'menu_confirmed' => 'Гость подтвердил выбор меню', 'menu_payment_requested' => 'Гость перешёл к оплате допов', 'menu_paid' => 'Оплата допов получена',
 ];
 ?>
 <h1 class="a-h1">Заезд <?= h(contract_number($stay)) ?></h1>
@@ -45,8 +46,15 @@ $eventNames = [
     <h2>Меню и допы</h2>
     <?php if (($stay['tariff'] ?? '') === ''): ?>
       <p>Тариф не выбран — страница меню гостю не открыта. Выберите тариф в «Условиях» ниже.</p>
-    <?php else: ?>
-      <p>Тариф: <b><?= h(tariff_label($stay['tariff'])) ?></b></p>
+    <?php else:
+      $mNights = nights($stay['checkin_at'], $stay['checkout_at']);
+      $mBooked = booked_tariff((string)$stay['tariff'], $mNights);
+      $mData = $menu['data'] ?? [];
+      $mTariff = effective_tariff($mBooked, $mNights, $mData);
+    ?>
+      <p>Тариф: <b><?= h(tariff_label($mTariff)) ?></b><?= $mTariff !== $mBooked ? ' (пакет выбрал гость, в карточке — «' . h(tariff_label($mBooked)) . '»)' : '' ?></p>
+      <?php if ($mBooked !== tariff_key((string)$stay['tariff'])): ?><p class="a-small">В карточке «<?= h(tariff_label($stay['tariff'])) ?>», но гастрономия доступна от 2 ночей — гостю показан тариф «<?= h(tariff_label($mBooked)) ?>».</p><?php endif; ?>
+      <p class="a-small">Гость меняет выбор и время приезда до <?= h(fmt_dt(date('Y-m-d H:i', menu_cutoff_ts($stay)))) ?>, потом — только просмотр.</p>
       <?php if (trim((string)$stay['prepaid_extras']) !== ''): ?><p>Уже оформлено: <?= nl2br(h($stay['prepaid_extras'])) ?></p><?php endif; ?>
       <?php if ((string)$stay['price_lock'] !== ''): ?>
         <p class="a-small">Гость скрыл цены кодом (подарок) — по ссылке ценники не видны.</p>
@@ -57,11 +65,20 @@ $eventNames = [
       <?php endif; ?>
       <?php if (!$menu): ?>
         <p class="a-small">Гость ещё ничего не выбрал. После подписи договора кнопка «Выбрать меню и допы» появится у него на экране «Спасибо».</p>
-      <?php else: ?>
-        <?php if ($menu['tariff'] !== $stay['tariff']): ?><p class="a-small">Выбор сделан по прежнему тарифу «<?= h(tariff_label($menu['tariff'])) ?>» — гостю нужно выбрать заново.</p><?php endif; ?>
-        <p class="a-small">Сохранено <?= h(fmt_dt($menu['updated_at'])) ?> · к оплате дополнительно <?= h(fmt_rub((int)$menu['total'])) ?></p>
+      <?php else: [$mTotal, $mUnknown] = menu_total($mData, $mBooked, $mNights); ?>
+        <p>
+          <span class="badge badge--<?= $menu['status'] === 'paid' ? 'signed' : ($menu['status'] === 'confirmed' ? 'sent' : 'created') ?>"><?= h(['draft' => 'Не подтверждено', 'confirmed' => 'Выбор подтверждён', 'paid' => 'Оплачено'][$menu['status']] ?? $menu['status']) ?></span>
+          <?php if ((int)$menu['pending_total'] > 0): ?><span class="badge badge--warn">Ждёт оплаты <?= h(fmt_rub((int)$menu['pending_total'])) ?></span><?php endif; ?>
+        </p>
+        <p class="a-small">Сохранено <?= h(fmt_dt($menu['updated_at'])) ?> · приезд ~<?= h(arrival_text($mData, $stay)) ?> · допы <?= h(fmt_rub($mTotal)) ?><?= $mUnknown ? ' + позиции с ценой по запросу' : '' ?><?= (int)$menu['paid_total'] ? ' · оплачено ' . h(fmt_rub((int)$menu['paid_total'])) . ' (' . h(fmt_dt($menu['paid_at'])) . ')' : '' ?></p>
+        <?php if ((int)$menu['pending_total'] > 0): ?>
+          <form method="post" action="<?= h(url('admin/stay/' . $stay['id'] . '/menu-paid')) ?>">
+            <input type="hidden" name="_csrf" value="<?= h($csrf) ?>">
+            <button class="btn btn--navy btn--sm" data-confirm="Подтвердить, что оплата <?= h(fmt_rub((int)$menu['pending_total'])) ?> через СБП получена?">Оплата получена: <?= h(fmt_rub((int)$menu['pending_total'])) ?></button>
+          </form>
+        <?php endif; ?>
         <dl class="a-kv">
-          <?php foreach (menu_summary($menu['data'], $menu['tariff']) as [$title, $lines]): ?>
+          <?php foreach (menu_summary($mData, $mBooked, $mNights) as [$title, , $lines]): ?>
             <div><dt><?= h($title) ?></dt><dd><?= implode('<br>', array_map('h', $lines)) ?></dd></div>
           <?php endforeach; ?>
         </dl>
