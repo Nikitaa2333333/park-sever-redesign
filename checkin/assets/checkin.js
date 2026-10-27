@@ -285,47 +285,126 @@
   }
 })();
 
-// «Меню и допы»: лимит «до N позиций», сброс радиокнопок и живой итог по платным позициям
+// «Меню и допы»: лимит «до N позиций», сброс радиокнопок, живой итог к доплате и кнопка
+// подвала («Подтвердить» / «Оплатить через СБП»), шеф-повар только к гриль-меню,
+// поле раннего заезда по галочке, автосохранение при смене пакета, шторка «Состав заказа»
 (function () {
   var d = document;
   var form = d.getElementById('menu-form');
   if (!form) return;
-  var totalEl = form.querySelector('[data-menu-total]');
+  var paid = +form.getAttribute('data-paid') || 0;
+  var line = form.querySelector('[data-menu-line]');
   var unknownEl = form.querySelector('[data-menu-unknown]');
-  function rub(n) { return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' ₽'; }
+  var submit = form.querySelector('[data-menu-submit]');
+  function rub(n) { return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' ₽'; }
+  function visible(el) { return !el.closest('[hidden]'); }
+
   function syncLimits() {
     form.querySelectorAll('.m-pick').forEach(function (p) {
       var max = +p.getAttribute('data-max');
       var boxes = p.querySelectorAll('input[type=checkbox]');
       if (max < 2 || !boxes.length) return;
       var on = p.querySelectorAll('input[type=checkbox]:checked').length;
-      boxes.forEach(function (b) { b.disabled = !b.checked && on >= max; });
+      boxes.forEach(function (b) { if (!b.closest('.m-opt--paid')) b.disabled = !b.checked && on >= max; });
+    });
+  }
+  // шеф-повар без гастрономии — только если выбрано наше гриль-меню
+  function syncRequires() {
+    form.querySelectorAll('[data-requires]').forEach(function (s) {
+      var src = d.getElementById('ms-' + s.getAttribute('data-requires'));
+      var on = !!(src && src.querySelector('.m-opt input:checked'));
+      s.hidden = !on;
+      if (!on) s.querySelectorAll('input').forEach(function (i) { if (i.type !== 'hidden') i.checked = false; });
+      var grp = s.closest('[data-grp]');
+      grp.hidden = !Array.prototype.some.call(grp.querySelectorAll('.m-sec'), function (x) { return !x.hidden; });
+    });
+  }
+  function syncWhen() {
+    form.querySelectorAll('[data-when]').forEach(function (f) {
+      var box = d.getElementById(f.getAttribute('data-when'));
+      f.hidden = !(box && box.checked);
     });
   }
   function syncCounts() {
-    form.querySelectorAll('[data-grp]').forEach(function (g) {
-      var n = g.querySelectorAll('.m-pick input:checked').length;
-      g.querySelector('[data-grp-count]').textContent = n ? 'выбрано: ' + n : '';
+    form.querySelectorAll('[data-grp-count]').forEach(function (c) {
+      var g = c.closest('[data-grp]');
+      var n = Array.prototype.filter.call(g.querySelectorAll('.m-sec:not([data-package]) .m-opt input:checked'), visible).length;
+      c.textContent = n && !g.querySelector('[data-package]') ? 'выбрано: ' + n : '';
     });
   }
   function syncTotal() {
     syncCounts();
-    if (!totalEl) return; // цены скрыты кодом — итога на странице нет
+    if (!line) return; // цены скрыты кодом — итога на странице нет
     var sum = 0, unknown = false;
-    form.querySelectorAll('input:checked').forEach(function (i) {
+    Array.prototype.filter.call(form.querySelectorAll('input:checked'), visible).forEach(function (i) {
       if (i.hasAttribute('data-price')) sum += +i.getAttribute('data-price');
       if (i.hasAttribute('data-price-unknown')) unknown = true;
     });
-    totalEl.textContent = rub(sum);
+    var due = Math.max(0, sum - paid);
+    line.firstChild && (line.innerHTML = due > 0
+      ? 'Дополнительно: <b>+ ' + rub(due) + '</b>'
+      : 'Тариф: ' + form.getAttribute('data-tariff').replace(/[<&]/g, '') + ' · <b>0 ₽</b> к доплате');
+    line.appendChild(unknownEl);
     unknownEl.hidden = !unknown;
+    if (submit) {
+      submit.value = due > 0 ? 'pay' : 'confirm';
+      submit.textContent = due > 0 ? 'Оплатить через СБП (' + rub(due) + ')' : 'Подтвердить выбор меню';
+    }
   }
-  form.addEventListener('change', function () { syncLimits(); syncTotal(); });
+  function sync() { syncLimits(); syncRequires(); syncWhen(); syncTotal(); }
+
+  form.addEventListener('change', function (e) {
+    // смена пакета меняет набор блоков — сохраняем и перерисовываем страницу
+    if (e.target.name === 'package') {
+      form.querySelector('[name=_anchor]').value = 'package';
+      form.submit();
+      return;
+    }
+    sync();
+  });
   form.addEventListener('click', function (e) {
     var b = e.target.closest('[data-clear]');
     if (!b) return;
     b.closest('.m-pick').querySelectorAll('input[type=radio]').forEach(function (r) { r.checked = false; });
-    syncTotal();
+    sync();
   });
-  syncLimits();
-  syncTotal();
+
+  // «Состав заказа» — собираем из того, что отмечено на экране сейчас
+  var body = d.querySelector('[data-order-body]');
+  function text(el) { return el ? el.textContent.replace(/\s+/g, ' ').trim() : ''; }
+  function buildOrder() {
+    if (!body) return;
+    var meta = body.querySelector('.doc-meta');
+    body.innerHTML = '';
+    if (meta) body.appendChild(meta);
+    var any = false;
+    form.querySelectorAll('[data-grp]').forEach(function (g) {
+      if (g.hidden) return;
+      var lines = [];
+      g.querySelectorAll('.m-opt input:checked').forEach(function (i) {
+        if (!visible(i) || !i.value && i.name === 'package') return;
+        var o = i.closest('.m-opt');
+        var p = text(o.querySelector('.m-opt__p'));
+        lines.push(text(o.querySelector('.m-opt__n')) + (p ? ' — ' + p : ''));
+      });
+      g.querySelectorAll('.fld, .m-check').forEach(function (f) {
+        if (!visible(f)) return;
+        var i = f.querySelector('select, textarea, input');
+        if (!i) return;
+        if (i.type === 'checkbox') { if (i.checked) lines.push('✓ ' + text(f.querySelector('span'))); return; }
+        var v = i.tagName === 'SELECT' ? text(i.options[i.selectedIndex]) : i.value.trim();
+        if (v) lines.push(text(f.querySelector('label')).replace(/ необязательно$/, '') + ': ' + v);
+      });
+      if (!lines.length) return;
+      any = true;
+      var h = d.createElement('h4'); h.textContent = g.getAttribute('data-grp-title'); body.appendChild(h);
+      var ul = d.createElement('ul'); ul.className = 'dots';
+      lines.forEach(function (l) { var li = d.createElement('li'); li.textContent = l; ul.appendChild(li); });
+      body.appendChild(ul);
+    });
+    if (!any) { var p = d.createElement('p'); p.textContent = 'Пока ничего не выбрано.'; body.appendChild(p); }
+  }
+  d.addEventListener('click', function (e) { if (e.target.closest('[data-sheet="sheet-order"]')) buildOrder(); }, true);
+
+  sync();
 })();

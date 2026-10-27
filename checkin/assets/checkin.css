@@ -299,13 +299,16 @@ details.a-card[open] > summary{ margin-bottom:14px }
 .m-sec{ padding:4px 0 14px }
 .m-h{ font-size:18px; font-weight:600; line-height:1.35; margin:6px 0 8px }
 /* блоки меню сворачиваются: заголовок блока — Corsiva, раскрытие нативным <details> */
-.m-grp{ margin:0 0 10px }
-.m-grp[open]{ margin-bottom:18px }
-.m-grp__s{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; padding:16px 16px; background:var(--cream); cursor:pointer; list-style:none }
+/* Плашки-блоки калькулятора: по ТЗ 21.10 — заголовок и сами плашки компактнее, шрифты внутри без изменений */
+.m-grp{ margin:0 0 8px }
+.m-grp[open]{ margin-bottom:16px }
+.m-grp__s{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 14px; background:var(--cream); cursor:pointer; list-style:none }
 .m-grp__s::-webkit-details-marker{ display:none }
-.m-grp__t{ font-family:var(--font-display); font-size:clamp(28px,5vw,34px); line-height:1 }
-.m-grp__t::after{ content:"+"; display:inline-block; margin-left:12px; font-family:var(--font-body); font-size:22px; font-weight:500 }
+.m-grp__h{ display:flex; flex-direction:column; gap:2px; min-width:0 }
+.m-grp__t{ font-family:var(--font-display); font-size:24px; line-height:1.05 }
+.m-grp__t::after{ content:"+"; display:inline-block; margin-left:10px; font-family:var(--font-body); font-size:18px; font-weight:500 }
 .m-grp[open] .m-grp__t::after{ content:"−" }
+.m-grp__inc{ font-size:13px; font-weight:600 }
 .m-grp__n{ flex:0 0 auto; font-size:14px; font-weight:600 }
 .m-grp__s:focus-visible{ outline:2px solid var(--gold-l); outline-offset:2px }
 /* «Скрыть цены» — справа вверху */
@@ -340,3 +343,29 @@ details.a-card[open] > summary{ margin-bottom:14px }
 .m-more{ margin:0 0 12px; font-size:15px }
 .m-more a{ color:var(--ink); font-weight:600; text-decoration:underline; text-underline-offset:3px }
 .m-more a:hover{ text-decoration:none }
+
+/* ТЗ 21.10: индикатор тарифа, статус заказа, блок «Уже ждёт вас в доме», маршрут */
+.m-tariff{ display:inline-block; margin:0 0 12px; padding:6px 12px; background:var(--navy); color:#fff; font-size:14px; font-weight:600 }
+.m-status{ margin:0 0 20px; padding:16px 18px; background:var(--frost); border-left:3px solid var(--navy) }
+.m-status p{ margin:0 0 6px; font-size:15px; line-height:1.5 }
+.m-status p:last-child{ margin-bottom:0 }
+.m-status__t{ font-family:var(--font-display); font-size:30px !important; line-height:1 !important; margin-bottom:10px !important }
+.m-status__n{ font-size:14px !important }
+.m-status--pay{ background:var(--sand); border-left-color:var(--gold-l) }
+.m-status--pay .btn{ margin-top:8px }
+.m-fs{ border:0; margin:0; padding:0; min-width:0 }
+.m-info{ margin:0 0 18px; padding:16px 18px 6px; border:1px solid var(--fog) }
+.m-info__t{ font-family:var(--font-display); font-weight:400; font-size:30px; line-height:1; margin:0 }
+/* подстрочник серым — прямая просьба заказчицы (ТЗ 21.10); цвет сплошной, не opacity */
+.m-info__sub{ margin:4px 0 6px; font-size:14px; color:#6f6a64 }
+.m-h__inc{ font-size:14px; font-weight:600 }
+.m-pkg__in{ font-weight:500 }
+.m-opt--pkg{ padding-left:0 }
+.m-opt--paid{ cursor:default }
+.m-opt--paid .m-opt__p{ font-weight:600 }
+.fld__hint{ margin:-2px 0 8px !important; font-size:14px !important }
+.m-route__img{ display:block; width:100%; height:auto; margin:4px 0 14px; border:1px solid var(--fog) }
+.m-route__h{ margin:20px 0 10px }
+.m-contacts{ display:flex; flex-wrap:wrap; gap:8px }
+.m-contacts .btn{ border-color:var(--navy) }
+.m-total b{ font-weight:600 }

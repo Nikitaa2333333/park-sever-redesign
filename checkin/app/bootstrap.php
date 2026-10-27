@@ -151,6 +151,21 @@ function migrate(PDO $pdo): void
     if (!in_array('prepaid_extras', $cols, true)) $pdo->exec("ALTER TABLE stays ADD COLUMN prepaid_extras TEXT NOT NULL DEFAULT ''");
     // «Скрыть цены» в меню: хэш кода гостя, пусто — цены видны (03.10.2026)
     if (!in_array('price_lock', $cols, true)) $pdo->exec("ALTER TABLE stays ADD COLUMN price_lock TEXT NOT NULL DEFAULT ''");
+    // ТЗ 21.10.2026: 4 тарифа вместо 3, подтверждение и оплата допов
+    $pdo->exec("UPDATE stays SET tariff = CASE tariff WHEN 'none' THEN 'duo' WHEN 'gastro' THEN 'duo_gastro' WHEN 'gastro_party' THEN 'party_gastro' ELSE tariff END
+        WHERE tariff IN ('none','gastro','gastro_party')");
+    $mcols = array_column($pdo->query('PRAGMA table_info(menu_orders)')->fetchAll(), 'name');
+    foreach ([
+        'status' => "TEXT NOT NULL DEFAULT 'draft'",   // draft | confirmed | paid
+        'paid_total' => 'INTEGER NOT NULL DEFAULT 0',  // всего оплачено допов
+        'paid_enc' => "TEXT NOT NULL DEFAULT ''",      // оплаченный снимок выбора (зашифрован)
+        'pending_total' => 'INTEGER NOT NULL DEFAULT 0', // ждёт оплаты через СБП
+        'pending_enc' => "TEXT NOT NULL DEFAULT ''",   // снимок выбора, за который ждём оплату
+        'confirmed_at' => "TEXT NOT NULL DEFAULT ''",
+        'paid_at' => "TEXT NOT NULL DEFAULT ''",
+    ] as $col => $def) {
+        if (!in_array($col, $mcols, true)) $pdo->exec("ALTER TABLE menu_orders ADD COLUMN $col $def");
+    }
 }
 
 function now_local(): string { return date('Y-m-d H:i:s'); }

@@ -17,7 +17,7 @@ $path = trim($path, '/');
 if (PHP_SAPI === 'cli-server' && str_starts_with($path, 'assets/')) {
     $file = realpath(__DIR__ . '/' . $path);
     if ($file && str_starts_with($file, realpath(__DIR__ . '/assets'))) {
-        $types = ['css' => 'text/css', 'js' => 'text/javascript', 'woff2' => 'font/woff2', 'svg' => 'image/svg+xml'];
+        $types = ['css' => 'text/css', 'js' => 'text/javascript', 'woff2' => 'font/woff2', 'svg' => 'image/svg+xml', 'jpg' => 'image/jpeg'];
         header('Content-Type: ' . ($types[pathinfo($file, PATHINFO_EXTENSION)] ?? 'application/octet-stream'));
         readfile($file);
         exit;

@@ -277,6 +277,11 @@ function admin_stay_post(array $stay, string $sub, array $parts): void
             flash('Цены в меню гостя снова видны.');
             break;
 
+        case 'menu-paid':
+            require_once __DIR__ . '/menu.php';
+            flash(menu_mark_paid($stay) ? 'Оплата отмечена. Гость видит «Оплачено», оплаченные позиции он уже не снимет.' : 'Нет суммы, ожидающей оплаты.');
+            break;
+
         case 'mark-sent':
             // Вызывается из кабинета при нажатии «Скопировать» (ссылку или текст сообщения)
             $channel = mb_substr((string)($_POST['channel'] ?? ''), 0, 20);
