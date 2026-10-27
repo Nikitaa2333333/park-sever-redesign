@@ -47,7 +47,12 @@ ErrorDocument 404 /404.html
   # /index.html → / (дубль главной)
   RewriteCond %{THE_REQUEST} \s/index\.html[\s?]
   RewriteRule ^index\.html$ / [R=301,L]
-  # Старые адреса прежнего сайта → похожие страницы нового (301).
-  # Остальные старые адреса отдают 404 — их удаляем в Яндекс Вебмастере.
-  RewriteRule ^entertainment/?$ /atmosphere/ [R=301,L]
+  # Адреса прежнего сайта (content/seo.json) → ближайшие страницы нового (301):
+  # вес страниц в поиске переходит на новые, а не теряется на 404.
+  RewriteRule ^about/?$ /our-world/ [R=301,L]
+  RewriteRule ^entertainment/?$ /our-world/ [R=301,L]
+  RewriteRule ^(new-year|february|special-offers)/?$ /atmosphere/ [R=301,L]
+  RewriteRule ^news/?$ /stories/ [R=301,L]
+  RewriteRule ^(contacts|pay)/?$ / [R=301,L]
+  RewriteRule ^accommodation/house-[23]/?$ /accommodation/house-1/ [R=301,L]
 </IfModule>
