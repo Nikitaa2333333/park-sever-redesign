@@ -1,7 +1,9 @@
 ---
 import { site, withBase } from '../lib/content';
 import '../styles/design-system.css';
-const { title } = Astro.props;
+const { title, noindex = false } = Astro.props;
+// Канонический адрес — без www и с завершающим слэшем, как отдаёт хостинг (SEO: один URL на страницу)
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const booking = site.integrations.booking;
 // Инициализация виджета брони: НЕ ждём window.load (он зависает на догрузке hero-видео).
 // Стартуем по DOMContentLoaded и опрашиваем готовность znmsWidget (скрипт грузится async).
@@ -63,6 +65,7 @@ const textFace = [400,500,600].map((w) =>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
+    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
     <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
     <!-- Заголовки: Monotype Corsiva (локально). Наборный/UI: Lora (тоже локально, self-hosted). -->
     <style is:inline set:html={fontFace + textFace}></style>

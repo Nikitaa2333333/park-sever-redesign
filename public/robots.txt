@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /checkin/
+Disallow: /checkin-demo/
+Disallow: /styleguide.html
+
+Sitemap: https://park-sever.ru/sitemap.xml

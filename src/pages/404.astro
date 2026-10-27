@@ -1,0 +1,98 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import LogoMark from '../components/LogoMark.astro';
+import { site, withBase } from '../lib/content';
+
+// Страница 404: старые адреса прежнего сайта и опечатки. Хостинг отдаёт её
+// с кодом 404 (ErrorDocument в public/.htaccess) — поисковик убирает такие URL из индекса.
+const c = site.contacts;
+const booking = site.contacts.bookingHref;
+
+const socialLabels: Record<string, string> = {
+  vk: 'ВКонтакте', whatsapp: 'WhatsApp', tiktok: 'TikTok',
+  instagram: 'Instagram', telegram: 'Telegram', youtube: 'YouTube', rutube: 'RUTUBE',
+};
+
+const navMenu = [
+  { t: 'Главная', href: withBase('/') },
+  { t: 'Дома', href: withBase('/accommodation/house-1') },
+  { t: 'Искусство отдыха', href: withBase('/art-of-rest') },
+  { t: 'Атмосфера для двоих', href: withBase('/atmosphere/') },
+  { t: 'Наш мир', href: withBase('/our-world/') },
+  { t: 'Истории', href: withBase('/stories/') },
+];
+
+
+// Phosphor Icons, Fill: file-text
+---
+<SiteLayout title="Страница не найдена — Парк Север" noindex>
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="wrap">
+      <a class="nav__logo" href={withBase('/')}><LogoMark class="nav__logo-mark" />Парк Север</a>
+      <button class="nav__toggle" aria-label="Открыть меню">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav__menu">
+        {navMenu.map((m) => <a href={m.href}>{m.t}</a>)}
+      </div>
+      <a class="nav__book" href={booking}>Забронировать</a>
+    </div>
+  </nav>
+
+  <section class="sec" id="nf">
+    <div class="wrap wrap--flush">
+      <h1 class="h1">Такой страницы нет</h1>
+      <p class="nf-p">Возможно, ссылка устарела: сайт Парк Север обновился, и часть старых адресов больше не работает. Всё главное — в разделах ниже.</p>
+      <ul class="nf-list">
+        {navMenu.map((m) => <li><a href={m.href}>{m.t}</a></li>)}
+        <li><a href={withBase('/services/')}>Дополнительные услуги</a></li>
+      </ul>
+      <a class="btn btn--navy" href={withBase('/')}>На главную</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="foot">
+    <div class="wrap wrap--flush">
+      <div class="foot__cols">
+        <div>
+          <div class="foot__brand">Парк Север</div>
+          <p class="foot__about">Пространство на краю леса для тех, кто выбирает тишину. Приватный дом без потока людей и лишнего, на территории 12,4 га. Без соседей. Только природа, животные и ощущение, что никуда не нужно спешить.</p>
+          <div class="socials">
+            {site.socials.map((s: any) => <a href={s.href} target="_blank" rel="noopener noreferrer">{socialLabels[s.type] ?? s.type}</a>)}
+          </div>
+        </div>
+        <div class="foot__col">
+          <h4>Разделы</h4>
+          {navMenu.map((m) => <a href={m.href}>{m.t}</a>)}
+        </div>
+        <div class="foot__col">
+          <h4>Контакты</h4>
+          <a href={c.phoneHref}>{c.phone}</a>
+          <a href={c.emailHref}>{c.email}</a>
+          <a href={c.whatsapp} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+          <span class="foot__addr">{c.address}</span>
+        </div>
+        <div class="foot__col">
+          <h4>Документы</h4>
+          <a href={withBase('/legal-information')}>Правовая информация</a>
+          <a href={withBase('/files/Договор-оферта.pdf')} target="_blank" rel="noopener noreferrer">Договор-оферта (PDF)</a>
+          <a href={withBase('/files/Правила-проживания.pdf')} target="_blank" rel="noopener noreferrer">Правила проживания (PDF)</a>
+          <a href={withBase('/files/Политика-конфиденциальности.pdf')} target="_blank" rel="noopener noreferrer">Политика конфиденциальности (PDF)</a>
+        </div>
+      </div>
+      <hr class="foot__rule" />
+      <div class="foot__cp">© {site.company} · {site.requisites.entity} · {site.requisites.note}</div>
+    </div>
+  </footer>
+
+  <style>
+    /* воздух под фиксированной шапкой (56px) — заголовок не утыкается в неё */
+    #nf{ padding-top:calc(56px + 48px); }
+    .nf-p{ font-family:var(--font-body); font-weight:500; font-size:18px; line-height:1.5; color:var(--ink); max-width:62ch; margin:8px 0 0; }
+    .nf-list{ list-style:none; padding:0; margin:24px 0 32px; display:flex; flex-direction:column; gap:8px; }
+    .nf-list a{ font-family:var(--font-head); font-weight:600; font-size:18px; color:var(--ink); text-decoration:underline; text-underline-offset:3px; }
+    .nf-list a:hover{ text-decoration:none; }
+  </style>
+</SiteLayout>

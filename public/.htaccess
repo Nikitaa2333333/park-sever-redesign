@@ -34,3 +34,20 @@
 <IfModule mod_deflate.c>
   AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/javascript application/json image/svg+xml
 </IfModule>
+
+# --- Один адрес сайта и старые URL (SEO, 27.10.2026) ---
+# Своя страница 404 (dist/404.html) — с кодом 404, поисковик убирает такие адреса из индекса.
+ErrorDocument 404 /404.html
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # www.park-sever.ru → park-sever.ru (иначе в поиске две копии сайта)
+  RewriteCond %{HTTP_HOST} ^www\.park-sever\.ru$ [NC]
+  RewriteRule ^(.*)$ https://park-sever.ru/$1 [R=301,L]
+  # /index.html → / (дубль главной)
+  RewriteCond %{THE_REQUEST} \s/index\.html[\s?]
+  RewriteRule ^index\.html$ / [R=301,L]
+  # Старые адреса прежнего сайта → похожие страницы нового (301).
+  # Остальные старые адреса отдают 404 — их удаляем в Яндекс Вебмастере.
+  RewriteRule ^entertainment/?$ /atmosphere/ [R=301,L]
+</IfModule>
