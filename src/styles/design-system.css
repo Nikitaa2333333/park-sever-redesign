@@ -2242,3 +2242,7 @@ h1,h2,h3,h4{ font-family:var(--font-head); color:var(--ink); margin:0; }
   .atm-hero__video{ margin:0 -20px; }
 }
 
+
+/* Режим ?embed=1: страница внутри окна «Подробнее» формы «Меню и допы» — только содержание */
+.embed .nav, .embed .foot, .embed #cookie-banner{ display:none !important; }
+.embed .ow-menubar{ top:0; }

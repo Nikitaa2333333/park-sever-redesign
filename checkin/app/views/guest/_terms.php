@@ -17,8 +17,9 @@
   </div>
   <?php if (empty($hidePrices)): // в меню со скрытыми ценами (подарок) стоимость дома тоже не показываем ?>
   <div class="ticket__foot">
-    <span>Стоимость <b><?= h(fmt_rub($terms['price'])) ?></b></span>
-    <span>Депозит <b><?= h(fmt_rub($terms['deposit'])) ?></b> · вернём после выезда</span>
+    <span class="ticket__lbl">Стоимость проживания</span>
+    <b class="ticket__price"><?= h(fmt_rub($terms['price'])) ?></b>
+    <span class="ticket__dep">Депозит <b><?= h(fmt_rub($terms['deposit'])) ?></b> · вернём после выезда</span>
   </div>
   <?php endif; ?>
 </div>

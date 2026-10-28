@@ -351,7 +351,13 @@
       submit.textContent = due > 0 ? 'Оплатить через СБП (' + rub(due) + ')' : 'Подтвердить выбор меню';
     }
   }
-  function sync() { syncLimits(); syncRequires(); syncWhen(); syncTotal(); }
+  // «Снять выбор» у радиокнопок — только когда в группе что-то выбрано
+  function syncClear() {
+    form.querySelectorAll('[data-clear]').forEach(function (b) {
+      b.hidden = !b.closest('.m-pick').querySelector('input[type=radio]:checked');
+    });
+  }
+  function sync() { syncLimits(); syncRequires(); syncWhen(); syncClear(); syncTotal(); }
 
   form.addEventListener('change', function (e) {
     // смена пакета меняет набор блоков — сохраняем и перерисовываем страницу
@@ -405,6 +411,16 @@
     if (!any) { var p = d.createElement('p'); p.textContent = 'Пока ничего не выбрано.'; body.appendChild(p); }
   }
   d.addEventListener('click', function (e) { if (e.target.closest('[data-sheet="sheet-order"]')) buildOrder(); }, true);
+
+  // «Подробнее и фото» — страница сайта в окне поверх формы; без JS ссылка открывается в новой вкладке
+  var frame = d.querySelector('[data-more-frame]');
+  var moreHead = d.querySelector('[data-more-head]');
+  d.addEventListener('click', function (e) {
+    var a = e.target.closest('[data-more]');
+    if (!a || !frame) return;
+    if (frame.getAttribute('src') !== a.getAttribute('data-more')) frame.setAttribute('src', a.getAttribute('data-more'));
+    moreHead.textContent = a.getAttribute('data-more-title') || 'Подробнее';
+  }, true);
 
   sync();
 })();

@@ -26,7 +26,7 @@ $c = $cat['contacts'];
 <section class="welcome">
   <?php // «Скрыть цены» — подарок: прячем ценники кодом и пересылаем ссылку ?>
   <details class="m-lock"<?= !empty($errors['_form']) && str_contains($errors['_form'], 'Код') ? ' open' : '' ?>>
-    <summary><?= $hidePrices ? 'Цены скрыты · показать' : 'Скрыть цены' ?></summary>
+    <summary class="m-lock__chip"><span class="m-lock__ico<?= $hidePrices ? '' : ' m-lock__ico--off' ?>" aria-hidden="true">₽</span><?= $hidePrices ? 'Показать цены' : 'Скрыть цены' ?></summary>
     <form class="m-lock__f" method="post" action="">
       <input type="hidden" name="_ft" value="<?= h($formToken) ?>">
       <input type="hidden" name="_do" value="<?= $hidePrices ? 'unlock' : 'lock' ?>">
@@ -139,8 +139,8 @@ $c = $cat['contacts'];
               $pPrice = $hidePrices ? '' : (($pc['price'] ?? null) === null ? 'цена уточняется' : fmt_rub((int)$pc['price'])); ?>
               <label class="m-opt">
                 <input type="radio" name="package" value="<?= h($pid) ?>"<?= $tariff === $pid ? ' checked' : '' ?><?= $hidePrices ? '' : (($pc['price'] ?? null) === null ? ' data-price-unknown' : ' data-price="' . (int)$pc['price'] . '"') ?>>
-                <span class="m-opt__t"><span class="m-opt__n">«<?= h($pc['short']) ?>»</span><span class="m-opt__d"><?= h($pc['desc']) ?></span></span>
-                <?php if ($pPrice !== ''): ?><span class="m-opt__p"><?= h($pPrice) ?></span><?php endif; ?>
+                <span class="m-opt__t"><span class="m-opt__n">«<?= h($pc['short']) ?>»</span><span class="m-opt__d"><?= h($pc['desc']) ?></span>
+                  <?php if ($pPrice !== ''): ?><span class="m-opt__p<?= ($pc['price'] ?? null) === null ? ' m-opt__p--note' : '' ?>"><?= h($pPrice) ?></span><?php endif; ?></span>
               </label>
             <?php endforeach; ?>
             <label class="m-opt">
@@ -177,7 +177,7 @@ $c = $cat['contacts'];
       <?php if (!empty($s['intro'])): ?><p class="m-x"><?= h($s['intro']) ?></p><?php endif; ?>
       <?php if ($closed): ?><p class="g-alert">Срок заказа прошёл — до заезда меньше <?= (int)$s['deadline_days'] ?> суток. Напишите нам в мессенджер, постараемся помочь.</p><?php endif; ?>
       <?php // на сайте у услуг есть цены — при скрытых ценах ссылку не показываем ?>
-      <?php if (!empty($s['more']) && !$hidePrices): ?><p class="m-more"><a href="<?= h($cat['site'] . $s['more']) ?>" target="_blank" rel="noopener">Подробнее и фото на сайте</a></p><?php endif; ?>
+      <?php if (!empty($s['more']) && !$hidePrices): ?><p class="m-more"><a href="<?= h($cat['site'] . $s['more']) ?>" target="_blank" rel="noopener" data-sheet="sheet-more" data-more="<?= h(more_embed_url($s['more'])) ?>" data-more-title="<?= h($s['title']) ?>">Подробнее и фото</a></p><?php endif; ?>
       <?php if (!empty($errors[$sid])): ?><p class="g-alert"><?= h($errors[$sid]) ?></p><?php endif; ?>
 
       <?php if (!empty($s['included'])): ?>
@@ -208,19 +208,19 @@ $c = $cat['contacts'];
           ?>
             <?php if ($inTariff): ?>
               <div class="m-opt m-opt--in">
-                <span class="m-opt__t"><span class="m-opt__n"><?= h($o['name']) ?></span><?php if (!empty($o['desc'])): ?><span class="m-opt__d"><?= h($o['desc']) ?></span><?php endif; ?></span>
-                <span class="m-opt__p"><?= h($priceText) ?></span>
+                <span class="m-opt__t"><span class="m-opt__n"><?= h($o['name']) ?></span><?php if (!empty($o['desc'])): ?><span class="m-opt__d"><?= h($o['desc']) ?></span><?php endif; ?>
+                  <span class="m-opt__p m-opt__p--note"><?= h($priceText) ?></span></span>
               </div>
             <?php else: ?>
               <label class="m-opt<?= $isLocked ? ' m-opt--paid' : '' ?>">
                 <input type="<?= $type ?>" name="<?= h($name) ?>" value="<?= h($o['id']) ?>"<?= in_array($o['id'], $chosen, true) || $isLocked ? ' checked' : '' ?><?= $off ? ' disabled' : '' ?><?= $priceAttr ?>>
                 <?php if ($isLocked): // заблокированная галочка не отправляется — дублируем значение ?><input type="hidden" name="<?= h($name) ?>" value="<?= h($o['id']) ?>"><?php endif; ?>
-                <span class="m-opt__t"><span class="m-opt__n"><?= h($o['name']) ?></span><?php if (!empty($o['desc'])): ?><span class="m-opt__d"><?= h($o['desc']) ?></span><?php endif; ?></span>
-                <?php if ($priceText !== ''): ?><span class="m-opt__p"><?= h($priceText) ?></span><?php endif; ?>
+                <span class="m-opt__t"><span class="m-opt__n"><?= h($o['name']) ?></span><?php if (!empty($o['desc'])): ?><span class="m-opt__d"><?= h($o['desc']) ?></span><?php endif; ?>
+                  <?php if ($priceText !== ''): ?><span class="m-opt__p<?= ($priceText !== '' && !preg_match('/\\d/', $priceText) ? ' m-opt__p--note' : '') ?>"><?= h($priceText) ?></span><?php endif; ?></span>
               </label>
             <?php endif; ?>
           <?php endforeach; ?>
-          <?php if ($type === 'radio' && !$locked): ?><button type="button" class="linkish m-clear" data-clear>Не выбирать</button><?php endif; ?>
+          <?php if ($type === 'radio' && !$locked): ?><button type="button" class="linkish m-clear" data-clear<?= $chosen ? '' : ' hidden' ?>>Снять выбор</button><?php endif; ?>
         </div>
       <?php endforeach; ?>
 
@@ -283,6 +283,15 @@ $c = $cat['contacts'];
     </div>
   </div>
 </form>
+
+<?php // «Подробнее и фото» — страница сайта в окне поверх формы (?embed=1: без шапки и подвала) ?>
+<section class="sheet sheet--wide" id="sheet-more" role="dialog" aria-modal="true" aria-label="Подробнее">
+  <div class="sheet__panel">
+    <header class="sheet__head"><h3 data-more-head>Подробнее</h3><button type="button" class="sheet__close" data-sheet-close aria-label="Закрыть">×</button></header>
+    <div class="sheet__body m-more__body"><iframe class="m-more__frame" title="Подробнее и фото" data-more-frame></iframe></div>
+    <footer class="sheet__foot"><button type="button" class="btn btn--navy btn--wide" data-sheet-close>Вернуться к выбору</button></footer>
+  </div>
+</section>
 
 <?php // Состав заказа — шторка. Без JS — сохранённый выбор; с JS — пересобирается из отмеченного на экране. ?>
 <section class="sheet" id="sheet-order" role="dialog" aria-modal="true" aria-label="Состав заказа">
