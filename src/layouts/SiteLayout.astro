@@ -94,6 +94,17 @@ const textFace = [400,500,600].map((w) =>
     <link rel="dns-prefetch" href="//widget.bronirui-online.ru" />
     <!-- Страница может добавить сюда свои теги (напр. preload LCP-картинки hero). -->
     <slot name="head" />
+    <!-- ?embed=1 — страница открыта в окне «Подробнее» из формы «Меню и допы» (checkin/):
+         без шапки, подвала и cookie-плашки; ссылки на другие страницы — в новой вкладке -->
+    <script is:inline>
+      if (/[?&]embed=1(&|$)/.test(location.search)) {
+        document.documentElement.classList.add('embed');
+        document.addEventListener('click', function (e) {
+          var a = e.target.closest && e.target.closest('a[href]');
+          if (a && a.getAttribute('href').charAt(0) !== '#' && a.pathname !== location.pathname) a.target = '_blank';
+        });
+      }
+    </script>
   </head>
   <body>
     <slot />

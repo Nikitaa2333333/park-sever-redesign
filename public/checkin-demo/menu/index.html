@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#ffffff">
 <title>Меню и допы · Парк Север</title>
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="../assets/menu.css?v=2710">
+<link rel="stylesheet" href="../assets/menu.css?v=2810">
 </head>
 <body class="g">
 <div class="demo-bar">Демо «Меню и допы»: 2 ночи, тариф «Парк Север для двоих». Выбор никуда не отправляется. <a href="./">Начать заново</a></div>
@@ -19,7 +19,7 @@
 <div class="g-main">
   <main><section class="welcome">
     <details class="m-lock">
-    <summary>Скрыть цены</summary>
+    <summary class="m-lock__chip"><span class="m-lock__ico m-lock__ico--off" aria-hidden="true">₽</span>Скрыть цены</summary>
     <form class="m-lock__f" method="post" action="">
       <input type="hidden" name="_ft" value="">
       <input type="hidden" name="_do" value="lock">
@@ -34,7 +34,7 @@
   <p class="m-tariff">Ваш тариф: Парк Север для двоих</p>
   <h1 class="g-h1">Меню и допы</h1>
 
-      <p class="g-lead">Отметьте в блоках «Пакетные предложения», «Гриль-меню», «Шеф-повар для мангала», «Welcome-стол», «Торт на заказ / Десерт», «Атмосфера и декор», «Дополнительное меню и закуски», «Букеты», «Индивидуальная подготовка», что приготовить и подготовить к вашему приезду. Выбор можно поменять по этой же ссылке до 9 ноября, 17:00.</p>
+      <p class="g-lead">Отметьте в блоках «Пакетные предложения», «Гриль-меню», «Шеф-повар для мангала», «Welcome-стол», «Торт на заказ / Десерт», «Атмосфера и декор», «Дополнительное меню и закуски», «Букеты», «Индивидуальная подготовка», что приготовить и подготовить к вашему приезду. Выбор можно поменять по этой же ссылке до 10 ноября, 17:00.</p>
   
   
   <div class="ticket">
@@ -43,18 +43,19 @@
   <div class="ticket__dates">
     <div>
       <span class="ticket__lbl">Заезд</span>
-      <b>10 ноября</b>
-      <span>вт, с 17:00</span>
+      <b>11 ноября</b>
+      <span>ср, с 17:00</span>
     </div>
     <div>
       <span class="ticket__lbl">Выезд</span>
-      <b>12 ноября</b>
-      <span>чт, до 12:00</span>
+      <b>13 ноября</b>
+      <span>пт, до 12:00</span>
     </div>
   </div>
     <div class="ticket__foot">
-    <span>Стоимость <b>48 000 ₽</b></span>
-    <span>Депозит <b>5 000 ₽</b> · вернём после выезда</span>
+    <span class="ticket__lbl">Стоимость проживания</span>
+    <b class="ticket__price">48 000 ₽</b>
+    <span class="ticket__dep">Депозит <b>5 000 ₽</b> · вернём после выезда</span>
   </div>
   </div>
   </section>
@@ -91,16 +92,19 @@
           <div class="m-pick" data-max="1" data-package>
                           <label class="m-opt">
                 <input type="radio" name="package" value="duo_gastro" data-price-unknown>
-                <span class="m-opt__t"><span class="m-opt__n">«С гастрономией»</span><span class="m-opt__d">Включает в себя выбор по «Гриль-меню» и Welcome-стол.</span></span>
-                <span class="m-opt__p">цена уточняется</span>              </label>
+                <span class="m-opt__t"><span class="m-opt__n">«С гастрономией»</span><span class="m-opt__d">Включает в себя выбор по «Гриль-меню» и Welcome-стол.</span>
+                  <span class="m-opt__p m-opt__p--note">цена уточняется</span></span>
+              </label>
                           <label class="m-opt">
                 <input type="radio" name="package" value="party" data-price-unknown>
-                <span class="m-opt__t"><span class="m-opt__n">«Праздник»</span><span class="m-opt__d">Включает в себя: торт на заказ или десерт, сет воздушных шаров.</span></span>
-                <span class="m-opt__p">цена уточняется</span>              </label>
+                <span class="m-opt__t"><span class="m-opt__n">«Праздник»</span><span class="m-opt__d">Включает в себя: торт на заказ или десерт, сет воздушных шаров.</span>
+                  <span class="m-opt__p m-opt__p--note">цена уточняется</span></span>
+              </label>
                           <label class="m-opt">
                 <input type="radio" name="package" value="party_gastro" data-price-unknown>
-                <span class="m-opt__t"><span class="m-opt__n">«Праздник с гастрономией»</span><span class="m-opt__d">Включает в себя: выбор по «Гриль-меню», Welcome-стол, сет воздушных шаров, сервировку стола «под ключ», десерт или торт на заказ.</span></span>
-                <span class="m-opt__p">цена уточняется</span>              </label>
+                <span class="m-opt__t"><span class="m-opt__n">«Праздник с гастрономией»</span><span class="m-opt__d">Включает в себя: выбор по «Гриль-меню», Welcome-стол, сет воздушных шаров, сервировку стола «под ключ», десерт или торт на заказ.</span>
+                  <span class="m-opt__p m-opt__p--note">цена уточняется</span></span>
+              </label>
                         <label class="m-opt">
               <input type="radio" name="package" value="" checked>
               <span class="m-opt__t"><span class="m-opt__n">Без пакета</span></span>
@@ -121,30 +125,30 @@
     </summary>
 
         <section class="m-sec" id="ms-n_grill">
-                              <p class="m-more"><a href="https://park-sever.ru/services/#grill" target="_blank" rel="noopener">Подробнее и фото на сайте</a></p>      
+                              <p class="m-more"><a href="https://park-sever.ru/services/#grill" target="_blank" rel="noopener" data-sheet="sheet-more" data-more="/services/?embed=1#grill" data-more-title="Гриль-меню">Подробнее и фото</a></p>      
       
       <fieldset class="m-fs">
               <div class="m-pick" data-max="0">
                                               <label class="m-opt">
                 <input type="checkbox" name="m[n_grill][items][]" value="north" data-price="7500">
-                                <span class="m-opt__t"><span class="m-opt__n">Северный гриль</span></span>
-                <span class="m-opt__p">7 500 ₽</span>              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Северный гриль</span>                  <span class="m-opt__p">7 500 ₽</span></span>
+              </label>
                                                 <label class="m-opt">
                 <input type="checkbox" name="m[n_grill][items][]" value="fire" data-price="5000">
-                                <span class="m-opt__t"><span class="m-opt__n">Вечер у костра</span></span>
-                <span class="m-opt__p">5 000 ₽</span>              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Вечер у костра</span>                  <span class="m-opt__p">5 000 ₽</span></span>
+              </label>
                                                 <label class="m-opt">
                 <input type="checkbox" name="m[n_grill][items][]" value="smoke" data-price="6000">
-                                <span class="m-opt__t"><span class="m-opt__n">Огонь и дым</span></span>
-                <span class="m-opt__p">6 000 ₽</span>              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Огонь и дым</span>                  <span class="m-opt__p">6 000 ₽</span></span>
+              </label>
                                                 <label class="m-opt">
                 <input type="checkbox" name="m[n_grill][items][]" value="terrace" data-price="8500">
-                                <span class="m-opt__t"><span class="m-opt__n">Вечер на террасе</span></span>
-                <span class="m-opt__p">8 500 ₽</span>              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Вечер на террасе</span>                  <span class="m-opt__p">8 500 ₽</span></span>
+              </label>
                                                 <label class="m-opt">
                 <input type="checkbox" name="m[n_grill][items][]" value="veggie" data-price-unknown>
-                                <span class="m-opt__t"><span class="m-opt__n">Вегетарианский отдых</span></span>
-                <span class="m-opt__p">цена уточняется</span>              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Вегетарианский отдых</span>                  <span class="m-opt__p m-opt__p--note">цена уточняется</span></span>
+              </label>
                                         </div>
       
       
@@ -167,14 +171,14 @@
     </summary>
 
         <section class="m-sec" id="ms-chef" data-requires="n_grill" hidden>
-            <p class="m-x">Мы уточним стоимость и наличие и отдельно с вами свяжемся. Отметьте, пожалуйста, галочкой, если шеф-повар нужен.</p>                  <p class="m-more"><a href="https://park-sever.ru/services/#chef" target="_blank" rel="noopener">Подробнее и фото на сайте</a></p>      
+            <p class="m-x">Мы уточним стоимость и наличие и отдельно с вами свяжемся. Отметьте, пожалуйста, галочкой, если шеф-повар нужен.</p>                  <p class="m-more"><a href="https://park-sever.ru/services/#chef" target="_blank" rel="noopener" data-sheet="sheet-more" data-more="/services/?embed=1#chef" data-more-title="Шеф-повар для мангала">Подробнее и фото</a></p>      
       
       <fieldset class="m-fs">
               <div class="m-pick" data-max="0">
                                               <label class="m-opt">
                 <input type="checkbox" name="m[chef][items][]" value="chef" data-price-unknown>
-                                <span class="m-opt__t"><span class="m-opt__n">Нужен шеф-повар для мангала</span></span>
-                <span class="m-opt__p">цена уточняется</span>              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Нужен шеф-повар для мангала</span>                  <span class="m-opt__p m-opt__p--note">цена уточняется</span></span>
+              </label>
                                         </div>
       
       
@@ -193,15 +197,15 @@
     </summary>
 
         <section class="m-sec" id="ms-n_welcome">
-                              <p class="m-more"><a href="https://park-sever.ru/services/#serving" target="_blank" rel="noopener">Подробнее и фото на сайте</a></p>      
+                              <p class="m-more"><a href="https://park-sever.ru/services/#serving" target="_blank" rel="noopener" data-sheet="sheet-more" data-more="/services/?embed=1#serving" data-more-title="Welcome-стол к заезду">Подробнее и фото</a></p>      
               <ul class="dots m-incl"><li>Сырное ассорти: с белой плесенью, с голубой плесенью, маасдам, моцарелла</li><li>Мясное ассорти: шейка, балык, бекон; сырокопчёные полусухие колбасы — брауншвейгская, велкомовская, миланская</li><li>Овощная тарелка: салат листовой, ассорти зелени (лук, укроп, петрушка), помидоры черри, огурцы, редис, перец сладкий</li><li>Хлебная тарелка: багет ржаной чесночный, чиабатта, булочки пшеничные, хлеб бородинский</li><li>Фруктовая тарелка: мандарины, яблоки, бананы, виноград чёрный и зелёный и т. д. Список уточняется по сезону и наличию, общий вес около 2,5 кг</li></ul>
       
       <fieldset class="m-fs">
               <div class="m-pick" data-max="0">
                                               <label class="m-opt">
                 <input type="checkbox" name="m[n_welcome][items][]" value="table" data-price-unknown>
-                                <span class="m-opt__t"><span class="m-opt__n">Заказать Welcome-стол к заезду</span></span>
-                <span class="m-opt__p">цена уточняется</span>              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Заказать Welcome-стол к заезду</span>                  <span class="m-opt__p m-opt__p--note">цена уточняется</span></span>
+              </label>
                                         </div>
       
       
@@ -228,37 +232,37 @@
     </summary>
 
         <section class="m-sec" id="ms-cake">
-      <h3 class="m-h">Торт на заказ / Десерт</h3>      <p class="m-x">Торт или десерт можно заказать не позднее чем за 5 суток до заезда.</p>                  <p class="m-more"><a href="https://park-sever.ru/services/#cake" target="_blank" rel="noopener">Подробнее и фото на сайте</a></p>      
+      <h3 class="m-h">Торт на заказ / Десерт</h3>      <p class="m-x">Торт или десерт можно заказать не позднее чем за 5 суток до заезда.</p>                  <p class="m-more"><a href="https://park-sever.ru/services/#cake" target="_blank" rel="noopener" data-sheet="sheet-more" data-more="/services/?embed=1#cake" data-more-title="Торт на заказ / Десерт">Подробнее и фото</a></p>      
       
       <fieldset class="m-fs">
               <div class="m-pick" data-max="1">
           <p class="m-pick__l">Доступна 1 позиция</p>                                    <label class="m-opt">
                 <input type="radio" name="m[cake][size][]" value="bento400" data-price="3000">
-                                <span class="m-opt__t"><span class="m-opt__n">Бенто-торт, 400 г</span></span>
-                <span class="m-opt__p">3 000 ₽</span>              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Бенто-торт, 400 г</span>                  <span class="m-opt__p">3 000 ₽</span></span>
+              </label>
                                                 <label class="m-opt">
                 <input type="radio" name="m[cake][size][]" value="bento800" data-price="4000">
-                                <span class="m-opt__t"><span class="m-opt__n">Бенто-торт, 800 г</span></span>
-                <span class="m-opt__p">4 000 ₽</span>              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Бенто-торт, 800 г</span>                  <span class="m-opt__p">4 000 ₽</span></span>
+              </label>
                                                 <label class="m-opt">
                 <input type="radio" name="m[cake][size][]" value="dessert" data-price-unknown>
-                                <span class="m-opt__t"><span class="m-opt__n">Десерт вместо торта</span><span class="m-opt__d">Подберём вместе с вами.</span></span>
-                <span class="m-opt__p">цена уточняется</span>              </label>
-                                <button type="button" class="linkish m-clear" data-clear>Не выбирать</button>        </div>
+                                <span class="m-opt__t"><span class="m-opt__n">Десерт вместо торта</span><span class="m-opt__d">Подберём вместе с вами.</span>                  <span class="m-opt__p m-opt__p--note">цена уточняется</span></span>
+              </label>
+                                <button type="button" class="linkish m-clear" data-clear hidden>Снять выбор</button>        </div>
               <div class="m-pick" data-max="1">
           <p class="m-pick__l">Вкус торта</p>                                    <label class="m-opt">
                 <input type="radio" name="m[cake][taste][]" value="vanilla">
-                                <span class="m-opt__t"><span class="m-opt__n">Ваниль с клубникой</span></span>
-                              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Ваниль с клубникой</span>                  </span>
+              </label>
                                                 <label class="m-opt">
                 <input type="radio" name="m[cake][taste][]" value="choco">
-                                <span class="m-opt__t"><span class="m-opt__n">Шоколадный с вишней</span></span>
-                              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Шоколадный с вишней</span>                  </span>
+              </label>
                                                 <label class="m-opt">
                 <input type="radio" name="m[cake][taste][]" value="peach">
-                                <span class="m-opt__t"><span class="m-opt__n">Персик-ваниль</span></span>
-                              </label>
-                                <button type="button" class="linkish m-clear" data-clear>Не выбирать</button>        </div>
+                                <span class="m-opt__t"><span class="m-opt__n">Персик-ваниль</span>                  </span>
+              </label>
+                                <button type="button" class="linkish m-clear" data-clear hidden>Снять выбор</button>        </div>
       
       
                         <div class="fld">
@@ -276,30 +280,30 @@
               <div class="m-pick" data-max="0">
                                               <label class="m-opt">
                 <input type="checkbox" name="m[tea][set][]" value="tea" data-price="2500">
-                                <span class="m-opt__t"><span class="m-opt__n">Набор к чаю</span><span class="m-opt__d">9 фруктово-ягодных кубиков и на выбор из списка ниже.</span></span>
-                <span class="m-opt__p">2 500 ₽</span>              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Набор к чаю</span><span class="m-opt__d">9 фруктово-ягодных кубиков и на выбор из списка ниже.</span>                  <span class="m-opt__p">2 500 ₽</span></span>
+              </label>
                                         </div>
               <div class="m-pick" data-max="0">
           <p class="m-pick__l">Сделать выбор</p>                                    <label class="m-opt">
                 <input type="checkbox" name="m[tea][choice][]" value="honey">
-                                <span class="m-opt__t"><span class="m-opt__n">Мёд</span></span>
-                              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Мёд</span>                  </span>
+              </label>
                                                 <label class="m-opt">
                 <input type="checkbox" name="m[tea][choice][]" value="almond">
-                                <span class="m-opt__t"><span class="m-opt__n">Миндаль</span></span>
-                              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Миндаль</span>                  </span>
+              </label>
                                                 <label class="m-opt">
                 <input type="checkbox" name="m[tea][choice][]" value="cashew">
-                                <span class="m-opt__t"><span class="m-opt__n">Кешью</span></span>
-                              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Кешью</span>                  </span>
+              </label>
                                                 <label class="m-opt">
                 <input type="checkbox" name="m[tea][choice][]" value="hazelnut">
-                                <span class="m-opt__t"><span class="m-opt__n">Фундук</span></span>
-                              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Фундук</span>                  </span>
+              </label>
                                                 <label class="m-opt">
                 <input type="checkbox" name="m[tea][choice][]" value="macarons">
-                                <span class="m-opt__t"><span class="m-opt__n">Макаронс 6 шт</span></span>
-                              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Макаронс 6 шт</span>                  </span>
+              </label>
                                         </div>
       
       
@@ -318,50 +322,50 @@
     </summary>
 
         <section class="m-sec" id="ms-sign">
-      <h3 class="m-h">Вывеска на окно</h3>      <p class="m-x">Без доплат.</p>                  <p class="m-more"><a href="https://park-sever.ru/atmosphere/#prepared" target="_blank" rel="noopener">Подробнее и фото на сайте</a></p>      
+      <h3 class="m-h">Вывеска на окно</h3>      <p class="m-x">Без доплат.</p>                  <p class="m-more"><a href="https://park-sever.ru/atmosphere/#prepared" target="_blank" rel="noopener" data-sheet="sheet-more" data-more="/atmosphere/?embed=1#prepared" data-more-title="Вывеска на окно">Подробнее и фото</a></p>      
       
       <fieldset class="m-fs">
               <div class="m-pick" data-max="1">
           <p class="m-pick__l">Доступна 1 позиция</p>                                    <label class="m-opt">
                 <input type="radio" name="m[sign][items][]" value="love_ru">
-                                <span class="m-opt__t"><span class="m-opt__n">Вывеска «Я тебя люблю»</span></span>
-                <span class="m-opt__p">без доплат</span>              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Вывеска «Я тебя люблю»</span>                  <span class="m-opt__p m-opt__p--note">без доплат</span></span>
+              </label>
                                                 <label class="m-opt">
                 <input type="radio" name="m[sign][items][]" value="love_en">
-                                <span class="m-opt__t"><span class="m-opt__n">Вывеска «I LOVE YOU»</span></span>
-                <span class="m-opt__p">без доплат</span>              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Вывеска «I LOVE YOU»</span>                  <span class="m-opt__p m-opt__p--note">без доплат</span></span>
+              </label>
                                                 <label class="m-opt">
                 <input type="radio" name="m[sign][items][]" value="bday_ru">
-                                <span class="m-opt__t"><span class="m-opt__n">Вывеска «С днём рождения»</span></span>
-                <span class="m-opt__p">без доплат</span>              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Вывеска «С днём рождения»</span>                  <span class="m-opt__p m-opt__p--note">без доплат</span></span>
+              </label>
                                                 <label class="m-opt">
                 <input type="radio" name="m[sign][items][]" value="bday_en">
-                                <span class="m-opt__t"><span class="m-opt__n">Вывеска «HAPPY BIRTHDAY»</span></span>
-                <span class="m-opt__p">без доплат</span>              </label>
-                                <button type="button" class="linkish m-clear" data-clear>Не выбирать</button>        </div>
+                                <span class="m-opt__t"><span class="m-opt__n">Вывеска «HAPPY BIRTHDAY»</span>                  <span class="m-opt__p m-opt__p--note">без доплат</span></span>
+              </label>
+                                <button type="button" class="linkish m-clear" data-clear hidden>Снять выбор</button>        </div>
       
       
             </fieldset>
 
           </section>
         <section class="m-sec" id="ms-serving">
-      <h3 class="m-h">Сервировка стола со свечами «под ключ»</h3>                        <p class="m-more"><a href="https://park-sever.ru/services/#serving" target="_blank" rel="noopener">Подробнее и фото на сайте</a></p>      
+      <h3 class="m-h">Сервировка стола со свечами «под ключ»</h3>                        <p class="m-more"><a href="https://park-sever.ru/services/#serving" target="_blank" rel="noopener" data-sheet="sheet-more" data-more="/services/?embed=1#serving" data-more-title="Сервировка стола со свечами «под ключ»">Подробнее и фото</a></p>      
       
       <fieldset class="m-fs">
               <div class="m-pick" data-max="1">
           <p class="m-pick__l">Выберите стиль</p>                                    <label class="m-opt">
                 <input type="radio" name="m[serving][items][]" value="rose" data-price="1800">
-                                <span class="m-opt__t"><span class="m-opt__n">Бордовая роза</span></span>
-                <span class="m-opt__p">1 800 ₽</span>              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Бордовая роза</span>                  <span class="m-opt__p">1 800 ₽</span></span>
+              </label>
                                                 <label class="m-opt">
                 <input type="radio" name="m[serving][items][]" value="rus" data-price="2800">
-                                <span class="m-opt__t"><span class="m-opt__n">Свидание на Руси</span></span>
-                <span class="m-opt__p">2 800 ₽</span>              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Свидание на Руси</span>                  <span class="m-opt__p">2 800 ₽</span></span>
+              </label>
                                                 <label class="m-opt">
                 <input type="radio" name="m[serving][items][]" value="special" data-price="7500">
-                                <span class="m-opt__t"><span class="m-opt__n">Особенный день для нас</span></span>
-                <span class="m-opt__p">7 500 ₽</span>              </label>
-                                <button type="button" class="linkish m-clear" data-clear>Не выбирать</button>        </div>
+                                <span class="m-opt__t"><span class="m-opt__n">Особенный день для нас</span>                  <span class="m-opt__p">7 500 ₽</span></span>
+              </label>
+                                <button type="button" class="linkish m-clear" data-clear hidden>Снять выбор</button>        </div>
       
       
                         <div class="fld">
@@ -372,26 +376,26 @@
 
           </section>
         <section class="m-sec" id="ms-balloons">
-      <h3 class="m-h">Сет воздушных шаров</h3>                        <p class="m-more"><a href="https://park-sever.ru/services/#balloons" target="_blank" rel="noopener">Подробнее и фото на сайте</a></p>      
+      <h3 class="m-h">Сет воздушных шаров</h3>                        <p class="m-more"><a href="https://park-sever.ru/services/#balloons" target="_blank" rel="noopener" data-sheet="sheet-more" data-more="/services/?embed=1#balloons" data-more-title="Сет воздушных шаров">Подробнее и фото</a></p>      
       
       <fieldset class="m-fs">
               <div class="m-pick" data-max="0">
                                               <label class="m-opt">
                 <input type="checkbox" name="m[balloons][items][]" value="heart" data-price="5600">
-                                <span class="m-opt__t"><span class="m-opt__n">Шары «Сердце», 15 шт</span></span>
-                <span class="m-opt__p">5 600 ₽</span>              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Шары «Сердце», 15 шт</span>                  <span class="m-opt__p">5 600 ₽</span></span>
+              </label>
                                                 <label class="m-opt">
                 <input type="checkbox" name="m[balloons][items][]" value="gold" data-price="3400">
-                                <span class="m-opt__t"><span class="m-opt__n">Шары 15 шт, золото</span></span>
-                <span class="m-opt__p">3 400 ₽</span>              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Шары 15 шт, золото</span>                  <span class="m-opt__p">3 400 ₽</span></span>
+              </label>
                                                 <label class="m-opt">
                 <input type="checkbox" name="m[balloons][items][]" value="pastel" data-price="2900">
-                                <span class="m-opt__t"><span class="m-opt__n">Шары 15 шт, красные пастель</span></span>
-                <span class="m-opt__p">2 900 ₽</span>              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Шары 15 шт, красные пастель</span>                  <span class="m-opt__p">2 900 ₽</span></span>
+              </label>
                                                 <label class="m-opt">
                 <input type="checkbox" name="m[balloons][items][]" value="fountain" data-price="3200">
-                                <span class="m-opt__t"><span class="m-opt__n">Фонтан из шаров</span><span class="m-opt__d">Фонтан 1 шт (9 шаров), из них фольгированные звёзды (или сердца) — 3 шт. В фонтане можно менять цвета шаров.</span></span>
-                <span class="m-opt__p">3 200 ₽</span>              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Фонтан из шаров</span><span class="m-opt__d">Фонтан 1 шт (9 шаров), из них фольгированные звёзды (или сердца) — 3 шт. В фонтане можно менять цвета шаров.</span>                  <span class="m-opt__p">3 200 ₽</span></span>
+              </label>
                                         </div>
       
       
@@ -415,50 +419,50 @@
     </summary>
 
         <section class="m-sec" id="ms-snacks">
-                              <p class="m-more"><a href="https://park-sever.ru/services/#serving" target="_blank" rel="noopener">Подробнее и фото на сайте</a></p>      
+                              <p class="m-more"><a href="https://park-sever.ru/services/#serving" target="_blank" rel="noopener" data-sheet="sheet-more" data-more="/services/?embed=1#serving" data-more-title="Дополнительное меню: закуски">Подробнее и фото</a></p>      
       
       <fieldset class="m-fs">
               <div class="m-pick" data-max="0">
                                               <label class="m-opt">
                 <input type="checkbox" name="m[snacks][items][]" value="panorama" data-price="5100">
-                                <span class="m-opt__t"><span class="m-opt__n">Гастрономический сет «У панорамного окна»</span><span class="m-opt__d">Ассорти сыров, включая сыры с белой и голубой плесенью, виноград, мёд и орехи; мясная нарезка; овощное ассорти; фруктовая тарелка; хлебная корзина.</span></span>
-                <span class="m-opt__p">5 100 ₽</span>              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Гастрономический сет «У панорамного окна»</span><span class="m-opt__d">Ассорти сыров, включая сыры с белой и голубой плесенью, виноград, мёд и орехи; мясная нарезка; овощное ассорти; фруктовая тарелка; хлебная корзина.</span>                  <span class="m-opt__p">5 100 ₽</span></span>
+              </label>
                                                 <label class="m-opt">
                 <input type="checkbox" name="m[snacks][items][]" value="fruit" data-price="1700">
-                                <span class="m-opt__t"><span class="m-opt__n">Фруктовая тарелка</span><span class="m-opt__d">Мандарины, яблоки, бананы, виноград чёрный и зелёный и т. д. Список уточняется по сезону и наличию.</span></span>
-                <span class="m-opt__p">1 700 ₽</span>              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Фруктовая тарелка</span><span class="m-opt__d">Мандарины, яблоки, бананы, виноград чёрный и зелёный и т. д. Список уточняется по сезону и наличию.</span>                  <span class="m-opt__p">1 700 ₽</span></span>
+              </label>
                                                 <label class="m-opt">
                 <input type="checkbox" name="m[snacks][items][]" value="pancakes" data-price="1200">
-                                <span class="m-opt__t"><span class="m-opt__n">Блины</span><span class="m-opt__d">14–16 шт, часть подпечённые, со сметаной и вареньем/сгущёнкой на выбор.</span></span>
-                <span class="m-opt__p">1 200 ₽</span>              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Блины</span><span class="m-opt__d">14–16 шт, часть подпечённые, со сметаной и вареньем/сгущёнкой на выбор.</span>                  <span class="m-opt__p">1 200 ₽</span></span>
+              </label>
                                                 <label class="m-opt">
                 <input type="checkbox" name="m[snacks][items][]" value="bruschetta" data-price="1600">
-                                <span class="m-opt__t"><span class="m-opt__n">Брускеты, два вида</span><span class="m-opt__d">С моцареллой, черри и джемом слива-базилик; запечённый бри с джемом из инжира.</span></span>
-                <span class="m-opt__p">1 600 ₽</span>              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Брускеты, два вида</span><span class="m-opt__d">С моцареллой, черри и джемом слива-базилик; запечённый бри с джемом из инжира.</span>                  <span class="m-opt__p">1 600 ₽</span></span>
+              </label>
                                                 <label class="m-opt">
                 <input type="checkbox" name="m[snacks][items][]" value="cheese_meat" data-price="1900">
-                                <span class="m-opt__t"><span class="m-opt__n">Сырно-мясная тарелка</span><span class="m-opt__d">Сыры (с белой плесенью, с голубой плесенью, маасдам, моцарелла), мясное ассорти (шейка, балык, бекон), сырокопчёные колбасы.</span></span>
-                <span class="m-opt__p">1 900 ₽</span>              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Сырно-мясная тарелка</span><span class="m-opt__d">Сыры (с белой плесенью, с голубой плесенью, маасдам, моцарелла), мясное ассорти (шейка, балык, бекон), сырокопчёные колбасы.</span>                  <span class="m-opt__p">1 900 ₽</span></span>
+              </label>
                                                 <label class="m-opt">
                 <input type="checkbox" name="m[snacks][items][]" value="veg" data-price="1200">
-                                <span class="m-opt__t"><span class="m-opt__n">Овощная тарелка</span><span class="m-opt__d">Салат листовой, ассорти зелени (лук, укроп, петрушка), помидоры черри, огурцы, редис, сладкий перец.</span></span>
-                <span class="m-opt__p">1 200 ₽</span>              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Овощная тарелка</span><span class="m-opt__d">Салат листовой, ассорти зелени (лук, укроп, петрушка), помидоры черри, огурцы, редис, сладкий перец.</span>                  <span class="m-opt__p">1 200 ₽</span></span>
+              </label>
                                                 <label class="m-opt">
                 <input type="checkbox" name="m[snacks][items][]" value="cheese" data-price="1900">
-                                <span class="m-opt__t"><span class="m-opt__n">Сырная тарелка</span><span class="m-opt__d">Сыры (с белой плесенью, с голубой плесенью, маасдам, моцарелла), мёд, грецкие орехи, виноград.</span></span>
-                <span class="m-opt__p">1 900 ₽</span>              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Сырная тарелка</span><span class="m-opt__d">Сыры (с белой плесенью, с голубой плесенью, маасдам, моцарелла), мёд, грецкие орехи, виноград.</span>                  <span class="m-opt__p">1 900 ₽</span></span>
+              </label>
                                                 <label class="m-opt">
                 <input type="checkbox" name="m[snacks][items][]" value="meat" data-price="1200">
-                                <span class="m-opt__t"><span class="m-opt__n">Мясная тарелка</span><span class="m-opt__d">Мясное ассорти (шейка, балык, бекон), сырокопчёные колбасы, бекон с/к, маслины.</span></span>
-                <span class="m-opt__p">1 200 ₽</span>              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Мясная тарелка</span><span class="m-opt__d">Мясное ассорти (шейка, балык, бекон), сырокопчёные колбасы, бекон с/к, маслины.</span>                  <span class="m-opt__p">1 200 ₽</span></span>
+              </label>
                                                 <label class="m-opt">
                 <input type="checkbox" name="m[snacks][items][]" value="bread" data-price="500">
-                                <span class="m-opt__t"><span class="m-opt__n">Хлебная тарелка</span><span class="m-opt__d">Багет ржаной чесночный, чиабатта, булочка пшеничная (2 шт), хлеб бородинский.</span></span>
-                <span class="m-opt__p">500 ₽</span>              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Хлебная тарелка</span><span class="m-opt__d">Багет ржаной чесночный, чиабатта, булочка пшеничная (2 шт), хлеб бородинский.</span>                  <span class="m-opt__p">500 ₽</span></span>
+              </label>
                                                 <label class="m-opt">
                 <input type="checkbox" name="m[snacks][items][]" value="nuts" data-price="1300">
-                                <span class="m-opt__t"><span class="m-opt__n">Орехи ассорти</span><span class="m-opt__d">Миндаль, кешью, фундук, арахис — жареные, фисташки.</span></span>
-                <span class="m-opt__p">1 300 ₽</span>              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Орехи ассорти</span><span class="m-opt__d">Миндаль, кешью, фундук, арахис — жареные, фисташки.</span>                  <span class="m-opt__p">1 300 ₽</span></span>
+              </label>
                                         </div>
       
       
@@ -483,17 +487,17 @@
               <div class="m-pick" data-max="1">
                                               <label class="m-opt">
                 <input type="radio" name="m[roses][items][]" value="r19" data-price-unknown>
-                                <span class="m-opt__t"><span class="m-opt__n">Розы, 19 шт</span></span>
-                <span class="m-opt__p">цена уточняется</span>              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Розы, 19 шт</span>                  <span class="m-opt__p m-opt__p--note">цена уточняется</span></span>
+              </label>
                                                 <label class="m-opt">
                 <input type="radio" name="m[roses][items][]" value="r25" data-price-unknown>
-                                <span class="m-opt__t"><span class="m-opt__n">Розы, 25 шт</span></span>
-                <span class="m-opt__p">цена уточняется</span>              </label>
+                                <span class="m-opt__t"><span class="m-opt__n">Розы, 25 шт</span>                  <span class="m-opt__p m-opt__p--note">цена уточняется</span></span>
+              </label>
                                                 <label class="m-opt">
                 <input type="radio" name="m[roses][items][]" value="r35" data-price-unknown>
-                                <span class="m-opt__t"><span class="m-opt__n">Розы, 35 шт</span></span>
-                <span class="m-opt__p">цена уточняется</span>              </label>
-                                <button type="button" class="linkish m-clear" data-clear>Не выбирать</button>        </div>
+                                <span class="m-opt__t"><span class="m-opt__n">Розы, 35 шт</span>                  <span class="m-opt__p m-opt__p--note">цена уточняется</span></span>
+              </label>
+                                <button type="button" class="linkish m-clear" data-clear hidden>Снять выбор</button>        </div>
       
       
                         <div class="fld">
@@ -516,7 +520,7 @@
     </summary>
 
         <section class="m-sec" id="ms-custom">
-      <h3 class="m-h">Индивидуальная подготовка праздника</h3>      <p class="m-x">Каждая история заслуживает своей атмосферы. Мы можем сделать эксклюзивно:</p>                  <p class="m-more"><a href="https://park-sever.ru/services/#custom" target="_blank" rel="noopener">Подробнее и фото на сайте</a></p>      
+      <h3 class="m-h">Индивидуальная подготовка праздника</h3>      <p class="m-x">Каждая история заслуживает своей атмосферы. Мы можем сделать эксклюзивно:</p>                  <p class="m-more"><a href="https://park-sever.ru/services/#custom" target="_blank" rel="noopener" data-sheet="sheet-more" data-more="/services/?embed=1#custom" data-more-title="Индивидуальная подготовка праздника">Подробнее и фото</a></p>      
               <ul class="dots m-incl"><li>индивидуальную газету к вашему вечеру</li><li>3D-торт любой сложности</li><li>индивидуальные букеты, например в лесном стиле</li><li>особую сервировку стола, например в стиле BMW</li><li>помочь с вашим праздником</li></ul>
       
       <fieldset class="m-fs">
@@ -610,11 +614,19 @@
   </div>
 </form>
 
+<section class="sheet sheet--wide" id="sheet-more" role="dialog" aria-modal="true" aria-label="Подробнее">
+  <div class="sheet__panel">
+    <header class="sheet__head"><h3 data-more-head>Подробнее</h3><button type="button" class="sheet__close" data-sheet-close aria-label="Закрыть">×</button></header>
+    <div class="sheet__body m-more__body"><iframe class="m-more__frame" title="Подробнее и фото" data-more-frame></iframe></div>
+    <footer class="sheet__foot"><button type="button" class="btn btn--navy btn--wide" data-sheet-close>Вернуться к выбору</button></footer>
+  </div>
+</section>
+
 <section class="sheet" id="sheet-order" role="dialog" aria-modal="true" aria-label="Состав заказа">
   <div class="sheet__panel">
     <header class="sheet__head"><h3>Состав заказа</h3><button type="button" class="sheet__close" data-sheet-close aria-label="Закрыть">×</button></header>
     <div class="sheet__body" data-order-body>
-      <p class="doc-meta">Парк Север для двоих · 10–12 ноября, приезд ~17:00</p>
+      <p class="doc-meta">Парк Север для двоих · 11–13 ноября, приезд ~17:00</p>
       <p>Пока ничего не выбрано.</p>          </div>
     <footer class="sheet__foot"><button type="button" class="btn btn--navy btn--wide" data-sheet-close>Закрыть</button></footer>
   </div>
@@ -625,7 +637,7 @@
     <p>Данные передаются по защищённому соединению и хранятся в зашифрованном виде на серверах в России.</p>
   </footer>
 </div>
-<script src="../assets/menu.js?v=2710" defer></script>
-<script src="../assets/menu-demo.js?v=2710" defer></script>
+<script src="../assets/menu.js?v=2810" defer></script>
+<script src="../assets/menu-demo.js?v=2810" defer></script>
 </body>
 </html>

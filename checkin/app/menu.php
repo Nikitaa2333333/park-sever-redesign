@@ -122,6 +122,13 @@ function option_in_tariff(array $opt, string $tariff): bool
     return !empty($opt['gastro']) && tariff_gastro($tariff);
 }
 
+/** Адрес страницы сайта для окна «Подробнее»: тот же домен, режим ?embed=1 (без шапки и подвала). */
+function more_embed_url(string $path): string
+{
+    [$p, $hash] = array_pad(explode('#', $path, 2), 2, '');
+    return $p . (str_contains($p, '?') ? '&' : '?') . 'embed=1' . ($hash !== '' ? '#' . $hash : '');
+}
+
 // ── сроки ────────────────────────────────────────────────────────────
 
 /** До этого момента гость может менять выбор и время приезда. */
