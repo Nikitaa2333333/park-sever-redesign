@@ -407,3 +407,11 @@ details.a-card[open] > summary{ margin-bottom:14px }
 .m-form .fld input::placeholder, .m-form .fld textarea::placeholder{ color:#77726c; opacity:1 }
 .m-form .fld input:focus, .m-form .fld textarea:focus, .m-form .fld select:focus{ background:#fff; border-color:var(--navy); outline:1px solid var(--navy); outline-offset:-1px }
 .m-sec + .m-sec{ margin-top:12px }
+
+/* «Меню и допы»: наборный крупнее, маркеры списков тоньше и мягче — точка не спорит с текстом (заказчик 28.10) */
+.m-form .dots li, .m-info .dots li{ font-size:17px; line-height:1.4; padding-left:16px; margin-bottom:8px }
+.m-form .dots li::before, .m-info .dots li::before{ width:4px; height:4px; top:.62em; background:var(--gold-l) }
+.m-form .m-x{ font-size:16px }
+.m-form .m-opt{ font-size:16px }
+.m-form .m-opt__d{ font-size:15px; line-height:1.45 }
+.m-form .m-pick__l{ font-size:15px }
