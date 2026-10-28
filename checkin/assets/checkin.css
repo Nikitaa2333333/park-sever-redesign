@@ -425,3 +425,5 @@ details.a-card[open] > summary{ margin-bottom:14px }
 /* подпись поля и «необязательно» — по разным краям строки, не сливаются в одну фразу (заказчик 28.10) */
 .m-form .fld > label{ display:flex; justify-content:space-between; align-items:baseline; gap:12px }
 .m-form .fld__opt{ flex:0 0 auto; font-size:13px; font-weight:500; white-space:nowrap }
+/* кнопки связи: иконка и подпись по одной левой линии во всех кнопках (заказчик 28.10) */
+.m-contact{ justify-content:flex-start; gap:12px; padding:10px 16px; text-decoration:none !important }
