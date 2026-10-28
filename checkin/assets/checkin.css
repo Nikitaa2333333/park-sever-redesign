@@ -421,3 +421,7 @@ details.a-card[open] > summary{ margin-bottom:14px }
 .m-grp__more{ margin:0 0 20px; padding:0 16px 14px; background:var(--cream); font-size:15px }
 .m-grp__more a{ font-weight:600 }
 .m-grp:not([open]) .m-grp__more{ display:none }
+
+/* подпись поля и «необязательно» — по разным краям строки, не сливаются в одну фразу (заказчик 28.10) */
+.m-form .fld > label{ display:flex; justify-content:space-between; align-items:baseline; gap:12px }
+.m-form .fld__opt{ flex:0 0 auto; font-size:13px; font-weight:500; white-space:nowrap }
