@@ -160,9 +160,9 @@ $c = $cat['contacts'];
         <p class="m-h m-route__h">Связаться с Парк Север</p>
         <div class="m-contacts">
           <?php foreach (['telegram' => 'Telegram', 'vk' => 'ВКонтакте', 'whatsapp' => 'WhatsApp', 'max' => 'MAX'] as $k => $label): if (($c[$k] ?? '') === '') continue; ?>
-            <a class="btn btn--ghost btn--sm" href="<?= h($c[$k]) ?>" target="_blank" rel="noopener"><?= h($label) ?></a>
+            <a class="m-contact" href="<?= h($c[$k]) ?>" target="_blank" rel="noopener"><?= contact_icon($k) ?><span><?= h($label) ?></span></a>
           <?php endforeach; ?>
-          <a class="btn btn--ghost btn--sm" href="tel:<?= h($c['phone']) ?>">Позвонить</a>
+          <a class="m-contact" href="tel:<?= h($c['phone']) ?>"><?= contact_icon('phone') ?><span>Позвонить</span></a>
         </div>
       </section>
 

@@ -147,7 +147,7 @@ return [
                 ],
             ]],
             'after' => 'Подготовим набор продуктов исходя из количества гостей и выбранных блюд.',
-            'fields' => [['id' => 'comment', 'type' => 'textarea', 'label' => 'Комментарий']],
+            'fields' => [['id' => 'comment', 'type' => 'textarea', 'label' => 'Комментарий', 'placeholder' => 'Например: без лука, мясо средней прожарки']],
         ],
         [
             'id' => 'g_sauce', 'title' => 'Соусы к горячему', 'gastro' => true, 'group' => 'grill',
@@ -179,7 +179,7 @@ return [
                     ['id' => 'veggie', 'name' => 'Вегетарианский отдых', 'price' => null],
                 ],
             ]],
-            'fields' => [['id' => 'comment', 'type' => 'textarea', 'label' => 'Комментарий']],
+            'fields' => [['id' => 'comment', 'type' => 'textarea', 'label' => 'Комментарий', 'placeholder' => 'Например: на 4 гостей, без свинины']],
         ],
         // Супы временно убраны (ТЗ 21.10): вернутся для бронирования от 3 ночей.
 
@@ -228,7 +228,7 @@ return [
                     ['id' => 'peach', 'name' => 'Персик-ваниль'],
                 ]],
             ],
-            'fields' => [['id' => 'text', 'type' => 'text', 'label' => 'Надпись на торте', 'safe' => true]],
+            'fields' => [['id' => 'text', 'type' => 'text', 'label' => 'Надпись на торте', 'safe' => true, 'placeholder' => 'Например: «С днём рождения, Аня!»']],
             'photo' => true,
         ],
         [
@@ -321,7 +321,7 @@ return [
                     ['id' => 'r35', 'name' => 'Розы, 35 шт', 'price' => null],
                 ],
             ]],
-            'fields' => [['id' => 'comment', 'type' => 'textarea', 'label' => 'Комментарий']],
+            'fields' => [['id' => 'comment', 'type' => 'textarea', 'label' => 'Комментарий', 'placeholder' => 'Например: белые розы, без упаковки']],
             'photo' => true,
         ],
 
@@ -336,7 +336,7 @@ return [
                 'особую сервировку стола, например в стиле BMW',
                 'помочь с вашим праздником',
             ],
-            'fields' => [['id' => 'comment', 'type' => 'textarea', 'label' => 'Что хотелось бы']],
+            'fields' => [['id' => 'comment', 'type' => 'textarea', 'label' => 'Что хотелось бы', 'placeholder' => 'Расскажите о поводе и идее — мы предложим варианты']],
         ],
         [
             'id' => 'wishes', 'title' => 'Особые пожелания', 'group' => 'custom',
@@ -351,7 +351,7 @@ return [
             'fields' => [
                 ['id' => 'time', 'type' => 'select', 'label' => 'Время прибытия'], // варианты — из 'arrival'
                 ['id' => 'early', 'type' => 'check', 'label' => 'Хотели бы приехать раньше 17:00?', 'short' => 'Просят ранний заезд'],
-                ['id' => 'early_time', 'type' => 'textarea', 'when' => 'early', 'label' => 'Желаемое время прибытия', 'safe' => true,
+                ['id' => 'early_time', 'type' => 'textarea', 'when' => 'early', 'label' => 'Желаемое время прибытия', 'safe' => true, 'placeholder' => 'Например: к 14:00',
                     'hint' => 'Напишите желаемое время прибытия. Возможность раннего заезда зависит от графика подготовки дома горничной. Мы сделаем всё возможное, чтобы принять вас раньше, и свяжемся с вами накануне дня заезда для подтверждения.'],
             ],
         ],
