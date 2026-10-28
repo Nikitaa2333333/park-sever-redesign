@@ -125,6 +125,14 @@ $c = $cat['contacts'];
       </span>
       <span class="m-grp__n" data-grp-count><?= $chosenCount ? 'выбрано: ' . $chosenCount : '' ?></span>
     </summary>
+    <?php
+      // одна страница «Подробнее» на весь блок — ссылка в самой плашке; разные страницы — у своих разделов
+      $mores = array_values(array_unique(array_filter(array_map(fn($x) => $x['more'] ?? '', $gSections))));
+      $grpMore = count($mores) === 1 ? $mores[0] : '';
+    ?>
+    <?php if ($grpMore !== '' && !$hidePrices): ?>
+      <p class="m-grp__more"><a href="<?= h($cat['site'] . $grpMore) ?>" target="_blank" rel="noopener" data-sheet="sheet-more" data-more="<?= h(more_embed_url($grpMore)) ?>" data-more-title="<?= h($g['title']) ?>">Узнать подробнее и посмотреть фото</a></p>
+    <?php endif; ?>
 
     <?php if ($kind === 'package'): // Блок 2 — пакеты ?>
       <section class="m-sec">
@@ -177,7 +185,7 @@ $c = $cat['contacts'];
       <?php if (!empty($s['intro'])): ?><p class="m-x"><?= h($s['intro']) ?></p><?php endif; ?>
       <?php if ($closed): ?><p class="g-alert">Срок заказа прошёл — до заезда меньше <?= (int)$s['deadline_days'] ?> суток. Напишите нам в мессенджер, постараемся помочь.</p><?php endif; ?>
       <?php // на сайте у услуг есть цены — при скрытых ценах ссылку не показываем ?>
-      <?php if (!empty($s['more']) && !$hidePrices): ?><p class="m-more"><a href="<?= h($cat['site'] . $s['more']) ?>" target="_blank" rel="noopener" data-sheet="sheet-more" data-more="<?= h(more_embed_url($s['more'])) ?>" data-more-title="<?= h($s['title']) ?>">Подробнее и фото</a></p><?php endif; ?>
+      <?php if (!empty($s['more']) && $grpMore === '' && !$hidePrices): ?><p class="m-more"><a href="<?= h($cat['site'] . $s['more']) ?>" target="_blank" rel="noopener" data-sheet="sheet-more" data-more="<?= h(more_embed_url($s['more'])) ?>" data-more-title="<?= h($s['title']) ?>">Узнать подробнее и посмотреть фото</a></p><?php endif; ?>
       <?php if (!empty($errors[$sid])): ?><p class="g-alert"><?= h($errors[$sid]) ?></p><?php endif; ?>
 
       <?php if (!empty($s['included'])): ?>

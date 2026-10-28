@@ -415,3 +415,9 @@ details.a-card[open] > summary{ margin-bottom:14px }
 .m-form .m-opt{ font-size:16px }
 .m-form .m-opt__d{ font-size:15px; line-height:1.45 }
 .m-form .m-pick__l{ font-size:15px }
+
+/* «Узнать подробнее и посмотреть фото» — внутри раскрытой плашки, под заголовком, на её фоне (заказчик 28.10) */
+.m-grp:has(.m-grp__more)[open] > .m-grp__s{ margin-bottom:0; padding-bottom:4px }
+.m-grp__more{ margin:0 0 20px; padding:0 16px 14px; background:var(--cream); font-size:15px }
+.m-grp__more a{ font-weight:600 }
+.m-grp:not([open]) .m-grp__more{ display:none }
