@@ -359,7 +359,7 @@
     unknownEl.hidden = !unknown;
     if (submit) {
       submit.value = due > 0 ? 'pay' : 'confirm';
-      submit.textContent = due > 0 ? 'Оплатить через СБП (' + rub(due) + ')' : 'Подтвердить выбор меню';
+      submit.textContent = due > 0 ? 'Оплатить через СБП (' + rub(due) + ')' : (submit.getAttribute('data-label-zero') || 'Подтвердить выбор меню');
     }
   }
   // «Снять выбор» у радиокнопок — только когда в группе что-то выбрано
