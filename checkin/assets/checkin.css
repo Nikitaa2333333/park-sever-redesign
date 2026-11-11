@@ -454,7 +454,3 @@ details.a-card[open] > summary{ margin-bottom:14px }
 .m-bar .btn{ min-height:46px; font-size:16px }
 .m-bar .m-total{ margin:0 0 6px; font-size:14px }
 .m-bar .m-saved{ margin:4px 0 0 }
-
-/* «Регистрационная карта гостя» в меню: статус заполнения — сплошной navy, без бейджей */
-.m-card .btn{ margin-top:4px }
-.m-card__ok{ margin:0 0 6px; font-size:17px; font-weight:600; color:var(--navy) }
