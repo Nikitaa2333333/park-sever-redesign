@@ -107,12 +107,13 @@ function group_included(array $sections, string $tariff): bool
 }
 
 /** Сколько позиций можно выбрать в группе (0 — без ограничения). */
-function pick_max(array $pick, int $nights, ?array $s = null, string $tariff = ''): int
+function pick_max(array $pick, int $nights, ?array $s = null, string $tariff = '', int $guests = 2): int
 {
     $m = $pick['max'] ?? 0;
-    $m = is_array($m) ? (int)($m['nights'][$nights] ?? $m['default'] ?? 0) : (int)$m;
+    $m = is_array($m) ? (int)($m['guests'][$guests] ?? $m['nights'][$nights] ?? $m['default'] ?? 0) : (int)$m;
     // бесплатный в тарифе раздел: входит ограниченное число позиций (например, один сет шаров)
-    if ($s && !empty($s['free_max']) && section_free($s, $tariff) && ($m === 0 || $m > $s['free_max'])) $m = (int)$s['free_max'];
+    // (вложенные группы — вкус, «к чаю» у десерта — под это ограничение не попадают)
+    if ($s && empty($pick['when']) && !empty($s['free_max']) && section_free($s, $tariff) && ($m === 0 || $m > $s['free_max'])) $m = (int)$s['free_max'];
     return $m;
 }
 
@@ -142,10 +143,37 @@ function menu_open(array $stay): bool
     return time() < menu_cutoff_ts($stay);
 }
 
-/** Раздел со своим сроком (торт — за 5 суток) уже закрыт. */
-function section_closed(array $s, array $stay): bool
+/** Срок раздела (торт — за 5 суток до заезда) прошёл. */
+function section_deadline_passed(array $s, array $stay): bool
 {
     return !empty($s['deadline_days']) && time() >= strtotime($stay['checkin_at']) - 86400 * (int)$s['deadline_days'];
+}
+
+/** Сроком закрыты только отдельные опции ('deadline' => true) — остальное в разделе доступно. */
+function section_partial_deadline(array $s): bool
+{
+    foreach ($s['picks'] ?? [] as $p) foreach ($p['options'] as $o) if (!empty($o['deadline'])) return true;
+    return false;
+}
+
+/** Раздел закрыт целиком (срок прошёл и нет доступных после срока опций). */
+function section_closed(array $s, array $stay): bool
+{
+    return section_deadline_passed($s, $stay) && !section_partial_deadline($s);
+}
+
+/** Опция закрыта сроком раздела. */
+function option_closed(array $o, array $s, array $stay): bool
+{
+    return !empty($o['deadline']) && section_deadline_passed($s, $stay);
+}
+
+/** Условие показа группы/поля: 'when' => [группа => [опции]] — выбрано ли там одно из них. */
+function pick_when_ok(?array $when, array $picks): bool
+{
+    if (!$when) return true;
+    foreach ($when as $pid => $ids) if (array_intersect($picks[$pid] ?? [], $ids)) return true;
+    return false;
 }
 
 /** Варианты времени прибытия: [значение => подпись]. */
@@ -195,11 +223,15 @@ function menu_parse(array $in, array $stay, string $booked, int $nights, array $
         $free = section_free($s, $tariff);
         $row = ['picks' => [], 'fields' => []];
         foreach ($s['picks'] ?? [] as $p) {
-            $valid = array_column(array_filter($p['options'], fn($o) => !option_in_tariff($o, $tariff)), 'id');
+            if (!pick_when_ok($p['when'] ?? null, $row['picks'])) continue;
+            // опции, закрытые сроком, остаются, только если были выбраны до срока
+            $savedIds = $saved[$sid]['picks'][$p['id']] ?? [];
+            $valid = array_column(array_filter($p['options'], fn($o) => !option_in_tariff($o, $tariff)
+                && (!option_closed($o, $s, $stay) || in_array($o['id'], $savedIds, true))), 'id');
             $got = $in['m'][$sid][$p['id']] ?? [];
             $got = array_values(array_intersect(array_map('strval', (array)$got), $valid));
             $locked = $free ? [] : array_values(array_intersect($paid[$sid]['picks'][$p['id']] ?? [], $valid));
-            $max = pick_max($p, $nights, $s, $tariff);
+            $max = pick_max($p, $nights, $s, $tariff, (int)($stay['guests'] ?? 2));
             if ($locked) $got = $max === 1 ? $locked : array_values(array_unique(array_merge($locked, $got)));
             if ($max > 0 && count($got) > $max) {
                 $errors[$sid] = 'Можно выбрать не больше ' . $max . ' ' . plural($max, 'позиции', 'позиций', 'позиций');
@@ -215,6 +247,7 @@ function menu_parse(array $in, array $stay, string $booked, int $nights, array $
                 default => mb_substr(trim((string)$val), 0, 1000),
             };
             if (!empty($f['when']) && empty($row['fields'][$f['when']])) $val = '';
+            if (!pick_when_ok($f['when_pick'] ?? null, $row['picks'])) $val = '';
             if ($val !== '') $row['fields'][$f['id']] = $val;
         }
         if ($row['picks'] || $row['fields']) $data[$sid] = $row;
@@ -282,7 +315,8 @@ function menu_summary(array $data, string $booked, int $nights, array $opts = []
                     $price = ($free || ($s['gastro'] ?? null) === true) ? ' — входит в тариф'
                         : (array_key_exists('price', $o) ? ($o['price'] === null ? ' — цена уточняется' : ($o['price'] ? ' — ' . fmt_rub((int)$o['price']) : '')) : '');
                 }
-                $lines[] = (!empty($p['label']) && !in_array($p['id'], ['items', 'size', 'set'], true) ? $p['label'] . ': ' : '') . $o['name'] . $price;
+                $lbl = $p['short'] ?? $p['label'] ?? '';
+                $lines[] = ($lbl !== '' && !in_array($p['id'], ['items', 'size', 'set'], true) ? $lbl . ': ' : '') . $o['name'] . $price;
             }
         }
         foreach ($s['fields'] ?? [] as $f) {

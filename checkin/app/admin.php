@@ -168,6 +168,7 @@ function stay_form_input(array $in): array
         'admin_note' => trim((string)($in['admin_note'] ?? '')),
         'tariff' => (string)($in['tariff'] ?? ''),
         'prepaid_extras' => mb_substr(trim((string)($in['prepaid_extras'] ?? '')), 0, 2000),
+        'guests' => (int)($in['guests'] ?? 2) === 1 ? 1 : 2,
     ];
     require_once __DIR__ . '/menu.php';
     if ($v['tariff'] !== '' && tariff_label($v['tariff']) === '') $v['tariff'] = '';
@@ -189,17 +190,17 @@ function admin_new(): void
         'house_id' => array_key_first(houses()),
         'checkin_at' => date('Y-m-d', strtotime('+1 day')) . ' 17:00',
         'checkout_at' => date('Y-m-d', strtotime('+2 day')) . ' 12:00',
-        'price' => '', 'deposit' => 5000, 'guest_label' => '', 'guest_phone' => '', 'admin_note' => '', 'tariff' => '', 'prepaid_extras' => '',
+        'price' => '', 'deposit' => 5000, 'guest_label' => '', 'guest_phone' => '', 'admin_note' => '', 'tariff' => '', 'prepaid_extras' => '', 'guests' => 2,
     ];
     $errors = [];
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         [$v, $errors] = stay_form_input($_POST);
         if (!$errors) {
             $now = now_local();
-            db()->prepare('INSERT INTO stays (token, house_id, checkin_at, checkout_at, price, deposit, guest_label, guest_phone, admin_note, tariff, prepaid_extras, created_at, updated_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')->execute([
+            db()->prepare('INSERT INTO stays (token, house_id, checkin_at, checkout_at, price, deposit, guest_label, guest_phone, admin_note, tariff, prepaid_extras, guests, created_at, updated_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')->execute([
                 new_token(), $v['house_id'], $v['checkin_at'], $v['checkout_at'], $v['price'], $v['deposit'],
-                $v['guest_label'], $v['guest_phone'], $v['admin_note'], $v['tariff'], $v['prepaid_extras'], $now, $now,
+                $v['guest_label'], $v['guest_phone'], $v['admin_note'], $v['tariff'], $v['prepaid_extras'], $v['guests'], $now, $now,
             ]);
             $id = (int)db()->lastInsertId();
             audit($id, 'admin', 'stay_created', array_diff_key($v, ['admin_note' => 1]));
@@ -245,8 +246,8 @@ function admin_stay_post(array $stay, string $sub, array $parts): void
             $termsChanged = $v['house_id'] !== $stay['house_id'] || $v['checkin_at'] !== $stay['checkin_at']
                 || $v['checkout_at'] !== $stay['checkout_at'] || $v['price'] !== (int)$stay['price'] || $v['deposit'] !== (int)$stay['deposit'];
             $wasSigned = latest_contract_signature($id) !== null;
-            $pdo->prepare('UPDATE stays SET house_id = ?, checkin_at = ?, checkout_at = ?, price = ?, deposit = ?, guest_label = ?, guest_phone = ?, admin_note = ?, tariff = ?, prepaid_extras = ?, updated_at = ? WHERE id = ?')
-                ->execute([$v['house_id'], $v['checkin_at'], $v['checkout_at'], $v['price'], $v['deposit'], $v['guest_label'], $v['guest_phone'], $v['admin_note'], $v['tariff'], $v['prepaid_extras'], now_local(), $id]);
+            $pdo->prepare('UPDATE stays SET house_id = ?, checkin_at = ?, checkout_at = ?, price = ?, deposit = ?, guest_label = ?, guest_phone = ?, admin_note = ?, tariff = ?, prepaid_extras = ?, guests = ?, updated_at = ? WHERE id = ?')
+                ->execute([$v['house_id'], $v['checkin_at'], $v['checkout_at'], $v['price'], $v['deposit'], $v['guest_label'], $v['guest_phone'], $v['admin_note'], $v['tariff'], $v['prepaid_extras'], $v['guests'], now_local(), $id]);
             if ($termsChanged) {
                 $pdo->prepare("UPDATE extensions SET status = 'cancelled' WHERE stay_id = ? AND status = 'pending'")->execute([$id]);
                 if ($wasSigned) {

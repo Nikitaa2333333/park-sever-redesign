@@ -427,3 +427,30 @@ details.a-card[open] > summary{ margin-bottom:14px }
 .m-form .fld__opt{ flex:0 0 auto; font-size:13px; font-weight:500; white-space:nowrap }
 /* кнопки связи: иконка и подпись по одной левой линии во всех кнопках (заказчик 28.10) */
 .m-contact{ justify-content:flex-start; gap:12px; padding:10px 16px; text-decoration:none !important }
+
+/* ── ТЗ 29.10 ─────────────────────────────────────────────────────── */
+/* Начало калькулятора: «Ваш тариф» → «Скрыть цены» → вводная; срок изменения — отдельной строкой */
+.welcome > .m-tariff{ margin:0 0 14px }
+.m-lead-2{ margin-top:-14px }
+/* «Уже ждёт Вас в доме» — сворачивается, как остальные; подстрочник серым сплошным (просьба заказчицы 27.10) */
+.m-grp--info .m-grp__inc{ color:#6f6a64; font-size:14px }
+/* пометки у пакетов: «доступен от 2-х ночей», «торт — минимум за 5 суток» */
+.m-opt__note{ font-weight:600 }
+/* «Отправить выбор в Парк Север» в блоке торта */
+.m-send{ margin:8px 0 0; border:1px solid var(--navy) }
+
+/* Фото блока: горизонтальные чистые кадры 4:3, прямые углы; несколько — лента со свайпом, следующий кадр выглядывает */
+.m-gal{ display:flex; gap:10px; margin:0 0 20px; overflow-x:auto; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch; scrollbar-width:none }
+.m-gal::-webkit-scrollbar{ display:none }
+.m-gal__i{ flex:0 0 100%; margin:0; scroll-snap-align:start; aspect-ratio:4/3; background:var(--cream) }
+.m-gal--multi .m-gal__i{ flex-basis:86% }
+.m-gal__i img{ display:block; width:100%; height:100%; object-fit:cover }
+.m-sec > .m-gal{ margin-top:4px }
+
+/* Липкий подвал меню компактнее — на телефоне занимал много места (ТЗ 29.10) */
+.m-bar{ padding-top:36px;
+  background:linear-gradient(to bottom, rgba(255,255,255,0) 0, rgba(255,255,255,.104) 8px, rgba(255,255,255,.352) 14.7px,
+    rgba(255,255,255,.648) 21px, rgba(255,255,255,.896) 27.7px, #fff 36px) }
+.m-bar .btn{ min-height:46px; font-size:16px }
+.m-bar .m-total{ margin:0 0 6px; font-size:14px }
+.m-bar .m-saved{ margin:4px 0 0 }
