@@ -51,24 +51,9 @@ function booked_tariff(string $tariff, int $nights): string
 }
 
 /** Пакеты, которые гость может выбрать сам: только когда в карточке «для двоих». */
-/** Блок временно скрыт ('hidden_groups' в каталоге): его разделы не видны, не сохраняются и не считаются. */
-function group_hidden(string $gid): bool
-{
-    return in_array($gid, menu_catalog()['hidden_groups'] ?? [], true);
-}
-
-/** Есть ли на экране хоть один блок выбора (или все временно скрыты). */
-function menu_has_choices(): bool
-{
-    foreach (menu_catalog()['groups'] as $gid => $g) {
-        if ((empty($g['kind']) || $g['kind'] === 'package') && !group_hidden($gid)) return true;
-    }
-    return false;
-}
-
 function package_options(string $booked, int $nights): array
 {
-    if ($booked !== 'duo' || group_hidden('package')) return [];
+    if ($booked !== 'duo') return [];
     return array_filter(menu_catalog()['tariffs'], fn($t, $id) => $id !== 'duo' && $nights >= ($t['min_nights'] ?? 1), ARRAY_FILTER_USE_BOTH);
 }
 
@@ -86,7 +71,6 @@ function tariff_gastro(string $tariff): bool
 
 function section_visible(array $s, string $tariff, int $nights, array $data): bool
 {
-    if (group_hidden($s['group'] ?? '')) return false;
     $gastro = tariff_gastro($tariff);
     if (isset($s['gastro']) && $s['gastro'] !== $gastro) return false;
     if ($nights < ($s['min_nights'] ?? 1)) return false;
@@ -429,7 +413,7 @@ function guest_menu(array $stay): void
             [$data] = menu_parse($_POST, $stay, $booked, $nights, $data, $paid);
         } else {
             [$data, $errors] = menu_parse($_POST, $stay, $booked, $nights, $data, $paid);
-            if ($hidePrices && menu_has_choices()) $do = 'save'; // режим подарка: выбирают без цен, платит тот, кто скрыл
+            if ($hidePrices) $do = 'save'; // режим подарка: выбирают без цен, платит тот, кто скрыл
             if (!$errors && in_array($do, ['confirm', 'pay'], true)) {
                 menu_submit($stay, $order, $data, $booked, $nights, $do);
                 return;
