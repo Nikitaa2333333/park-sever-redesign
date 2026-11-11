@@ -325,6 +325,17 @@
       f.hidden = !(box && box.checked);
     });
   }
+  // группы/поля, которые раскрываются по выбору в другой группе: у торта — вкус и надпись, у десерта — «к чаю»
+  function syncIf() {
+    form.querySelectorAll('[data-if-name]').forEach(function (el) {
+      var ids = el.getAttribute('data-if-ids').split(',');
+      var on = Array.prototype.some.call(form.querySelectorAll('input:checked'), function (i) {
+        return i.name === el.getAttribute('data-if-name') && ids.indexOf(i.value) >= 0;
+      });
+      el.hidden = !on;
+      if (!on) el.querySelectorAll('input[type=checkbox], input[type=radio]').forEach(function (i) { i.checked = false; });
+    });
+  }
   function syncCounts() {
     form.querySelectorAll('[data-grp-count]').forEach(function (c) {
       var g = c.closest('[data-grp]');
@@ -357,7 +368,7 @@
       b.hidden = !b.closest('.m-pick').querySelector('input[type=radio]:checked');
     });
   }
-  function sync() { syncLimits(); syncRequires(); syncWhen(); syncClear(); syncTotal(); }
+  function sync() { syncIf(); syncLimits(); syncRequires(); syncWhen(); syncClear(); syncTotal(); }
 
   form.addEventListener('change', function (e) {
     // смена пакета меняет набор блоков — сохраняем и перерисовываем страницу
@@ -391,7 +402,10 @@
         if (!visible(i) || !i.value && i.name === 'package') return;
         var o = i.closest('.m-opt');
         var p = text(o.querySelector('.m-opt__p'));
-        lines.push(text(o.querySelector('.m-opt__n')) + (p ? ' — ' + p : ''));
+        // у вложенных групп (вкус торта, десерт) — подпись группы, чтобы в составе было «Вкус торта: …»
+        var pk = i.closest('[data-if-name]');
+        var lbl = pk ? text(pk.querySelector('.m-pick__l')).replace(/:.*$/, '') : '';
+        lines.push((lbl ? lbl + ': ' : '') + text(o.querySelector('.m-opt__n')) + (p ? ' — ' + p : ''));
       });
       g.querySelectorAll('.fld, .m-check').forEach(function (f) {
         if (!visible(f)) return;

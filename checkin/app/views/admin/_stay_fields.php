@@ -31,5 +31,14 @@
   </select>
   <p class="fld__hint">С тарифом гость получит страницу «Меню и допы» по своей ссылке</p>
 </div>
+<div class="fld">
+  <label for="f-guests">Гостей</label>
+  <select id="f-guests" name="guests">
+    <?php foreach ([2 => '2 гостя', 1 => '1 гость'] as $gn => $gl): ?>
+      <option value="<?= $gn ?>" <?= (int)($v['guests'] ?? 2) === $gn ? 'selected' : '' ?>><?= h($gl) ?></option>
+    <?php endforeach; ?>
+  </select>
+  <p class="fld__hint">В гриль-меню тарифа с гастрономией: 1 гость — до 2 позиций, двое — до 3</p>
+</div>
 <?= field('prepaid_extras', 'Уже оформленные допы (гость видит)', $v, $errors, ['type' => 'textarea', 'placeholder' => 'Например: торт бенто 800 г, шары «Сердце»']) ?>
 <?= field('admin_note', 'Заметка (гость не видит)', $v, $errors, ['type' => 'textarea']) ?>

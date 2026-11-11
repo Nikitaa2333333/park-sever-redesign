@@ -19,7 +19,9 @@
   <div class="ticket__foot">
     <span class="ticket__lbl">Стоимость проживания</span>
     <b class="ticket__price"><?= h(fmt_rub($terms['price'])) ?></b>
+    <?php if (empty($noDeposit)): // в «Меню и допы» депозит не показываем (ТЗ 29.10) ?>
     <span class="ticket__dep">Депозит <b><?= h(fmt_rub($terms['deposit'])) ?></b> · вернём после выезда</span>
+    <?php endif; ?>
   </div>
   <?php endif; ?>
 </div>

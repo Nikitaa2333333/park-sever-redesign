@@ -22,8 +22,20 @@ $confirmed = in_array($status, ['confirmed', 'paid'], true);
 $homeReady = fmt_dm($stay['checkin_at']) . ' в ' . arrival_text($data, $stay);
 $summary = menu_summary($data, $booked, $nights, ['prices' => !$hidePrices]);
 $c = $cat['contacts'];
+$guests = (int)($stay['guests'] ?? 2);
+$cutoffText = fmt_dm(date('Y-m-d H:i', menu_cutoff_ts($stay))) . ', ' . fmt_time(date('Y-m-d H:i', menu_cutoff_ts($stay)));
+// фото блока/раздела: горизонтальные кадры, несколько — листаются свайпом
+$gallery = function (array $photos): string {
+    if (!$photos) return '';
+    $out = '<div class="m-gal' . (count($photos) > 1 ? ' m-gal--multi' : '') . '">';
+    foreach ($photos as [$src, $alt]) {
+        $out .= '<figure class="m-gal__i"><img src="' . h(asset($src)) . '" alt="' . h($alt) . '" loading="lazy" decoding="async"></figure>';
+    }
+    return $out . '</div>';
+};
 ?>
 <section class="welcome">
+  <p class="m-tariff"><?= h($indicator) ?></p>
   <?php // «Скрыть цены» — подарок: прячем ценники кодом и пересылаем ссылку ?>
   <details class="m-lock"<?= !empty($errors['_form']) && str_contains($errors['_form'], 'Код') ? ' open' : '' ?>>
     <summary class="m-lock__chip"><span class="m-lock__ico<?= $hidePrices ? '' : ' m-lock__ico--off' ?>" aria-hidden="true">₽</span><?= $hidePrices ? 'Показать цены' : 'Скрыть цены' ?></summary>
@@ -42,13 +54,10 @@ $c = $cat['contacts'];
     </form>
   </details>
 
-  <p class="m-tariff"><?= h($indicator) ?></p>
-  <h1 class="g-h1">Меню и допы</h1>
-
   <?php if ($confirmed && !$pending): ?>
     <div class="m-status">
       <p class="m-status__t">Бронь подтверждена</p>
-      <p>Дом будет готов к вашему приезду: <b><?= h($homeReady) ?></b></p>
+      <p>Дом будет готов к Вашему приезду: <b><?= h($homeReady) ?></b></p>
       <p>Меню зафиксировано<?= $paidTotal && !$hidePrices ? ' · оплачено ' . h(fmt_rub($paidTotal)) : '' ?> · <button type="button" class="linkish" data-sheet="sheet-order">посмотреть заказ</button></p>
       <p class="m-status__n"><?= $open
         ? 'До ' . h(fmt_dm(date('Y-m-d H:i', menu_cutoff_ts($stay)))) . ', ' . h(fmt_time(date('Y-m-d H:i', menu_cutoff_ts($stay)))) . ' можно докупить допы и поменять время приезда — ниже, в блоках.'
@@ -57,7 +66,8 @@ $c = $cat['contacts'];
   <?php elseif (!$open): ?>
     <div class="m-status"><p class="m-status__t">Заказ передан на кухню</p><p>Для срочных изменений свяжитесь с нами напрямую — контакты внизу, в блоке «Маршрут».</p></div>
   <?php else: ?>
-    <p class="g-lead">Отметьте в блоках <?= h(implode(', ', $choiceTitles)) ?>, что приготовить и подготовить к вашему приезду. Выбор можно поменять по этой же ссылке до <?= h(fmt_dm(date('Y-m-d H:i', menu_cutoff_ts($stay)))) ?>, <?= h(fmt_time(date('Y-m-d H:i', menu_cutoff_ts($stay)))) ?>.</p>
+    <p class="g-lead">Настройте детали Вашего отдыха в блоках <?= h(implode(', ', $choiceTitles)) ?>.</p>
+    <p class="g-lead m-lead-2">Выбор можно поменять по этой же ссылке до <?= h($cutoffText) ?>.</p>
   <?php endif; ?>
 
   <?php if ($pending && !$hidePrices): ?>
@@ -72,7 +82,7 @@ $c = $cat['contacts'];
     </div>
   <?php endif; ?>
 
-  <?php require __DIR__ . '/_terms.php'; ?>
+  <?php $noDeposit = true; require __DIR__ . '/_terms.php'; ?>
   <?php if (trim((string)$stay['prepaid_extras']) !== '' && !$hidePrices): // в режиме подарка не раскрываем уже заказанное ?>
     <div class="m-paid">
       <p class="m-paid__t">Уже оформлено</p>
@@ -95,15 +105,22 @@ $c = $cat['contacts'];
     $gSectionsShown = array_filter($gSections, fn($s) => section_visible($s, $tariff, $nights, $data));
   ?>
 
-  <?php if ($kind === 'info'): // Блок 1 — всегда на виду, не сворачивается ?>
-    <section class="m-info" id="m-<?= h($gid) ?>">
-      <h2 class="m-info__t"><?= h($g['title']) ?></h2>
-      <p class="m-info__sub"><?= h($g['sub']) ?></p>
-      <?php foreach ($cat['home'] as [$hTitle, $items]): ?>
-        <h3 class="m-h"><?= h($hTitle) ?></h3>
-        <ul class="dots m-incl"><?php foreach ($items as $it): ?><li><?= h($it) ?></li><?php endforeach; ?></ul>
-      <?php endforeach; ?>
-    </section>
+  <?php if ($kind === 'info'): // Блок 1 — что уже есть в доме; сворачивается, как остальные (ТЗ 29.10) ?>
+    <details class="m-grp m-grp--info" id="m-<?= h($gid) ?>">
+      <summary class="m-grp__s">
+        <span class="m-grp__h">
+          <span class="m-grp__t"><?= h($g['title']) ?></span>
+          <span class="m-grp__inc"><?= h($g['sub']) ?></span>
+        </span>
+      </summary>
+      <?= $gallery($g['photos'] ?? []) ?>
+      <section class="m-sec">
+        <?php foreach ($cat['home'] as [$hTitle, $items]): ?>
+          <h3 class="m-h"><?= h($hTitle) ?></h3>
+          <ul class="dots m-incl"><?php foreach ($items as $it): ?><li><?= h($it) ?></li><?php endforeach; ?></ul>
+        <?php endforeach; ?>
+      </section>
+    </details>
     <?php continue; endif; ?>
 
   <?php
@@ -133,12 +150,14 @@ $c = $cat['contacts'];
     <?php if ($grpMore !== '' && !$hidePrices): ?>
       <p class="m-grp__more"><a href="<?= h($cat['site'] . $grpMore) ?>" target="_blank" rel="noopener" data-sheet="sheet-more" data-more="<?= h(more_embed_url($grpMore)) ?>" data-more-title="<?= h($g['title']) ?>">Узнать подробнее и посмотреть фото</a></p>
     <?php endif; ?>
+    <?= $gallery($g['photos'] ?? []) ?>
 
     <?php if ($kind === 'package'): // Блок 2 — пакеты ?>
       <section class="m-sec">
         <?php if (!$pkgOptions): $tc = tariff_cfg($booked); ?>
           <div class="m-opt m-opt--in m-opt--pkg">
-            <span class="m-opt__t"><span class="m-opt__n">«<?= h($tc['short']) ?>» <span class="m-pkg__in">(включено в ваш тариф)</span></span><span class="m-opt__d"><?= h($tc['desc']) ?></span></span>
+            <span class="m-opt__t"><span class="m-opt__n">«<?= h($tc['short']) ?>» <span class="m-pkg__in">(включено в Ваш тариф)</span></span><span class="m-opt__d"><?= h($tc['desc']) ?></span>
+              <?php if (!empty($tc['note'])): ?><span class="m-opt__d m-opt__note"><?= h($tc['note']) ?></span><?php endif; ?></span>
           </div>
         <?php else: ?>
           <p class="m-x">Выберите пакет — нужные блоки ниже сразу отметятся как включённые в тариф.<?= $nights < 2 ? ' Пакеты с гастрономией доступны при бронировании от 2 ночей.' : '' ?></p>
@@ -147,7 +166,8 @@ $c = $cat['contacts'];
               $pPrice = $hidePrices ? '' : (($pc['price'] ?? null) === null ? 'цена уточняется' : fmt_rub((int)$pc['price'])); ?>
               <label class="m-opt">
                 <input type="radio" name="package" value="<?= h($pid) ?>"<?= $tariff === $pid ? ' checked' : '' ?><?= $hidePrices ? '' : (($pc['price'] ?? null) === null ? ' data-price-unknown' : ' data-price="' . (int)$pc['price'] . '"') ?>>
-                <span class="m-opt__t"><span class="m-opt__n">«<?= h($pc['short']) ?>»</span><span class="m-opt__d"><?= h($pc['desc']) ?></span>
+                <span class="m-opt__t"><span class="m-opt__n">«<?= h($pc['short']) ?>»<?= ($pc['min_nights'] ?? 1) > 1 ? ' <span class="m-pkg__in">(доступен только при бронировании от 2-х ночей)</span>' : '' ?></span><span class="m-opt__d"><?= h($pc['desc']) ?></span>
+                  <?php if (!empty($pc['note'])): ?><span class="m-opt__d m-opt__note"><?= h($pc['note']) ?></span><?php endif; ?>
                   <?php if ($pPrice !== ''): ?><span class="m-opt__p<?= ($pc['price'] ?? null) === null ? ' m-opt__p--note' : '' ?>"><?= h($pPrice) ?></span><?php endif; ?></span>
               </label>
             <?php endforeach; ?>
@@ -184,8 +204,10 @@ $c = $cat['contacts'];
       <?php if (!$single): ?><h3 class="m-h"><?= h($s['title']) ?><?php if ($free && !$included && !$hidePrices): ?> <span class="m-h__inc">· 0 ₽, включено в тариф</span><?php endif; ?></h3><?php endif; ?>
       <?php if (!empty($s['intro'])): ?><p class="m-x"><?= h($s['intro']) ?></p><?php endif; ?>
       <?php if ($closed): ?><p class="g-alert">Срок заказа прошёл — до заезда меньше <?= (int)$s['deadline_days'] ?> суток. Напишите нам в мессенджер, постараемся помочь.</p><?php endif; ?>
+      <?php if (!$closed && section_deadline_passed($s, $stay) && !empty($s['closed_note'])): ?><p class="g-alert"><?= h($s['closed_note']) ?></p><?php endif; ?>
       <?php // на сайте у услуг есть цены — при скрытых ценах ссылку не показываем ?>
       <?php if (!empty($s['more']) && $grpMore === '' && !$hidePrices): ?><p class="m-more"><a href="<?= h($cat['site'] . $s['more']) ?>" target="_blank" rel="noopener" data-sheet="sheet-more" data-more="<?= h(more_embed_url($s['more'])) ?>" data-more-title="<?= h($s['title']) ?>">Узнать подробнее и посмотреть фото</a></p><?php endif; ?>
+      <?= $gallery($s['photos'] ?? []) ?>
       <?php if (!empty($errors[$sid])): ?><p class="g-alert"><?= h($errors[$sid]) ?></p><?php endif; ?>
 
       <?php if (!empty($s['included'])): ?>
@@ -194,15 +216,22 @@ $c = $cat['contacts'];
 
       <fieldset class="m-fs"<?= $closed ? ' disabled' : '' ?>>
       <?php foreach ($s['picks'] ?? [] as $p):
-        $max = pick_max($p, $nights, $s, $tariff);
+        $max = pick_max($p, $nights, $s, $tariff, $guests);
         $type = $max === 1 ? 'radio' : 'checkbox';
         $chosen = $data[$sid]['picks'][$p['id']] ?? [];
         $locked = $free ? [] : ($paid[$sid]['picks'][$p['id']] ?? []);
         $name = 'm[' . $sid . '][' . $p['id'] . '][]';
         $hint = $max === 1 ? '' : ($max > 1 ? 'Можно выбрать до ' . $max . ' ' . plural($max, 'позиции', 'позиций', 'позиций') : '');
-        if ($free && !empty($s['free_max']) && !$hidePrices) $hint = 'В тариф входит ' . $s['free_max'] . ' ' . plural((int)$s['free_max'], 'позиция', 'позиции', 'позиций');
+        if ($free && !empty($s['free_max']) && !$hidePrices && empty($p['when'])) $hint = 'В тариф входит ' . $s['free_max'] . ' ' . plural((int)$s['free_max'], 'позиция', 'позиции', 'позиций');
+        // группа, которая раскрывается по выбору в другой группе (вкус — у торта, «к чаю» — у десерта)
+        $ifAttr = '';
+        if (!empty($p['when'])) {
+            $wp = array_key_first($p['when']);
+            $ifAttr = ' data-if-name="' . h('m[' . $sid . '][' . $wp . '][]') . '" data-if-ids="' . h(implode(',', $p['when'][$wp])) . '"'
+                . (pick_when_ok($p['when'], $data[$sid]['picks'] ?? []) ? '' : ' hidden');
+        }
       ?>
-        <div class="m-pick" data-max="<?= $max ?>">
+        <div class="m-pick" data-max="<?= $max ?>"<?= $ifAttr ?>>
           <?php if (!empty($p['label']) || $hint): ?><p class="m-pick__l"><?= h(trim(($p['label'] ?? '') . ($hint && !empty($p['label']) ? ' · ' : '') . $hint)) ?></p><?php endif; ?>
           <?php foreach ($p['options'] as $o):
             $inTariff = option_in_tariff($o, $tariff);
@@ -213,6 +242,8 @@ $c = $cat['contacts'];
               : (!$hasPrice || $hidePrices ? '' : ($o['price'] === null ? 'цена уточняется' : ($o['price'] ? fmt_rub((int)$o['price']) : 'без доплат'))));
             $priceAttr = $hasPrice && !$hidePrices ? ($o['price'] ? ' data-price="' . (int)$o['price'] . '"' : ($o['price'] === null ? ' data-price-unknown' : '')) : '';
             $off = $isLocked || ($type === 'radio' && $locked && !$isLocked);
+            // торт после срока: выбрать нельзя (если выбран раньше — остаётся)
+            if (option_closed($o, $s, $stay) && !in_array($o['id'], $chosen, true)) { $off = true; $priceText = 'уточните у нас'; $priceAttr = ''; }
           ?>
             <?php if ($inTariff): ?>
               <div class="m-opt m-opt--in">
@@ -239,6 +270,11 @@ $c = $cat['contacts'];
         $fid = 'm-' . $sid . '-' . $f['id'];
         $val = (string)($data[$sid]['fields'][$f['id']] ?? '');
         $when = !empty($f['when']) ? ' data-when="m-' . h($sid . '-' . $f['when']) . '"' . (empty($data[$sid]['fields'][$f['when']]) ? ' hidden' : '') : '';
+        if (!empty($f['when_pick'])) {
+            $wp = array_key_first($f['when_pick']);
+            $when .= ' data-if-name="' . h('m[' . $sid . '][' . $wp . '][]') . '" data-if-ids="' . h(implode(',', $f['when_pick'][$wp])) . '"'
+                . (pick_when_ok($f['when_pick'], $data[$sid]['picks'] ?? []) ? '' : ' hidden');
+        }
       ?>
         <?php if ($f['type'] === 'check'): ?>
           <label class="agree m-check"><input type="checkbox" id="<?= h($fid) ?>" name="<?= h($fname) ?>" value="1"<?= $val ? ' checked' : '' ?>><span><?= h($f['label']) ?></span></label>
@@ -265,6 +301,10 @@ $c = $cat['contacts'];
 
       <?php if (!empty($s['photo'])): ?>
         <p class="m-x m-photo">Фото-референс пока пришлите нам в мессенджер — загрузку прямо сюда добавим.</p>
+      <?php endif; ?>
+      <?php // ТЗ 29.10: определились с тортом — можно сразу отправить выбор (сервер сам решит: подтвердить или к оплате) ?>
+      <?php if (!empty($s['send_button']) && $open && !$closed): ?>
+        <button class="btn btn--ghost btn--wide m-send" type="submit" name="_do" value="confirm">Отправить выбор в Парк Север</button>
       <?php endif; ?>
     </section>
     <?php endforeach; endif; ?>

@@ -151,6 +151,8 @@ function migrate(PDO $pdo): void
     if (!in_array('prepaid_extras', $cols, true)) $pdo->exec("ALTER TABLE stays ADD COLUMN prepaid_extras TEXT NOT NULL DEFAULT ''");
     // «Скрыть цены» в меню: хэш кода гостя, пусто — цены видны (03.10.2026)
     if (!in_array('price_lock', $cols, true)) $pdo->exec("ALTER TABLE stays ADD COLUMN price_lock TEXT NOT NULL DEFAULT ''");
+    // ТЗ 29.10.2026: сколько гостей — от этого лимит позиций гриль-меню (1 гость — 2, двое — 3)
+    if (!in_array('guests', $cols, true)) $pdo->exec("ALTER TABLE stays ADD COLUMN guests INTEGER NOT NULL DEFAULT 2");
     // ТЗ 21.10.2026: 4 тарифа вместо 3, подтверждение и оплата допов
     $pdo->exec("UPDATE stays SET tariff = CASE tariff WHEN 'none' THEN 'duo' WHEN 'gastro' THEN 'duo_gastro' WHEN 'gastro_party' THEN 'party_gastro' ELSE tariff END
         WHERE tariff IN ('none','gastro','gastro_party')");
