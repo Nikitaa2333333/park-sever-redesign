@@ -190,7 +190,7 @@ function admin_new(): void
         'house_id' => array_key_first(houses()),
         'checkin_at' => date('Y-m-d', strtotime('+1 day')) . ' 17:00',
         'checkout_at' => date('Y-m-d', strtotime('+2 day')) . ' 12:00',
-        'price' => '', 'deposit' => 5000, 'guest_label' => '', 'guest_phone' => '', 'admin_note' => '', 'tariff' => '', 'prepaid_extras' => '', 'guests' => 2,
+        'price' => '', 'deposit' => 5000, 'guest_label' => '', 'guest_phone' => '', 'admin_note' => '', 'tariff' => 'duo', 'prepaid_extras' => '', 'guests' => 2,
     ];
     $errors = [];
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -320,5 +320,6 @@ function admin_stay_post(array $stay, string $sub, array $parts): void
 
 function share_message(array $stay, string $link): string
 {
-    return "Здравствуйте! Это Парк Север. Чтобы мы подготовили дом и пропуск на въезд, заполните, пожалуйста, анкету и подпишите договор найма по персональной ссылке. Заполнить можно частями, а ссылку переслать второму гостю — посторонним её не передавайте: $link";
+    // ведёт на калькулятор: там «Уже ждёт Вас в доме», регистрационная карта, время прибытия и маршрут (12.11)
+    return "Здравствуйте! Это Парк Север. По персональной ссылке — всё к Вашему приезду: регистрационная карта гостя (анкета и договор), время прибытия и как к нам доехать. Ссылку можно переслать второму гостю — посторонним её не передавайте: $link/menu";
 }
