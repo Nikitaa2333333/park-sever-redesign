@@ -20,20 +20,17 @@ $eventNames = [
 <div>
   <section class="a-card">
     <h2>Ссылка для гостя</h2>
-    <label class="a-label" for="guest-link">Ссылка</label>
-    <div class="a-link">
-      <input type="text" readonly value="<?= h($link) ?>" id="guest-link">
-      <button class="btn btn--navy btn--sm" type="button" data-copy="#guest-link" data-mark-sent="copy">Скопировать</button>
-    </div>
-    <?php if (($stay['tariff'] ?? '') !== ''): ?>
-    <label class="a-label" for="menu-link-top">Ссылка на меню и допы · тариф «<?= h(tariff_label($stay['tariff'])) ?>»</label>
+    <?php // главная ссылка — калькулятор: «Уже ждёт Вас в доме», регистрационная карта, время прибытия, маршрут (12.11) ?>
+    <label class="a-label" for="menu-link-top">Ссылка для гостя — калькулятор и регистрационная карта · тариф «<?= h(tariff_label(booked_tariff((string)$stay['tariff'], nights($stay['checkin_at'], $stay['checkout_at'])))) ?>»</label>
     <div class="a-link">
       <input type="text" readonly value="<?= h($link . '/menu') ?>" id="menu-link-top">
-      <button class="btn btn--navy btn--sm" type="button" data-copy="#menu-link-top">Скопировать</button>
+      <button class="btn btn--navy btn--sm" type="button" data-copy="#menu-link-top" data-mark-sent="copy">Скопировать</button>
     </div>
-    <?php else: ?>
-    <p class="a-small">Ссылка на меню и допы появится, когда выберете тариф в «Условиях».</p>
-    <?php endif; ?>
+    <label class="a-label" for="guest-link">Только регистрация (анкета и договор)</label>
+    <div class="a-link">
+      <input type="text" readonly value="<?= h($link) ?>" id="guest-link">
+      <button class="btn btn--ghost btn--sm" type="button" data-copy="#guest-link" data-mark-sent="copy">Скопировать</button>
+    </div>
     <label class="a-label" for="guest-msg">Текст сообщения со ссылкой</label>
     <div class="a-link">
       <textarea readonly rows="4" id="guest-msg"><?= h($msg) ?></textarea>
@@ -44,16 +41,14 @@ $eventNames = [
 
   <section class="a-card">
     <h2>Меню и допы</h2>
-    <?php if (($stay['tariff'] ?? '') === ''): ?>
-      <p>Тариф не выбран — страница меню гостю не открыта. Выберите тариф в «Условиях» ниже.</p>
-    <?php else:
+    <?php
       $mNights = nights($stay['checkin_at'], $stay['checkout_at']);
       $mBooked = booked_tariff((string)$stay['tariff'], $mNights);
       $mData = $menu['data'] ?? [];
       $mTariff = effective_tariff($mBooked, $mNights, $mData);
     ?>
       <p>Тариф: <b><?= h(tariff_label($mTariff)) ?></b><?= $mTariff !== $mBooked ? ' (пакет выбрал гость, в карточке — «' . h(tariff_label($mBooked)) . '»)' : '' ?></p>
-      <?php if ($mBooked !== tariff_key((string)$stay['tariff'])): ?><p class="a-small">В карточке «<?= h(tariff_label($stay['tariff'])) ?>», но гастрономия доступна от 2 ночей — гостю показан тариф «<?= h(tariff_label($mBooked)) ?>».</p><?php endif; ?>
+      <?php if ((string)$stay['tariff'] === ''): ?><p class="a-small">Тариф в «Условиях» не выбран — гостю показан базовый «<?= h(tariff_label($mBooked)) ?>».</p><?php elseif ($mBooked !== tariff_key((string)$stay['tariff'])): ?><p class="a-small">В карточке «<?= h(tariff_label($stay['tariff'])) ?>», но гастрономия доступна от 2 ночей — гостю показан тариф «<?= h(tariff_label($mBooked)) ?>».</p><?php endif; ?>
       <p class="a-small">Гость меняет выбор и время приезда до <?= h(fmt_dt(date('Y-m-d H:i', menu_cutoff_ts($stay)))) ?>, потом — только просмотр.</p>
       <?php if (trim((string)$stay['prepaid_extras']) !== ''): ?><p>Уже оформлено: <?= nl2br(h($stay['prepaid_extras'])) ?></p><?php endif; ?>
       <?php if ((string)$stay['price_lock'] !== ''): ?>
@@ -83,7 +78,6 @@ $eventNames = [
           <?php endforeach; ?>
         </dl>
       <?php endif; ?>
-    <?php endif; ?>
   </section>
 
   <section class="a-card">

@@ -43,7 +43,8 @@ function tariff_label(string $tariff): string
  */
 function booked_tariff(string $tariff, int $nights): string
 {
-    $t = tariff_key($tariff);
+    // тариф в карточке не выбран — калькулятор всё равно открывается, по базовому тарифу (12.11)
+    $t = tariff_key($tariff !== '' ? $tariff : 'duo');
     $cfg = tariff_cfg($t);
     if (!$cfg) return '';
     if ($nights < ($cfg['min_nights'] ?? 1)) return $t === 'party_gastro' ? 'party' : 'duo';
