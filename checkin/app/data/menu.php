@@ -86,7 +86,7 @@ return [
 
     // Контакты в блоке «Маршрут». Пустая строка — кнопка не показывается.
     'contacts' => [
-        'telegram' => 'https://t.me/park_sever',
+        'telegram' => 'https://t.me/ESPark_Sever', // написать администратору (не канал) — заказчица 12.11
         'vk' => 'https://vk.me/park_sever',
         'whatsapp' => 'https://wa.me/79296060045',
         'max' => '', // ⚠ ссылки на MAX пока нет — заказчица пришлёт

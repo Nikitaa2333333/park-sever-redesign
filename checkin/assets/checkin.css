@@ -458,3 +458,9 @@ details.a-card[open] > summary{ margin-bottom:14px }
 /* «Регистрационная карта гостя» в меню: статус заполнения — сплошной navy, без бейджей */
 .m-card .btn{ margin-top:4px }
 .m-card__ok{ margin:0 0 6px; font-size:17px; font-weight:600; color:var(--navy) }
+
+/* «Вернуться в калькулятор» — внизу экрана регистрации, прилипшая (заказчица 12.11) */
+.g-nav__back{ display:block; margin-top:10px; text-align:center; font-size:15px; font-weight:600; color:var(--ink); text-decoration:underline; text-underline-offset:3px }
+.g-nav--back .btn{ background:#fff }
+body:has(.g-nav--back) .g-main{ padding-bottom:110px }
+.g-form{ padding-bottom:150px }
