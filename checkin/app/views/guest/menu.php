@@ -14,9 +14,12 @@ $pkgOptions = package_options($booked, $nights);
 $groups = [];
 foreach ($cat['groups'] as $gid => $g) $groups[$gid] = [$g, []];
 foreach (menu_sections($tariff, $nights, $data, true) as $s) $groups[$s['group']][1][] = $s;
-$groups = array_filter($groups, fn($g) => !empty($g[0]['kind']) || $g[1]);
+$groups = array_filter($groups, fn($g, $gid) => !group_hidden($gid) && (!empty($g[0]['kind']) || $g[1]), ARRAY_FILTER_USE_BOTH);
 $choiceTitles = array_map(fn($g) => '«' . $g[0]['title'] . '»', array_filter($groups, fn($g) => empty($g[0]['kind']) || $g[0]['kind'] === 'package'));
 
+$hasChoices = (bool)$choiceTitles; // все блоки выбора скрыты — страница «к приезду»: без цен и слов про меню
+// регистрационная карта: анкета и договор подписаны — или ещё нет
+$checkinDone = !in_array($stay['status'], ['created', 'sent'], true) && empty($stay['resign_required']);
 $indicator = $nights >= 2 ? 'Ваш тариф: ' . tariff_label($tariff) : tariff_label($tariff);
 $confirmed = in_array($status, ['confirmed', 'paid'], true);
 $homeReady = fmt_dm($stay['checkin_at']) . ' в ' . arrival_text($data, $stay);
@@ -37,6 +40,7 @@ $gallery = function (array $photos): string {
 <section class="welcome">
   <p class="m-tariff"><?= h($indicator) ?></p>
   <?php // «Скрыть цены» — подарок: прячем ценники кодом и пересылаем ссылку ?>
+  <?php if ($hasChoices): ?>
   <details class="m-lock"<?= !empty($errors['_form']) && str_contains($errors['_form'], 'Код') ? ' open' : '' ?>>
     <summary class="m-lock__chip"><span class="m-lock__ico<?= $hidePrices ? '' : ' m-lock__ico--off' ?>" aria-hidden="true">₽</span><?= $hidePrices ? 'Показать цены' : 'Скрыть цены' ?></summary>
     <form class="m-lock__f" method="post" action="">
@@ -53,21 +57,26 @@ $gallery = function (array $photos): string {
       </div>
     </form>
   </details>
+  <?php endif; ?>
 
   <?php if ($confirmed && !$pending): ?>
     <div class="m-status">
       <p class="m-status__t">Бронь подтверждена</p>
       <p>Дом будет готов к Вашему приезду: <b><?= h($homeReady) ?></b></p>
-      <p>Меню зафиксировано<?= $paidTotal && !$hidePrices ? ' · оплачено ' . h(fmt_rub($paidTotal)) : '' ?> · <button type="button" class="linkish" data-sheet="sheet-order">посмотреть заказ</button></p>
+      <?php if ($hasChoices): ?><p>Меню зафиксировано<?= $paidTotal && !$hidePrices ? ' · оплачено ' . h(fmt_rub($paidTotal)) : '' ?> · <button type="button" class="linkish" data-sheet="sheet-order">посмотреть заказ</button></p><?php endif; ?>
       <p class="m-status__n"><?= $open
-        ? 'До ' . h(fmt_dm(date('Y-m-d H:i', menu_cutoff_ts($stay)))) . ', ' . h(fmt_time(date('Y-m-d H:i', menu_cutoff_ts($stay)))) . ' можно докупить допы и поменять время приезда — ниже, в блоках.'
+        ? 'До ' . h(fmt_dm(date('Y-m-d H:i', menu_cutoff_ts($stay)))) . ', ' . h(fmt_time(date('Y-m-d H:i', menu_cutoff_ts($stay)))) . ($hasChoices ? ' можно докупить допы и поменять время приезда — ниже, в блоках.' : ' время приезда можно поменять ниже.')
         : 'Заказ передан на кухню. Для срочных изменений свяжитесь с нами напрямую.' ?></p>
     </div>
   <?php elseif (!$open): ?>
     <div class="m-status"><p class="m-status__t">Заказ передан на кухню</p><p>Для срочных изменений свяжитесь с нами напрямую — контакты внизу, в блоке «Маршрут».</p></div>
   <?php else: ?>
+    <?php if ($hasChoices): ?>
     <p class="g-lead">Настройте детали Вашего отдыха в блоках <?= h(implode(', ', $choiceTitles)) ?>.</p>
     <p class="g-lead m-lead-2">Выбор можно поменять по этой же ссылке до <?= h($cutoffText) ?>.</p>
+    <?php else: ?>
+    <p class="g-lead">Заполните регистрационную карту гостя и сориентируйте нас по времени прибытия — мы подготовим дом к Вашему приезду.</p>
+    <?php endif; ?>
   <?php endif; ?>
 
   <?php if ($pending && !$hidePrices): ?>
@@ -132,7 +141,7 @@ $gallery = function (array $photos): string {
     }
     $included = !$kind && group_included($gSectionsShown ?: $gSections, $tariff);
     $single = count($gSections) === 1;
-    $isOpen = $hasError || ($kind === 'package' && $tariff !== $booked) || in_array($gid, ['arrival', 'route'], true);
+    $isOpen = $hasError || ($kind === 'package' && $tariff !== $booked) || in_array($gid, ['arrival', 'route'], true) || ($gid === 'checkin' && !$checkinDone);
   ?>
   <details class="m-grp" id="m-<?= h($gid) ?>" data-grp data-grp-title="<?= h($g['title']) ?>"<?= $isOpen ? ' open' : '' ?><?= !$kind && !$gSectionsShown ? ' hidden' : '' ?>>
     <summary class="m-grp__s">
@@ -177,6 +186,18 @@ $gallery = function (array $photos): string {
             </label>
           </div>
           <noscript><p class="m-x">После выбора пакета нажмите кнопку внизу — блоки обновятся.</p></noscript>
+        <?php endif; ?>
+      </section>
+
+    <?php elseif ($kind === 'checkin'): // Регистрационная карта гостя — анкета и договор по той же персональной ссылке ?>
+      <section class="m-sec m-card">
+        <?php if ($checkinDone): ?>
+          <p class="m-card__ok">Карта заполнена, договор подписан</p>
+          <p class="m-x">Копию договора можно скачать на странице регистрации.</p>
+          <a class="btn btn--ghost btn--wide" href="<?= h(url($stay['token'])) ?>">Открыть регистрационную карту</a>
+        <?php else: ?>
+          <p class="m-x">Заполните анкету и подпишите договор проживания — это нужно для заселения и пропуска на въезд. Займёт около 5 минут, данные хранятся в зашифрованном виде.</p>
+          <a class="btn btn--navy btn--wide" href="<?= h(url($stay['token'])) ?>">Заполнить регистрационную карту</a>
         <?php endif; ?>
       </section>
 
@@ -315,19 +336,19 @@ $gallery = function (array $photos): string {
   <?php // Липкий подвал: что к доплате + действие. Пересчитывается на лету (checkin.js). ?>
   <div class="g-nav m-bar" data-menu-bar>
     <div class="g-nav__in">
-      <?php if (!$hidePrices): ?>
+      <?php if (!$hidePrices && $hasChoices): // без блоков выбора доплаты не бывает — строку не показываем ?>
         <p class="m-total" data-menu-line>
           <?php if ($due > 0): ?>Дополнительно: <b>+ <?= h(fmt_rub($due)) ?></b><?php else: ?>Тариф: <?= h(tariff_label($tariff)) ?> · <b>0 ₽</b> к доплате<?php endif; ?><span data-menu-unknown<?= $unknown ? '' : ' hidden' ?>> + позиции с ценой по запросу</span>
         </p>
       <?php endif; ?>
       <?php if ($open): ?>
-        <?php if ($hidePrices): ?>
+        <?php if ($hidePrices && $hasChoices): ?>
           <button class="btn btn--navy btn--wide" type="submit" name="_do" value="save">Сохранить выбор</button>
         <?php else: ?>
-          <button class="btn btn--navy btn--wide" type="submit" name="_do" value="<?= $due > 0 ? 'pay' : 'confirm' ?>" data-menu-submit><?= $due > 0 ? 'Оплатить через СБП (' . h(fmt_rub($due)) . ')' : 'Подтвердить выбор меню' ?></button>
+          <button class="btn btn--navy btn--wide" type="submit" name="_do" value="<?= $due > 0 ? 'pay' : 'confirm' ?>" data-menu-submit data-label-zero="<?= $hasChoices ? 'Подтвердить выбор меню' : 'Подтвердить время прибытия' ?>"><?= $due > 0 ? 'Оплатить через СБП (' . h(fmt_rub($due)) . ')' : ($hasChoices ? 'Подтвердить выбор меню' : 'Подтвердить время прибытия') ?></button>
         <?php endif; ?>
       <?php endif; ?>
-      <p class="m-saved"><button type="button" class="linkish" data-sheet="sheet-order">Посмотреть состав заказа</button></p>
+      <?php if ($hasChoices): ?><p class="m-saved"><button type="button" class="linkish" data-sheet="sheet-order">Посмотреть состав заказа</button></p><?php endif; ?>
     </div>
   </div>
 </form>
