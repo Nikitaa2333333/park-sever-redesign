@@ -63,6 +63,7 @@
   var bars = form.querySelectorAll('.progress__bars i');
   var label = form.querySelector('[data-progress-label]');
   var nav = form.querySelector('[data-nav]');
+  nav.hidden = false;
   var prev = form.querySelector('[data-prev]');
   var next = form.querySelector('[data-next]');
   var current = 1;
@@ -157,7 +158,7 @@
     bars.forEach(function (b, i) { b.classList.toggle('is-on', i < n); });
     label.textContent = 'Шаг ' + n + ' из ' + steps.length + ' · ' + steps[n - 1].getAttribute('data-title');
     prev.hidden = n === 1;
-    nav.hidden = n === steps.length; // на последнем шаге — своя кнопка «Подписать»
+    next.hidden = n === steps.length; // на последнем шаге — своя кнопка «Подписать»; «Вернуться в калькулятор» остаётся
     syncNext();
     if (n === steps.length) buildReview();
     if (scroll !== false) {

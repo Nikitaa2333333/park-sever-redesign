@@ -161,6 +161,10 @@ $check = function (string $name, string $html, bool $required = true, string $ex
   </div>
 
   <div class="g-nav" data-nav hidden>
-    <div class="g-nav__in"><button class="btn btn--navy btn--wide" type="button" data-next aria-disabled="true">Продолжить</button></div>
+    <div class="g-nav__in">
+      <button class="btn btn--navy btn--wide" type="button" data-next aria-disabled="true">Продолжить</button>
+      <?php // назад в калькулятор: «Уже ждёт Вас в доме», время прибытия, маршрут (заказчица 12.11) ?>
+      <a class="g-nav__back" href="<?= h(url($stay['token'] . '/menu')) ?>">← Вернуться в калькулятор</a>
+    </div>
   </div>
 </form>

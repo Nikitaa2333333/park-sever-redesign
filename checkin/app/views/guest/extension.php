@@ -32,3 +32,4 @@
   </div>
   <button class="btn btn--gold btn--wide btn--sign" type="submit" data-sign>Подписать продление</button>
 </form>
+<?php require __DIR__ . '/_back.php'; ?>
